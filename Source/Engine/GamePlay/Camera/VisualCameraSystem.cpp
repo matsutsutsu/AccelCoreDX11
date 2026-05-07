@@ -5,6 +5,8 @@
 #include "Engine/Platform/Input/Input.h"
 #include <SimpleMath.h>
 #include <cstdlib>
+#include <imgui.h>
+
 
 // システムの実行順序の定義ヘッダー
 #include "ECS/System/CCL_SystemRegistry.h"
@@ -131,6 +133,17 @@ void CameraShakeSystem::Update(float dt)
 // =========================================================
 void CameraFreeControlSystem::Update(float dt)
 {
+    // 1. スライダーをつかんでいる、テキスト入力中など「アイテムを操作中」か？
+    bool isItemActive = ImGui::IsAnyItemActive();
+
+    // 2. ImGuiのウィンドウ自体（背景やタイトルバー）を「クリック」しているか？
+    bool isWindowClicked = ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsAnyMouseDown();
+
+    // ★ ウィンドウに重なっているだけ(ホバー)なら無視してカメラを動かす！
+    if (isItemActive || isWindowClicked) {
+        return; // UIを「操作」している時だけカメラを止める
+    }
+
     // シングルトンから入力取得
     auto &input = Input::Instance();
     auto &mouse = input.GetMouse();
@@ -233,57 +246,234 @@ void CameraFreeControlSystem::Update(float dt)
 // =========================================================
 void CameraTPSControlSystem::Update(float dt)
 {
+    // 1. スライダーをつかんでいる、テキスト入力中など「アイテムを操作中」か？
+    bool isItemActive = ImGui::IsAnyItemActive();
+
+    // 2. ImGuiのウィンドウ自体（背景やタイトルバー）を「クリック」しているか？
+    bool isWindowClicked = ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsAnyMouseDown();
+
+    // ★ ウィンドウに重なっているだけ(ホバー)なら無視してカメラを動かす！
+    if (isItemActive || isWindowClicked) {
+        return; // UIを「操作」している時だけカメラを止める
+    }
+
     if (!_world->HasResource<Input*>()) return;
     auto* input = _world->GetResource<Input*>();
 
-    // 入力（右スティック ＋ マウス）
     float lookX = input->GetGamePad().GetAxisRX() + input->GetMouse().GetVelocityX() * 0.1f;
     float lookY = input->GetGamePad().GetAxisRY() + input->GetMouse().GetVelocityY() * 0.1f;
 
     ForEach([&](VirtualCamera& vcam, CameraBodyTPS& tps, TransformComponent& trans) {
-
-        // 1. ターゲットの取得
         if (!_world->IsEntityValid(tps.targetEntity)) return;
         auto* targetTrans = _world->GetComponent<TransformComponent>(tps.targetEntity);
         if (!targetTrans) return;
 
-        // 2. 角度の更新
+        // 1. 角度の更新
         tps.currentYaw += -lookX * tps.lookSpeedX * dt;
         tps.currentPitch += -lookY * tps.lookSpeedY * dt;
-
-        // ジンバルロック防止のためPitchを制限
         tps.currentPitch = std::clamp(tps.currentPitch, -85.0f, 85.0f);
 
         float yawRad = XMConvertToRadians(tps.currentYaw);
         float pitchRad = XMConvertToRadians(tps.currentPitch);
 
-        // 3. カメラの前方ベクトルを計算 (FreeCameraの方式に準拠)
+        // 2. 目標方向 (Front) の計算
         Vector3 Front;
         Front.x = cos(yawRad) * cos(pitchRad);
         Front.y = sin(pitchRad);
         Front.z = sin(yawRad) * cos(pitchRad);
         Front.Normalize();
 
-        // 4. 座標と回転の計算
+        // 3. 目標位置の計算
         Vector3 targetPos = targetTrans->position + Vector3(tps.targetOffset);
-        trans.position = targetPos - (Front * tps.distance); // ターゲットの「後ろ」に配置
+        // カメラは注視点から「Front方向」と逆に離れた位置にある
+        Vector3 desiredPos = targetPos - (Front * tps.distance);
 
+        // 4. 滑らかな補間 (解除時のジャンプを防ぐ)
+        // ロックオンシステムが書き換えた trans.position から desiredPos へ滑らかに移動
+        float lerpFactor = 1.0f - std::exp(-10.0f * dt);
+        trans.position = Vector3::Lerp(trans.position, desiredPos, lerpFactor);
+
+        // 回転の同期
         XMMATRIX lookMat = XMMatrixLookToLH(XMVectorZero(), Front, Vector3(0, 1, 0));
         XMVECTOR det;
         XMMATRIX worldRot = XMMatrixInverse(&det, lookMat);
-        trans.rotation = Quaternion::CreateFromRotationMatrix(worldRot);
+        Quaternion desiredRot = Quaternion::CreateFromRotationMatrix(worldRot);
+        trans.rotation = Quaternion::Slerp(trans.rotation, desiredRot, lerpFactor);
 
-        // 5. VirtualCameraへの同期
         vcam.resultPos = trans.position;
-        vcam.resultLookAt = targetPos;
-        vcam.resultUp = Vector3(0, 1, 0);
+        vcam.resultLookAt = Vector3::Lerp(vcam.resultLookAt, targetPos, lerpFactor);
         vcam.isValid = true;
         });
 }
 
+void CameraFPSControlSystem::Update(float dt)
+{
+    // 1. スライダーをつかんでいる、テキスト入力中など「アイテムを操作中」か？
+    bool isItemActive = ImGui::IsAnyItemActive();
+
+    // 2. ImGuiのウィンドウ自体（背景やタイトルバー）を「クリック」しているか？
+    bool isWindowClicked = ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsAnyMouseDown();
+
+    // ★ ウィンドウに重なっているだけ(ホバー)なら無視してカメラを動かす！
+    if (isItemActive || isWindowClicked) {
+        return; // UIを「操作」している時だけカメラを止める
+    }
+
+    if (!_world->HasResource<Input*>()) return;
+    auto* input = _world->GetResource<Input*>();
+
+    // 入力取得（TPSの方式に準拠）
+    float lookX = input->GetGamePad().GetAxisRX() + input->GetMouse().GetVelocityX() * 0.1f;
+    float lookY = -input->GetGamePad().GetAxisRY() + input->GetMouse().GetVelocityY() * 0.1f;
+
+    ForEach([&](VirtualCamera& vcam, CameraBodyFPS& fps, TransformComponent& trans)
+        {
+
+            if (!_world->IsEntityValid(fps.targetEntity)) return;
+            auto* targetTrans = _world->GetComponent<TransformComponent>(fps.targetEntity);
+            if (!targetTrans) return;
+
+            // --- 1. 回転の更新 ---
+            fps.currentYaw += lookX * fps.mouseSensitivity * 100.0f * dt;
+            fps.currentPitch += lookY * fps.mouseSensitivity * 100.0f * dt;
+            fps.currentPitch = std::clamp(fps.currentPitch, fps.minPitch, fps.maxPitch);
+
+            float yawRad = XMConvertToRadians(fps.currentYaw);
+            float pitchRad = XMConvertToRadians(fps.currentPitch);
+
+            XMVECTOR baseRotQuat = XMQuaternionRotationRollPitchYaw(pitchRad, yawRad, 0);
+            XMVECTOR offsetRotQuat = XMLoadFloat4(&fps.rotationOffset);
+            XMVECTOR targetRotQuat = XMQuaternionMultiply(offsetRotQuat, baseRotQuat);
+
+            // --- 2. 補間係数の計算 (TPSと同じ方式) ---
+            // 指数減衰を用いたフレームレート独立な補間
+            float lerpFactor = 1.0f - std::exp(-15.0f * dt); // 15.0fは追従の鋭さ。好みで10.0f〜20.0fで調整
+
+            // 回転の補間 (Slerp)
+            trans.rotation = Quaternion::Slerp(trans.rotation, targetRotQuat, lerpFactor);
+
+            // --- 3. 座標の更新 ---
+            Vector3 desiredEyePos = Vector3(targetTrans->position) + Vector3(fps.eyeOffset);
+
+            // 座標の補間 (TPSと同じ Lerp)
+            trans.position = Vector3::Lerp(trans.position, desiredEyePos, lerpFactor);
+
+            // --- 4. VirtualCamera への書き込み ---
+            XMVECTOR finalRotQuat = XMLoadFloat4(&trans.rotation);
+            XMVECTOR forwardVec = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), finalRotQuat);
+            XMVECTOR upVec = XMVector3Rotate(XMVectorSet(0, 1, 0, 0), finalRotQuat);
+
+            vcam.resultPos = trans.position;
+            XMStoreFloat3(&vcam.resultLookAt, XMLoadFloat3(&trans.position) + forwardVec);
+            XMStoreFloat3(&vcam.resultUp, upVec);
+
+            vcam.isValid = true;
+        });
+}
+
+void CameraLockOnSystem::Update(float dt)
+{
+    ForEach([&](VirtualCamera& vcam, 
+        CameraBodyTPS& tps, 
+        CameraLockOn& Targeting, 
+        TransformComponent& trans)
+        {
+            bool hasValidTarget = _world->IsEntityValid(Targeting.targetEntity) && _world->IsEntityValid(tps.targetEntity);
+
+            if (!hasValidTarget) {
+                Targeting.isInitialized = false;
+                if (Targeting.originalLookSpeedX >= 0.0f) {
+                    tps.lookSpeedX = Targeting.originalLookSpeedX;
+                    tps.lookSpeedY = Targeting.originalLookSpeedY;
+                    if (Targeting.originalDistance >= 0.0f) tps.distance = Targeting.originalDistance;
+                    Targeting.originalLookSpeedX = -1.0f;
+                }
+                return;
+            }
+
+            if (Targeting.originalLookSpeedX < 0.0f) {
+                Targeting.originalLookSpeedX = tps.lookSpeedX;
+                Targeting.originalLookSpeedY = tps.lookSpeedY;
+                Targeting.originalDistance = tps.distance;
+                tps.lookSpeedX = 0.0f;
+                tps.lookSpeedY = 0.0f;
+            }
+
+            auto* enemyTrans = _world->GetComponent<TransformComponent>(Targeting.targetEntity);
+            auto* playerTrans = _world->GetComponent<TransformComponent>(tps.targetEntity);
+            if (!enemyTrans || !playerTrans) return;
+
+            // --- 1. 目標位置の計算 ---
+            Vector3 pPos = Vector3(playerTrans->position) + Vector3(tps.targetOffset);
+            Vector3 ePos = Vector3(enemyTrans->position) + Vector3(Targeting.targetOffset);
+            Vector3 dirPE = pPos - ePos; // 敵からプレイヤーへの方向
+            float distPE = dirPE.Length();
+            
+
+            // ★追加：距離による強制解除
+            if (distPE > Targeting.maxDistance) {
+                Targeting.targetEntity = CCL::ECS::InvalidEntityID; // ターゲットを無効化
+                return; // 次のフレームの開始時に解除ロジックが走る
+            }
+
+            dirPE.Normalize();
+
+            Vector3 worldUp = Vector3(0, 1, 0);
+            Vector3 sideVec = worldUp.Cross(dirPE);
+            sideVec.Normalize();
+
+            // 理想的なカメラ位置
+            Vector3 cameraPosGoal = pPos + (dirPE * tps.distance) + (sideVec * Targeting.sideOffset * Targeting.currentSide);
+            if (cameraPosGoal.y < pPos.y) cameraPosGoal.y = pPos.y;
+
+            // 理想的な注視点
+            float proximityScale = std::clamp(1.0f - (distPE / Targeting.maxDistance), 0.0f, 1.0f);
+            float dynamicFocus = std::lerp(0.3f, 0.5f, proximityScale);
+            Vector3 lookAtGoal = Vector3::Lerp(pPos, ePos, dynamicFocus);
+
+            // --- 2. 補間処理 ---
+            if (!Targeting.isInitialized || Targeting.lastTargetEntity != Targeting.targetEntity) {
+                Targeting.currentInterpolatedPos = trans.position;
+                Targeting.currentInterpolatedLookAt = vcam.resultLookAt;
+                Targeting.isInitialized = true;
+                Targeting.lastTargetEntity = Targeting.targetEntity;
+            }
+
+            float lerpFactor = std::clamp(Targeting.interpolationSpeed * dt, 0.0f, 1.0f);
+            Targeting.currentInterpolatedPos = Vector3::Lerp(Targeting.currentInterpolatedPos, cameraPosGoal, lerpFactor);
+            Targeting.currentInterpolatedLookAt = Vector3::Lerp(Targeting.currentInterpolatedLookAt, lookAtGoal, lerpFactor);
+
+            // --- 3. 反映と角度の逆算 ---
+            Matrix rotationMatrix = Matrix::CreateLookAt(Targeting.currentInterpolatedPos, Targeting.currentInterpolatedLookAt, worldUp).Invert();
+            trans.position = Targeting.currentInterpolatedPos;
+            trans.rotation = Quaternion::CreateFromRotationMatrix(rotationMatrix);
+
+            // ★重要：ここが反転対策のキモ
+            // 現在の rotation から「カメラが向いている正面ベクトル」を取り出す
+            Vector3 forward = Vector3::Transform(Vector3(0, 0, 1), trans.rotation);
+            forward.Normalize();
+
+            // TPS側の座標系 (x=cos, z=sin) に合わせて Yaw/Pitch を同期
+            tps.currentPitch = XMConvertToDegrees(asin(forward.y));
+            float yaw = XMConvertToDegrees(atan2(forward.z, forward.x)) + 180.0f;
+
+            // 角度を -180 ~ 180 または 0 ~ 360 の範囲に丸める（念のため）
+            if (yaw > 180.0f) yaw -= 360.0f;
+            if (yaw < -180.0f) yaw += 360.0f;
+
+            tps.currentYaw = yaw;
+
+            vcam.resultPos = trans.position;
+            vcam.resultLookAt = Targeting.currentInterpolatedLookAt;
+            vcam.isValid = true;
+        });
+}
+
+// システムの登録
 // ファイル末尾に追加
 REGISTER_LOGIC_SYSTEM(CameraTPSControlSystem, Priority::LogicStage::L02_Update);
-
+REGISTER_LOGIC_SYSTEM(CameraFPSControlSystem, Priority::LogicStage::L02_Update);
+REGISTER_LOGIC_SYSTEM(CameraLockOnSystem, Priority::LogicStage::L02_Update);
 
 // =========================================================
 // 自動登録マクロ群（必ず .cpp の末尾に1回だけ書く）
@@ -292,3 +482,5 @@ REGISTER_RENDER_SYSTEM(CameraFollowSystem, Priority::RenderStage::R01_Camera);
 REGISTER_RENDER_SYSTEM(CameraLookAtSystem, Priority::RenderStage::R01_Camera);
 REGISTER_RENDER_SYSTEM(CameraShakeSystem, Priority::RenderStage::R01_Camera);
 REGISTER_RENDER_SYSTEM(CameraFreeControlSystem, Priority::RenderStage::R01_Camera);
+
+

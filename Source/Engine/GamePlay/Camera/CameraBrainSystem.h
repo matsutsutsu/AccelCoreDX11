@@ -7,13 +7,14 @@
 // 前方宣言 (インクルード削減のため)
 class Camera;
 
-class CameraBrainSystem : public CCL::ECS::SystemBase {
+class CameraBrainSystem : public CCL::ECS::SystemBase 
+{
   private:
     // ブレンド管理用
     CCL::ECS::EntityID _currentCamID = CCL::ECS::InvalidEntityID; // 現在のメイン
     CCL::ECS::EntityID _prevCamID    = CCL::ECS::InvalidEntityID; // 遷移元
 
-    float _blendDuration = 1.5f; // デフォルトブレンド時間
+    float _blendDuration = 0.3f; // デフォルトブレンド時間
     float _blendTimer    = 0.0f;
 
     // 前回のカメラ状態（遷移元が消滅した場合のバックアップ用）

@@ -74,12 +74,79 @@ struct CameraBodyFree {
 struct CameraBodyTPS {
     CCL::ECS::EntityID targetEntity = CCL::ECS::InvalidEntityID; // 追従するプレイヤーのID
 
-    float distance = 8.0f;  // プレイヤーからカメラまでの距離
+    float distance = 6.0f;  // プレイヤーからカメラまでの距離
     float currentPitch = 20.0f; // 縦の角度（上下）
     float currentYaw = 0.0f;  // 横の角度（左右）
 
-    float lookSpeedX = 150.0f; // マウス・右スティックでの横回転スピード
-    float lookSpeedY = 100.0f; // マウス・右スティックでの縦回転スピード
+    float lookSpeedX = 300.0f; // マウス・右スティックでの横回転スピード
+    float lookSpeedY = 200.0f; // マウス・右スティックでの縦回転スピード
+    float speedFactor = 1.0f; 
 
     DirectX::XMFLOAT3 targetOffset = { 0.0f, 1.5f, 0.0f }; // プレイヤーの足元ではなく「頭や肩」を注視するためのズレ
+};
+
+// ---------------------------------------------------------
+// FPS（一人称視点）カメラ用コンポーネント
+// ---------------------------------------------------------
+struct CameraBodyFPS {
+    CCL::ECS::EntityID targetEntity = CCL::ECS::InvalidEntityID; // 追従するプレイヤーのID
+
+    float mouseSensitivity = 0.1f;
+    float minPitch = -89.0f;
+    float maxPitch = 89.0f;
+
+    // 内部状態
+    float currentYaw = 0.0f;
+    float currentPitch = 0.0f;
+
+    // オフセット（目線の高さなど）
+    DirectX::XMFLOAT3 eyeOffset = { 0.0f, 1.7f, 0.0f };
+    DirectX::XMFLOAT4 rotationOffset = { 0, 0, 0, 1 };       // 走行時などの揺れ回転
+};
+
+// ===================================================================================
+// TPSロックオン用コンポーネント（POD）
+// ===================================================================================
+struct CameraLockOn
+{
+    CCL::ECS::EntityID targetEntity = CCL::ECS::InvalidEntityID; // ロックオン対象
+
+    float rotationDamping = 10.0f;
+    float minDistance = 4.0f;  // 最短カメラ距離
+    float maxDistance = 28.0f; // 最長カメラ距離
+
+    // --- 肩越し視点・レイアウト制御 ---
+    float sideOffset = 1.5f;     // 左右へのズレ量
+    float currentSide = 1.0f;    // 1.0(右出し) or -1.0(左出し)
+    float sideDamping = 5.0f;    // 左右移動の滑らかさ
+
+    // --- 画面内維持・FOV制御 ---
+    float minFov = 45.0f;        // 通常時のFOV
+    float maxFov = 65.0f;        // 接近時に広角にする最大値
+    float originalFov = -1.0f;   // FOV退避用
+
+    // --- ロックオン中の制約 ---
+    float speedReductionFactor = 0.01f;
+    float originalLookSpeedX = -1.0f;
+    float originalLookSpeedY = -1.0f;
+    float originalDistance = -1.0f;
+
+    // --- 内部計算用 ---
+    float focusWeight = 0.4f;
+    DirectX::XMFLOAT3 targetOffset = { 0.0f, 0.1f, 0.0f };
+
+    // ==========================================
+    // --- 補間移動・切り替え制御用（追加分） ---
+    // ==========================================
+
+    // 現在補間計算中の値（この値を最終的なカメラに適用する）
+    DirectX::XMFLOAT3 currentInterpolatedPos = { 0.0f, 0.0f, 0.0f };
+    DirectX::XMFLOAT3 currentInterpolatedLookAt = { 0.0f, 0.0f, 0.0f };
+
+    // 補間速度 (大きいほど素早く、小さいほどゆったり)
+    float interpolationSpeed = 12.5f;
+
+    // 切り替え判定用
+    CCL::ECS::EntityID lastTargetEntity = CCL::ECS::InvalidEntityID;
+    bool isInitialized = false; // 補間の初期化が完了しているか
 };

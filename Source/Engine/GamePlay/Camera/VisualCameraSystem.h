@@ -61,3 +61,26 @@ class CameraTPSControlSystem : public CCL::ECS::IfSystem<CameraTPSControlSystem,
     CameraTPSControlSystem() : IfSystem("CameraTPSControlSystem") {}
     void Update(float dt) override;
 };
+
+class CameraFPSControlSystem : public CCL::ECS::IfSystem<CameraFPSControlSystem,
+    CCL::ECS::Write<VirtualCamera>,
+    CCL::ECS::Write<CameraBodyFPS>,
+    CCL::ECS::Write<TransformComponent>> {
+public:
+    CameraFPSControlSystem() : IfSystem("CameraFPSControlSystem") {}
+    void Update(float dt) override;
+};
+
+
+// ---------------------------------------------------------
+// LockOn: ロックオン制御ロジック TPS用
+// ---------------------------------------------------------
+class CameraLockOnSystem : public CCL::ECS::IfSystem<CameraLockOnSystem,
+    CCL::ECS::Write<VirtualCamera>,
+    CCL::ECS::Write<CameraBodyTPS>,
+    CCL::ECS::Write<CameraLockOn>,
+    CCL::ECS::Write<TransformComponent>>{
+public:
+    CameraLockOnSystem() : IfSystem("CameraLockOnSystem") {}
+    void Update(float dt) override;
+};

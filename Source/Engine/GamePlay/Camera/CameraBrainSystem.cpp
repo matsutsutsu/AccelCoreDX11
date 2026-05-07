@@ -2,7 +2,7 @@
 
 // 実装で必要なヘッダ群
 #include "ECS/Core/CCL_World.h"
-#include "Engine/Graphics/Core/Camera.h"
+#include "Engine/Graphics/Camera.h"
 #include <algorithm>
 
 // システムの実行順序の定義ヘッダー
