@@ -1,52 +1,35 @@
 #pragma once
-
 #include "Scene.h"
 #include <string>
 
 // World クラスが存在することをコンパイラに教える
 namespace CCL::ECS::Core { class World; }
 
-// シーンマネージャー
+// シーンマネージャー（シングルトン）
 class SceneManager {
 private:
     SceneManager() {}
     ~SceneManager() {}
 
 public:
-    // 唯一のインスタンス取得
     static SceneManager& Instance() {
         static SceneManager instance;
         return instance;
     }
 
-    // 初期化
     void Initialize();
 
-    // 終了化
-    //void Finalize();
-
-    // --- 追加：固定更新 ---
+    // 更新処理（シーン切り替え時のInitializeに必要なため、システム群を渡す）
     void FixedUpdate(float fixedTime);
+    void Update(float elapsedTime, int frameIndex, DX12System* dx12System, SystemDataContext* systemDataContext, ResourceManager* resourceManager);
 
-    // 更新処理
-    void Update(float elapsedTime);
+    // 描画処理（DX12のコマンドリストを渡す）
+    void Render(DX12System* dx12System, CommandList* commandList, int frameIndex);
 
-    // 描画処理
-    void Render();
-
-    // GUI描画
-    void DrawGUI();
-
-    // シーンクリア
     void Clear();
-
-    // シーン切り替え
     void ChangeScene(const std::string& name);
+    void ChangeScene(Scene* scene);
 
-    // インスタンスを直接渡すオーバーロード
-    void ChangeScene(Scene *scene);
-
-    // 現在のシーン名を取得・設定
     const std::string& GetCurrentSceneName() const { return _currentSceneName; }
     void SetCurrentSceneName(const std::string& name) { _currentSceneName = name; }
 
@@ -55,11 +38,7 @@ public:
     void LoadScene(CCL::ECS::Core::World* world, const std::string& filepath);
 
 private:
-
-
-    Scene* currentScene = nullptr; // 現在のシーン
-    Scene* nextScene = nullptr;    // 次に遷移するシーン
-
-    // 現在のシーン名を保持する変数
+    Scene* currentScene = nullptr;
+    Scene* nextScene = nullptr;
     std::string _currentSceneName = "";
 };

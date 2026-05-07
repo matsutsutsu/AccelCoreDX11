@@ -1,9 +1,7 @@
-#include"SceneManager.h"
-#include"SceneFactory.h"
+#include "SceneManager.h"
+#include "SceneFactory.h"
 
-// シーン登録ヘッダー
-#include"Game/Scenes/EditorScene.h"
-#include "Game/Scenes/ParticleScene.h"
+#include "Game/Scene/SceneGame.h"
 
 
 #include "Engine/Serialization/SceneSerializer.h"
@@ -17,101 +15,77 @@
 #include "Engine/GamePlay/Physics/Jolt/JoltCleanupSystem.h"
 
 
-#include "tracy/Tracy.hpp"
 
-
-using namespace CCL::ECS::Core;
-
-//初期化
 void SceneManager::Initialize()
 {
-	//シーン登録
-	//SceneFactory::Instance().Register("ModelViewer", []() { return new ModelViewerScene(); });
-	SceneFactory::Instance().Register("Editor", []() { return new EditorScene(); });
-
-	SceneFactory::Instance().Register("Particle", []() { return new ParticleScene(); });
-
-
-	// 最初に表示するシーン
-	ChangeScene("Editor");
-	//ChangeScene("Particle");
+    // 初期シーンの登録と遷移リクエストをここで行います
+    SceneFactory::Instance().Register("Game", []() { return new SceneGame(); });
+    ChangeScene("Game");
 }
 
-// --- 追加：固定更新の実装 ---
 void SceneManager::FixedUpdate(float fixedTime)
 {
-	// シーン遷移待ちの状態では物理演算を行わないのが安全
-	if (nextScene == nullptr && currentScene != nullptr)
-	{
-		currentScene->FixedUpdate(fixedTime);
-	}
+    if (nextScene == nullptr && currentScene != nullptr) {
+        currentScene->FixedUpdate(fixedTime);
+    }
 }
 
-//更新処理
-void SceneManager::Update(float elapsedTime)
+void SceneManager::Update(float elapsedTime, int frameIndex, DX12System* dx12System, SystemDataContext* systemDataContext, ResourceManager* resourceManager)
 {
+    if (nextScene != nullptr)
+    {
+        Clear();
 
-	if (nextScene != nullptr)
-	{
-		//古いシーンを終了処理
-		Clear();
+        currentScene = nextScene;
+        nextScene = nullptr;
 
-		//新しいシーンを設定
-		currentScene = nextScene;
-		nextScene = nullptr;
-
-		//シーン初期化処理
-        // 【1段階目】: 重いデータロード (Initialize)
-        // もし SceneLoading を経由して既に行われていれば、IsReady() が true
-        // なのでスキップされる
+        // シーン初期化処理にDX12システムを渡す
         if (!currentScene->IsReady()) {
-            currentScene->Initialize();
-
-			// 終わった瞬間にマネージャーが責任を持ってフラグを立てる
+            currentScene->Initialize(dx12System, systemDataContext, resourceManager);
             currentScene->SetReady();
         }
 
-		// 【2段階目】: GPUへのセットアップ (Start) 
-        // これは絶対にメインスレッドのこのタイミングで1回だけ呼ばれる。
-        // dc->Map や UIManager の dc へのバインド等はここで行う。
         currentScene->Start();
-	}
+    }
 
-	if (currentScene != nullptr)
-	{
-		currentScene->Update(elapsedTime);
-	}
-
+    if (currentScene != nullptr) {
+        currentScene->Update(elapsedTime, frameIndex);
+    }
 }
 
-//描画処理
-void SceneManager::Render()
+void SceneManager::Render(DX12System* dx12System, CommandList* commandList, int frameIndex)
 {
-	if (currentScene != nullptr)
-	{
-		currentScene->Render();
-	}
+    if (currentScene != nullptr) {
+        currentScene->Render(dx12System, commandList, frameIndex);
+    }
 }
 
-//GUI描画
-void SceneManager::DrawGUI()
-{
-	if (currentScene != nullptr)
-	{
-		currentScene->DrawGUI();
-	}
-}
-
-//シーンクリア
 void SceneManager::Clear()
 {
-	if (currentScene != nullptr)
-	{
-		currentScene->Finalize();
-		delete currentScene;
-		currentScene = nullptr;
-	}
+    if (currentScene != nullptr) {
+        currentScene->Finalize();
+        delete currentScene;
+        currentScene = nullptr;
+    }
 }
+
+void SceneManager::ChangeScene(const std::string& name)
+{
+    Scene* newScene = SceneFactory::Instance().Create(name);
+    if (newScene) {
+        ChangeScene(newScene);
+        _currentSceneName = name;
+    }
+}
+
+void SceneManager::ChangeScene(Scene* scene)
+{
+    if (nextScene != nullptr) {
+        delete nextScene;
+    }
+    nextScene = scene;
+}
+
 
 
 // =========================================================================
@@ -119,16 +93,16 @@ void SceneManager::Clear()
 // =========================================================================
 void SceneManager::SaveScene(CCL::ECS::Core::World* world, const std::string& filepath)
 {
-	// 1. 写真撮影前の「世界の整理」
-	// 今溜まっている RequestDestroy などのペンディング操作を完全に終わらせ、
-	// 中途半端な半死半生のエンティティがセーブデータに混ざるのを防ぐ
-	world->ScrutinyAndApply();
+    // 1. 写真撮影前の「世界の整理」
+    // 今溜まっている RequestDestroy などのペンディング操作を完全に終わらせ、
+    // 中途半端な半死半生のエンティティがセーブデータに混ざるのを防ぐ
+    world->ScrutinyAndApply();
 
-	// 2. 翻訳家（シリアライザ）に現在の状態をJSONに書き出させる
-	SceneSerializer::Serialize(world, filepath);
+    // 2. 翻訳家（シリアライザ）に現在の状態をJSONに書き出させる
+    SceneSerializer::Serialize(world, filepath);
 }
 
-void SceneManager::LoadScene(World* world, const std::string& filepath)
+void SceneManager::LoadScene(CCL::ECS::Core::World* world, const std::string& filepath)
 {
     // ==========================================================
     // 1. 破壊の宣告 (Marking)
@@ -185,28 +159,3 @@ void SceneManager::LoadScene(World* world, const std::string& filepath)
     }
 }
 
-
-//シーン切り替え
-void SceneManager::ChangeScene(const std::string& name)
-{
-    // 名前を記録しておく
-    _currentSceneName = name;
-
-	Scene* newScene = SceneFactory::Instance().Create(name);
-	if (newScene) {
-		nextScene = newScene;
-	}
-}
-
-
-void SceneManager::ChangeScene(Scene *scene)
-{
-    // ※ここでは _currentSceneName は自動更新されない
-    // 呼び出し側（GateSystem）で SetCurrentSceneName を呼んでからこれを使う
-    if (nextScene != nullptr) {
-        delete nextScene;
-    }
-
-    // nextSceneに直接セット
-    nextScene = scene;
-}
