@@ -18,8 +18,8 @@
  */
 struct TransformComponent {
     // --- 【データ部】（保存・編集する値 = Local） ---
-    DirectX::XMFLOAT3   position    = {0, 0, 0};    // 親からの相対位置 (Local Position)
     DirectX::XMFLOAT4   rotation    = {0, 0, 0, 1}; // 親からの相対回転 (Local Rotation)
+    DirectX::XMFLOAT3   position    = {0, 0, 0};    // 親からの相対位置 (Local Position)
     DirectX::XMFLOAT3   scale       = {1, 1, 1};    // 親からの相対サイズ (Local Scale)
 
     // 静的オブジェクトフラグ (trueなら更新しない)
@@ -57,12 +57,14 @@ struct TransformComponent {
       position = newPos;
       isTeleported = true; // 裏で自動的にフラグを立てる
       isStatic = false;    // 行列の再計算も要求
+      isDirty = true;
     }
 
     void SetPosition(float x, float y, float z) {
       position = {x, y, z};
       isTeleported = true;
       isStatic = false;
+      isDirty = true;
     }
 
     // ------------------------------------------------------------------

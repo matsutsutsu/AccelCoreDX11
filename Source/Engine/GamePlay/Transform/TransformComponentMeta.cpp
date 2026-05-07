@@ -74,8 +74,8 @@ template <> struct ComponentMeta<TransformComponent> {
     static const std::vector<FieldDescriptor>& Fields()
     {
         static const std::vector<FieldDescriptor> fields = {
-            META_FIELD_FLOAT3(TransformComponent, position, "position", "Position", 0.1f, "Transform"),
             META_FIELD_FLOAT4(TransformComponent, rotation, "rotation", "Rotation", 0.1f, "Transform"),
+            META_FIELD_FLOAT3(TransformComponent, position, "position", "Position", 0.1f, "Transform"),
             META_FIELD_FLOAT3(TransformComponent, scale, "scale", "Scale", 0.1f, "Transform"),
             META_FIELD_BOOL(TransformComponent, isStatic, "isStatic", "Is Static", "Transform"),
             META_FIELD_ENTITY_ID(TransformComponent, parentID, "parentID", "Parent Entity ID", "Transform") };
