@@ -8,7 +8,7 @@
  */
 #pragma once
 #include "Editor/Core/EditorWindow.h"
-#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeData.h"
+#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeData.h"
 #include <string>
 #include <vector>
 #include <json.hpp>

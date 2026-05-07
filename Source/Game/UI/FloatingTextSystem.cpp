@@ -1,5 +1,5 @@
 #include "FloatingTextSystem.h"
-#include "Game/Logics/Character/Player/PlayerComponent.h"
+//#include "Game/Logics/Character/Player/PlayerComponent.h"
 #include <SimpleMath.h>
 
 // システムの実行順序の定義ヘッダー

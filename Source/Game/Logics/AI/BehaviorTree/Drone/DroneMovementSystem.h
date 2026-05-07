@@ -4,7 +4,7 @@
  */
 #pragma once
 #include "ECS/System/CCL_System.h"
-#include "Game/Logic/AI/BehaviorTree/Drone/DroneComponent.h"
+#include "Game/Logics/AI/BehaviorTree/Drone/DroneComponent.h"
 #include "Engine/GamePlay/Transform/TransformComponent.h"
 #include "Engine/GamePlay/Core/Time/TimeState.h"
 

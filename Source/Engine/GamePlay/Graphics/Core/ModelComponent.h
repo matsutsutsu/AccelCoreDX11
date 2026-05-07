@@ -13,6 +13,10 @@ struct ModelComponent
     ModelInstanceHandle modelHandle; // 8 byte (Index 4 + Gen 4)
     uint32_t assetHash = 0;          // 4 byte (文字列パスのハッシュ)
 
+    // ルートモーション用のノードインデックス（O(1)アクセス用キャッシュ）
+    // エディタ側で名前をハッシュ化して保持するか、ロード時に一度だけ検索して埋める
+    int rootNodeIndex = -1;          // 4 byte
+
     ModelComponent() = default;
 
     // パスから初期化
@@ -45,6 +49,7 @@ struct ModelComponent
                 ResourceManager::Instance().UnloadModelInstance(modelHandle);
             }
             assetHash = other.assetHash;
+            rootNodeIndex = other.rootNodeIndex; // ★追加
             if (assetHash != 0) {
                 modelHandle = ResourceManager::Instance().CreateModelInstanceFromHash(assetHash);
             }
@@ -72,6 +77,7 @@ struct ModelComponent
             }
             modelHandle = other.modelHandle;
             assetHash = other.assetHash;
+            rootNodeIndex = other.rootNodeIndex; 
 
             other.modelHandle = ModelInstanceHandle{};
             other.assetHash = 0;
@@ -100,5 +106,7 @@ struct ModelComponent
         else {
             assetHash = 0;
         }
+        // モデルが変わったのでキャッシュを無効化
+        rootNodeIndex = -1;
     }
 };

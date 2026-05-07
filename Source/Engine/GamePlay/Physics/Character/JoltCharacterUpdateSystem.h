@@ -2,7 +2,7 @@
 #include "ECS/System/CCL_System.h"
 #include "Engine/GamePlay/Transform/TransformComponent.h"
 #include "JoltCharacterHandleComponent.h"
-#include "Game/Logic/Character/CharacterMovementInputComponent.h"
+#include "Game/Logics/Character/CharacterMovementInputComponent.h"
 #include "Engine/GamePlay/Physics/Character/JoltCharacterConfigComponent.h"
 #include "Engine/GamePlay/Core/Time/TimeState.h"
 

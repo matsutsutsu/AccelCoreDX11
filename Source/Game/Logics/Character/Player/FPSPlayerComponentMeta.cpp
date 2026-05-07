@@ -12,7 +12,7 @@
 
 #include "Engine/GamePlay/Transform/TransformComponent.h"
 #include "PlayerTag.h"
-#include "Game/Logic/System/HidingComponents.h"
+#include "Game/Logics/System/HidingComponents.h"
 #include "Engine/GamePlay/Core/NameComponent.h" // NameComponentの定義ヘッダー
 
 // ============================================================================

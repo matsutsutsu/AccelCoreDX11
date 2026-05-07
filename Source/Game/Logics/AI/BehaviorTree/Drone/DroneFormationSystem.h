@@ -6,7 +6,7 @@
 #include "ECS/System/CCL_System.h"
 #include "DroneComponent.h"
 #include "Engine/GamePlay/Transform/TransformComponent.h"
-#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
+#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
 #include "Engine/GamePlay/Core/Time/TimeState.h"
 
  /**

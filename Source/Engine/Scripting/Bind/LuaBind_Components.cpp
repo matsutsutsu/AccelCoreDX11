@@ -66,31 +66,6 @@ void LuaBind_Components::Bind(sol::state &lua, CCL::ECS::Core::World *world)
 
     // --- RigidBodyComponent (Handle) ---
     
-
-    // --- HealthComponent (Handle) ---
-    lua.new_usertype<ComponentHandle<HealthComponent>>("Health",
-        "IsValid",
-        &ComponentHandle<HealthComponent>::IsValid,
-
-        "current",
-        HANDLE_PROP(HealthComponent, currentHealth),
-        "max",
-        HANDLE_PROP(HealthComponent, maxHealth),
-        "team",
-        HANDLE_PROP(HealthComponent, team));
-
-
-
-    // --- PlayerComponent (Handle) ---
-    lua.new_usertype<ComponentHandle<PlayerComponent>>("PlayerComp",
-        "IsValid",
-        &ComponentHandle<PlayerComponent>::IsValid,
-
-        "moveSpeed",
-        HANDLE_PROP(PlayerComponent, moveSpeed),
-        "turnSpeed",
-        HANDLE_PROP(PlayerComponent, turnSpeed));
-
     // --- NameComponent (Handle) ---
     // char配列の扱いは特殊なのでマクロを使わず手書き
     lua.new_usertype<ComponentHandle<NameComponent>>("NameInfo",
@@ -119,13 +94,8 @@ void LuaBind_Components::Bind(sol::state &lua, CCL::ECS::Core::World *world)
         [world](CCL::ECS::EntityID id) { return world->GetHandle<TransformComponent>(id); });
 
 
-    entityTable.set_function("GetHealth",
-        [world](CCL::ECS::EntityID id) { return world->GetHandle<HealthComponent>(id); });
-
     entityTable.set_function(
         "GetName", [world](CCL::ECS::EntityID id) { return world->GetHandle<NameComponent>(id); });
 
-    // プレイヤーコンポーネント取得も追加しておきます
-    entityTable.set_function("GetPlayer",
-        [world](CCL::ECS::EntityID id) { return world->GetHandle<PlayerComponent>(id); });
+  
 }

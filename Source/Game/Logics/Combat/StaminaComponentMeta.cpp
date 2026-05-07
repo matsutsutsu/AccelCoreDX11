@@ -12,7 +12,7 @@
 #include "Engine/Platform/Input/InputFacade.h" // GetAxisNames等を使用する場合
 #include "ECS/Core/CCL_World.h"
 
-#include "Game/Logic/System/Modifier/ModifierComponent.h"
+#include "Game/Logics/System/Modifier/ModifierComponent.h"
 
 // ============================================================================
 // Stamina Component Meta

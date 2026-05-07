@@ -1,6 +1,6 @@
 #pragma once
 #include "ECS/System/CCL_System.h"
-#include "Game/Logic/Combat/HealthComponent.h"
+#include "Game/Logics/Combat/HealthComponent.h"
 #include "Engine/GamePlay/Core/Time/TimeState.h"
 
 /**

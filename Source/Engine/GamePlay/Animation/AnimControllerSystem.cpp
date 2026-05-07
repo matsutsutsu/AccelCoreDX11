@@ -2,13 +2,16 @@
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Game/Core/SystemPriority.h"
 #include <cmath> 
-#include "Engine/Assets/ResourceManager.h"
+#include "Engine/Graphics/Resource/ResourceManager.h"
 #include "Engine/GamePlay/Animation/Data/AnimGraphSerializer.h"
 #include "Engine/Platform/Logger.h"
 #include <imgui.h>
-#include "Engine/Graphics/Camera.h"
+#include "Engine/Graphics/Core/Camera.h"
 #include "Engine/GamePlay/Transform/TransformComponent.h"
 #include <algorithm> // std::clamp用
+#include <SimpleMath.h>
+
+using namespace DirectX::SimpleMath;
 
 void AnimControllerSystem::Update(float dt)
 {

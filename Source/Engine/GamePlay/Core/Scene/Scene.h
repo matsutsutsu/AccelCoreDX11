@@ -1,37 +1,47 @@
 #pragma once
-#include <vector>
-#include "Engine/Graphics/RenderPass/RenderPassDesc.h"
 
-class DX12System;
-class CommandList;
-class SystemDataContext;
-class ResourceManager;
+#include <memory>
 
-// ---------------------------------------------------------
-// 【第1階層】Scene (純粋なインターフェース)
-// ---------------------------------------------------------
+
+// シーン基底
 class Scene
 {
-public:
-    Scene() = default;
-    virtual ~Scene() = default;
+protected:
+    // 状態管理は一番親のクラスが責任を持つ
+    bool _isReady = false;
 
-    // 初期化と終了
-    virtual void Initialize(DX12System* dx12System, SystemDataContext* systemDataContext, ResourceManager* resourceManager) = 0;
-    virtual void Start() {} // 初期化直後に1回だけ呼ばれるフック
+public:
+    Scene() {}
+    virtual ~Scene() {}
+
+    // 初期化が完了しているかどうかのフラグ
+    // LoadingSceneで裏読みした場合は true を返すようにする
+    bool IsReady() const { return _isReady; }
+
+    // マネージャーから「初期化完了」を通知するための関数
+    void SetReady() { _isReady = true; }
+
+    // 初期化
+    virtual void Initialize() = 0;
+
+    // GPUセットアップなど、Initialize後にメインスレッドで1回だけ呼ばれる処理（必要に応じてオーバーライド）
+    virtual void Start() {}
+
+    // 終了化
     virtual void Finalize() = 0;
 
+    // --- 固定タイムステップ更新（物理・ロジック用） ---
+    // デフォルトでは何もしない（必要に応じてオーバーライド）
+    virtual void FixedUpdate(float fixedTime) {}
+
     // 更新処理
-    virtual void FixedUpdate(float fixedTime) = 0;
-    virtual void Update(float elapsedTime, int frameIndex) = 0;
+    virtual void Update(float elapsedTime) = 0;
 
     // 描画処理
-    virtual void Render(DX12System* dx12System, CommandList* commandList, int frameIndex) = 0;
+    virtual void Render() = 0;
 
-    // 状態管理
-    bool IsReady() const { return ready; }
-    void SetReady() { ready = true; }
+    // GUI描画
+    virtual void DrawGUI() = 0;
 
-private:
-    bool ready = false;
+
 };

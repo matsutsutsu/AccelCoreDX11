@@ -1,4 +1,4 @@
-#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeBuilder.h"
+#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeBuilder.h"
 #include "Engine/Platform/Logger.h"
 
 /**

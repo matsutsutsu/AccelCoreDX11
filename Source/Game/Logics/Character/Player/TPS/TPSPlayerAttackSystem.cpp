@@ -7,14 +7,17 @@
 #include "Engine/GamePlay/Transform/TransformComponent.h"
 #include "Engine/GamePlay/Animation/AnimParametersComponent.h"
 #include "Engine/GamePlay/Animation/AnimatorComponent.h"
-#include "Game/Logic/Character/Enemy/EnemyTag.h"
+#include "Game/Logics/Character/Enemy/EnemyTag.h"
 #include "Engine/Core/Math/StringHash.h"
 #include "Engine/GamePlay/Camera/VirtualCameraComponents.h"
-#include "Game/Logic/System/BlackboardComponent.h"
+#include "Game/Logics/System/BlackboardComponent.h"
 #include "Engine/GamePlay/Transform//Motion/MotionComponent.h"
 
 #include "Engine/GamePlay/Physics/Character/JoltCharacterConfigComponent.h"
-#include "Game/Logic/Character/CharacterMovementInputComponent.h"
+#include "Game/Logics/Character/CharacterMovementInputComponent.h"
+
+#include <SimpleMath.h>
+using namespace DirectX::SimpleMath;
 
 using namespace DirectX;
 

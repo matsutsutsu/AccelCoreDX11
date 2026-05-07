@@ -1,5 +1,5 @@
 #pragma once
-#include "Engine/Assets/Model.h"
+#include "Engine/Graphics/Resource/Model.h"
 #include "Engine/GamePlay/Animation/Data/AnimSequence.h"
 #include <vector>
 // カーブデータ構造の先行宣言（後で定義します）
@@ -53,6 +53,14 @@ struct AnimatorComponent {
 
     // エディタからの強制制御フラグ
     bool isEditorOverride = false;
+
+    // =========================================================
+    //  ルートモーション制御用データ
+    // =========================================================
+    // 抽出対象のルートボーン名 (例: "mixamorig:Hips")
+    // ※これは「初期化・エディタ操作時」のみ使われ、毎フレームの検索には使われない
+    std::string rootNodeName = "mixamorig:Hips";
+
 
     void Play(const AnimSequence* sequence, float blendTime = 0.2f, bool loop = true, float speed = 1.0f)
     {

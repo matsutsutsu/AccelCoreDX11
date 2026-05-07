@@ -1,8 +1,8 @@
 // PlayerHUDSystem.h
 #pragma once
 #include "ECS/System/CCL_System.h"
-#include "Game/Logic/Combat/StaminaComponent.h"
-#include "Game/Logic/Character/Player/TPS/TPSPlayerComponent.h"
+#include "Game/Logics/Combat/StaminaComponent.h"
+#include "Game/Logics/Character/Player/TPS/TPSPlayerComponent.h"
 
 // 引数なしのすっきりしたコンストラクタになる
 class PlayerHUDSystem : public CCL::ECS::IfSystem<PlayerHUDSystem,

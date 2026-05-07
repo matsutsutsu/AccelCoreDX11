@@ -140,13 +140,17 @@ template <> struct ComponentMeta<MaterialComponent> {
                         ImGui::SameLine();
                         if (ImGui::Button("Load...")) {
                             char        filename[256] = {};
-                            const char* filter =
-                                "Image Files\0*.png;*.jpg;*.tga;*.bmp\0All Files\0*.*\0";
-                            if (Dialog::OpenFileName(filename,
-                                256,
-                                filter,
-                                "Select Texture",
-                                Graphics::Instance().GetWindowHandle()) == DialogResult::OK) {
+                            // カスタムのDialogConfigを構築
+                            DialogConfig cfg;
+                            cfg.title = "Select Texture";
+                            cfg.filter = "Texture Files\0*.png;*.jpg;*.dds;*.tga\0All Files\0*.*\0";
+                            cfg.defaultDir = "Assets/Textures"; // ※適当なパス。そちらで変更してくれ
+                            cfg.historyKey = "MaterialTexture";
+
+                            // 第3引数に cfg を渡し、第4引数に HWND を渡す
+                            if (Dialog::OpenFileName(filename, 256, cfg, GetActiveWindow()) == DialogResult::OK) {
+
+
                                 Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
                                 if (SUCCEEDED(GpuResourceUtils::LoadTexture(
                                     Graphics::Instance().GetDevice(),

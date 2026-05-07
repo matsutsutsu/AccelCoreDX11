@@ -4,7 +4,7 @@
 #include "Engine/Platform/Input/IInputAPI.h"
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Game/Core/SystemPriority.h"
-#include "Game/Logic/System/Modifier/ModifierComponent.h"
+#include "Game/Logics/System/Modifier/ModifierComponent.h"
 
 #include <algorithm> // std::min / std::max
 

@@ -2,7 +2,7 @@
  * @file CombatAnimationSyncSystem.cpp
  */
 #include "CombatAnimationSyncSystem.h"
-#include "Game/Logic/Combat/CombatComponents.h"
+#include "Game/Logics/Combat/CombatComponents.h"
 #include "ECS/Core/CCL_World.h"
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Game/Core/SystemPriority.h"

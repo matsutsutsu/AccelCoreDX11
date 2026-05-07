@@ -8,9 +8,11 @@
 #include "Engine/Serialization/Meta/ComponentMeta.h"
 #include "Engine/Serialization/Meta/ComponentMetaImGui.h"
 #include "Engine/Serialization/Meta/ComponentMetaJson.h"
+#include "Engine/GamePlay/Animation/AnimatorComponent.h"
+#include "ECS/Core/CCL_World.h"
 
 #include "Engine/GamePlay/Animation/Data/AnimGraphSerializer.h"
-#include "Engine/Assets/ResourceManager.h"
+#include "Engine/Graphics/Resource/ResourceManager.h"
 #include "Engine/Platform/Dialog.h"
 #include <filesystem>
 
@@ -30,12 +32,41 @@ template <> struct ComponentMeta<AnimatorComponent> {
         if (ImGui::Checkbox("Loop", &anim.isLoop)) changed = true;
         ImGui::Separator();
 
+        // =========================================================
+        // ★追加: ルートモーションのUI
+        // =========================================================
+        ImGui::Separator();
+        ImGui::TextDisabled("Root Motion Settings");
+        if (ImGui::Checkbox("Disable Root Motion", &anim.disableRootMotion)) changed = true;
+
+        // ボーン名の入力フィールド
+        char rootBuffer[256];
+        strncpy_s(rootBuffer, anim.rootNodeName.c_str(), sizeof(rootBuffer));
+        if (ImGui::InputText("Root Bone Name", rootBuffer, sizeof(rootBuffer))) {
+            anim.rootNodeName = rootBuffer;
+            changed = true;
+
+            // 【超重要】ボーン名が変更されたら、O(1)アクセスのためのキャッシュを破棄する！
+            if (worldPtr) {
+                auto* world = static_cast<CCL::ECS::Core::World*>(worldPtr);
+                if (auto* modelComp = world->GetComponent<ModelComponent>(entityID)) {
+                    modelComp->rootNodeIndex = -1; // キャッシュをリセットし、再検索を促す
+                }
+            }
+        }
+        ImGui::Separator();
+
         // アニメーションの動的プレビュー機能
         ImGui::TextDisabled("Dynamic Preview");
         if (ImGui::Button("Load & Play Sequence... (JSON)", ImVec2(-1, 0))) {
             char filename[256] = {};
-            if (Dialog::OpenFileName(filename, 256, "JSON Files\0*.json\0", "Select Anim Sequence",
-                "Data/Animations/Sequence", GetActiveWindow()) == DialogResult::OK) {
+            DialogConfig cfg;
+            cfg.title = "Select Anim Sequence";
+            cfg.filter = "JSON Files\0*.json\0";
+            cfg.defaultDir = "Assets/Animations";
+            cfg.historyKey = "AnimSequence"; // グラフとシーケンスで履歴を分けても良い
+
+            if (Dialog::OpenFileName(filename, sizeof(filename), cfg, GetActiveWindow()) == DialogResult::OK) {
 
                 namespace fs = std::filesystem;
                 fs::path absPath = filename;
@@ -71,7 +102,10 @@ template <> struct ComponentMeta<AnimatorComponent> {
     {
         static const std::vector<FieldDescriptor> fields = {
             META_FIELD_FLOAT(AnimatorComponent, playbackSpeed, "playbackSpeed", "Playback Speed", 0.05f, -5.0f, 5.0f, "Playback"),
-            META_FIELD_BOOL(AnimatorComponent, isLoop, "isLoop", "Loop", "Playback")
+            META_FIELD_BOOL(AnimatorComponent, isLoop, "isLoop", "Loop", "Playback"),
+
+            META_FIELD_STRING(AnimatorComponent, rootNodeName, "rootNodeName", "Root Bone Name", "RootMotion"),
+            META_FIELD_BOOL(AnimatorComponent, disableRootMotion, "disableRootMotion", "Disable Root Motion", "RootMotion")
         };
         return fields;
     }

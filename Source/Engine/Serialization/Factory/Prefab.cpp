@@ -14,6 +14,12 @@
 #include <filesystem> // ファイル存在確認用
 #include <sstream> // エラーメッセージ構築用
 
+//#include "Engine/GamePlay/Graphics/Particle/GPUParticleTypes.h"
+#include "Engine/GamePlay/Graphics/Particle/GPUParticleComponent.h"
+#include "Game/Utils/PooledParticleComponent.h"]
+#include "Engine/GamePlay/Utils/TimerComponent.h"
+
+
 using namespace DirectX::SimpleMath;
 
 // ----------------------------------------------------------------------------

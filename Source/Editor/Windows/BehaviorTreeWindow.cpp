@@ -4,8 +4,8 @@
  */
 #include "BehaviorTreeWindow.h"
 #include "Editor/Core/EditorCommandHistory.h"
-#include "Game/Logic/AI/BehaviorTree/Data/ActionRegistry.h"
-#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
+#include "Game/Logics/AI/BehaviorTree/Data/ActionRegistry.h"
+#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
 #include <imgui_node_editor.h>
 #include <imgui.h>
 #include <algorithm>

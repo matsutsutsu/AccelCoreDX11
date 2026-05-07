@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeData.h"
+#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeData.h"
 
 /**
  * @file BehaviorTreeBuilder.h

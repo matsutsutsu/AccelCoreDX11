@@ -2,13 +2,13 @@
 #include "Engine/GamePlay/Animation/AnimatorComponent.h"
 #include "Engine/GamePlay/Graphics/Core/ModelComponent.h"
 #include "ImSequencer.h"
-#include "Engine/Assets/Model.h"
-#include "Engine/Assets/ModelResource.h"
+#include "Engine/Graphics/Resource/Model.h"
+#include "Engine/Graphics/Resource/ModelResource.h"
 #include "Engine/GamePlay/Animation/Data/AnimSequence.h" 
 #include "Engine/GamePlay/Animation/AnimationSystem.h" 
 
 // ボスが持っている武器の名簿を読むためにインクルード
-#include "Game/Logic/Combat/CombatRosterComponent.h"
+#include "Game/Logics/Combat/CombatRosterComponent.h"
 #include "Engine/GamePlay/Transform/TransformComponent.h"
 #include "Engine/GamePlay/Transform/PendingParentComponent.h"
 
@@ -570,7 +570,7 @@ void AnimationSequencerWindow::DrawContents(EditorContext& context)
                     }
 
                     for (int i = 0; i < (int)animations.size(); ++i) {
-                        if (animations[i].m_Name == g_EditingSequence.targetAnimName) {
+                        if (animations[i].name == g_EditingSequence.targetAnimName) {
                             s_SelectedAnimIndex = i; break;
                         }
                     }
@@ -600,10 +600,10 @@ void AnimationSequencerWindow::DrawContents(EditorContext& context)
     if (s_SelectedAnimIndex < 0 || s_SelectedAnimIndex >= (int)animations.size()) s_SelectedAnimIndex = 0;
     static int prevSelectedIndex = -2;
     ImGui::SetNextItemWidth(250.0f);
-    if (ImGui::BeginCombo("Target Animation", animations[s_SelectedAnimIndex].m_Name.c_str())) {
+    if (ImGui::BeginCombo("Target Animation", animations[s_SelectedAnimIndex].name.c_str())) {
         for (int i = 0; i < (int)animations.size(); ++i) {
             bool isSelected = (s_SelectedAnimIndex == i);
-            if (ImGui::Selectable(animations[i].m_Name.c_str(), isSelected)) s_SelectedAnimIndex = i;
+            if (ImGui::Selectable(animations[i].name.c_str(), isSelected)) s_SelectedAnimIndex = i;
             if (isSelected) ImGui::SetItemDefaultFocus();
         }
         ImGui::EndCombo();
@@ -611,8 +611,8 @@ void AnimationSequencerWindow::DrawContents(EditorContext& context)
 
     if (prevSelectedIndex != s_SelectedAnimIndex) {
         prevSelectedIndex = s_SelectedAnimIndex;
-        g_EditingSequence.targetAnimName = animations[s_SelectedAnimIndex].m_Name;
-        g_EditingSequence.duration = animations[s_SelectedAnimIndex].m_SecondsLength;
+        g_EditingSequence.targetAnimName = animations[s_SelectedAnimIndex].name;
+        g_EditingSequence.duration = animations[s_SelectedAnimIndex].secondsLength;
         _sequencerImpl->targetSequence = &g_EditingSequence;
         _sequencerImpl->UpdateDuration(g_EditingSequence.duration);
         _sequencerImpl->SyncFromData();

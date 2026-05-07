@@ -4,18 +4,21 @@
 
 #include "Engine/Physics/IPhysicsAPI.h" // 物理APIの窓口
 #include "Engine/Core/Math/StringHash.h" // HashString用
-#include "Engine/Graphics/Camera.h"
+#include "Engine/Graphics/Core/Camera.h"
 #include "ECS/Core/CCL_World.h"
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Game/Core/SystemPriority.h"
 
-#include "Game/Logic/Combat/StaminaComponent.h"
+#include "Game/Logics/Combat/StaminaComponent.h"
 #include "Engine/GamePlay/Transform/TransformComponent.h"
-#include "Game/Logic/System/Modifier/ModifierComponent.h"
-#include "Game/Logic/Character/CharacterMovementInputComponent.h"
+#include "Game/Logics/System/Modifier/ModifierComponent.h"
+#include "Game/Logics/Character/CharacterMovementInputComponent.h"
 #include "Engine/GamePlay/Animation/AnimParametersComponent.h"
 #include "Engine/GamePlay/Transform//Motion/MotionComponent.h"
 #include <memory>
+
+#include <SimpleMath.h>
+using namespace DirectX::SimpleMath;
 
 // Joltキャラクターの接地状態を知るために必要
 #include "Engine/GamePlay/Physics/Character/JoltCharacterHandleComponent.h"
@@ -35,7 +38,11 @@ void TPSPlayerMoveSystem::Update(float rawDt)
     DirectX::XMVECTOR camRight = DirectX::XMVectorSet(1, 0, 0, 0);
 
     if (mainCamera) {
-        DirectX::XMMATRIX invView = DirectX::XMMatrixInverse(nullptr, mainCamera->GetView());
+        // 1. カメラのビュー行列（XMFLOAT4X4）を取得し、SIMDレジスタ（XMMATRIX）にロード（Load）する
+        XMMATRIX viewMat = XMLoadFloat4x4(&mainCamera->GetView());
+
+        // 2. SIMDレジスタ上で逆行列計算を行う
+        XMMATRIX invView = XMMatrixInverse(nullptr, viewMat);
         camForward = DirectX::XMVector3Normalize(DirectX::XMVectorSetY(invView.r[2], 0.0f));
         camRight = DirectX::XMVector3Normalize(DirectX::XMVectorSetY(invView.r[0], 0.0f));
     }

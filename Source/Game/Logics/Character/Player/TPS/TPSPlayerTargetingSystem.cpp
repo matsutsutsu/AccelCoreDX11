@@ -9,9 +9,9 @@
 #include "ECS/Core/CCL_World.h"
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Game/Core/SystemPriority.h"
-#include "Game/Logic/Combat/StaminaComponent.h"
-#include "Game/Logic/Character/Enemy/EnemyTag.h"
-#include "Engine/Graphics/Camera.h"
+#include "Game/Logics/Combat/StaminaComponent.h"
+#include "Game/Logics/Character/Enemy/EnemyTag.h"
+#include "Engine/Graphics/Core/Camera.h"
 #include "Engine/GamePlay/Camera/VirtualCameraComponents.h"
 
 using namespace DirectX;
@@ -25,7 +25,11 @@ void TPSPlayerTargetingSystem::Update(float dt)
     XMVECTOR camRight = XMVectorSet(1, 0, 0, 0);
 
     if (mainCamera) {
-        XMMATRIX invView = XMMatrixInverse(nullptr, mainCamera->GetView());
+        // 1. カメラのビュー行列（XMFLOAT4X4）を取得し、SIMDレジスタ（XMMATRIX）にロード（Load）する
+        XMMATRIX viewMat = XMLoadFloat4x4(&mainCamera->GetView());
+
+        // 2. SIMDレジスタ上で逆行列計算を行う
+        XMMATRIX invView = XMMatrixInverse(nullptr, viewMat);
         camForward = XMVector3Normalize(XMVectorSetY(invView.r[2], 0.0f));
         camRight = XMVector3Normalize(XMVectorSetY(invView.r[0], 0.0f));
     }

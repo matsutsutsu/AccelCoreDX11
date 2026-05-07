@@ -8,7 +8,7 @@
 #include "Engine/GamePlay/Physics/Collision/JoltCapsuleColliderComponent.h"
 #include "Engine/GamePlay/Physics/Collision/JoltMeshColliderComponent.h"
 #include "Engine/GamePlay/Graphics/Core/ModelComponent.h"
-#include "Engine/Assets/ModelResource.h"
+#include "Engine/Graphics/Resource/ModelResource.h"
 
 
 #include <Jolt/Physics/Collision/Shape/MeshShape.h>
@@ -101,72 +101,51 @@ void JoltBodySetupSystem::Update(float dt)
         // =======================================================
         // 4. Mesh Collider (地形) の自動抽出と生成
         // =======================================================
-        // 4. Mesh Collider (地形) の自動抽出と生成
         else if (auto* meshCol = _world->GetComponent<JoltMeshColliderComponent>(id)) {
 
+            // 1. 同じEntityから、描画用のモデルコンポーネントを取得
             auto* modelComp = _world->GetComponent<ModelComponent>(id);
+
+            // モデルが無い、ロードされていない、またはタグがOFFならスキップ
             if (!modelComp || !modelComp->GetModel() || !meshCol->isEnabled) return;
 
-            ModelResource* res = modelComp->GetModel()->GetModelResource();
+            // リソース（CPU上の頂点データ）にアクセス
+            const ModelResource* res = modelComp->GetModel()->GetResource();
             if (!res) return;
 
             JPH::VertexList joltVertices;
             JPH::IndexedTriangleList joltTriangles;
 
-            // Meshループ
+            // 2. ModelResource内の全メッシュから頂点とインデックスを吸い出す
             for (const auto& mesh : res->GetMeshes()) {
+                uint32_t vertexOffset = static_cast<uint32_t>(joltVertices.size());
 
-                // ★修正: Node行列は SubMesh ではなく、親の Mesh に紐づいている。
-                // Mesh が持っている Node ポインタから直接グローバル行列を取得する
-                DirectX::XMMATRIX matNode = DirectX::XMMatrixIdentity();
-                if (mesh.m_pNode != nullptr) {
-                    matNode = DirectX::XMLoadFloat4x4(&mesh.m_pNode->m_GlobalTransform);
+                // 頂点の「位置座標(Position)」だけを抽出 (UVや法線は物理には不要！)
+                for (const auto& v : mesh.vertices) {
+                    joltVertices.push_back(JPH::Float3(v.position.x, v.position.y, v.position.z));
                 }
 
-                // SubMeshループ
-                for (const auto& subMesh : mesh.m_SubMeshes) {
-                    uint32_t vertexOffset = static_cast<uint32_t>(joltVertices.size());
-
-                    // 頂点の抽出と Node 行列の適用
-                    for (const auto& v : subMesh.m_Vertices) {
-                        // 生の頂点座標(Local)に Node行列 を掛けて、モデル全体の原点からの位置(World)に変換
-                        DirectX::XMVECTOR pos = DirectX::XMLoadFloat4(&v.m_Position);
-                        pos = DirectX::XMVector3Transform(pos, matNode);
-
-                        DirectX::XMFLOAT3 finalPos;
-                        DirectX::XMStoreFloat3(&finalPos, pos);
-
-                        joltVertices.push_back(JPH::Float3(finalPos.x, finalPos.y, finalPos.z));
-                    }
-
-                    // インデックスの抽出
-                    for (size_t i = 0; i < subMesh.m_Indices.size(); i += 3) {
-                        joltTriangles.push_back(JPH::IndexedTriangle(
-                            subMesh.m_Indices[i + 0] + vertexOffset,
-                            subMesh.m_Indices[i + 1] + vertexOffset,
-                            subMesh.m_Indices[i + 2] + vertexOffset
-                        ));
-                    }
+                // インデックスを抽出（複数のメッシュを1つに合体させるためオフセットを足す）
+                for (size_t i = 0; i < mesh.indices.size(); i += 3) {
+                    joltTriangles.push_back(JPH::IndexedTriangle(
+                        mesh.indices[i + 0] + vertexOffset,
+                        mesh.indices[i + 1] + vertexOffset,
+                        mesh.indices[i + 2] + vertexOffset
+                    ));
                 }
             }
 
-            // 何も抽出できなかった場合は安全にスキップ
-            if (joltTriangles.empty() || joltVertices.empty()) return;
+            if (joltTriangles.empty()) return;
 
+            // 3. Joltの「純粋なメッシュ形状」を作成
             JPH::MeshShapeSettings meshSettings(joltVertices, joltTriangles);
+            JPH::ShapeRefC rawMeshShape = meshSettings.Create().Get();
 
-            JPH::ShapeSettings::ShapeResult result = meshSettings.Create();
-            if (result.HasError()) {
-                OutputDebugStringA("[Jolt] ERROR: MeshShapeの生成に失敗: ");
-                OutputDebugStringA(result.GetError().c_str());
-                OutputDebugStringA("\n");
-                return;
-            }
-            JPH::ShapeRefC rawMeshShape = result.Get();
-
-            // 最後に ECS の Transform のスケールを適用
+            // 4. ★最重要: Transform のスケールを物理メッシュに適用する！
+            // エディタで家を「3倍」に拡大した場合、物理判定も「3倍」に膨らませる
             JPH::ScaledShapeSettings scaledSettings(
-                rawMeshShape, JPH::Vec3(trans.scale.x, trans.scale.y, trans.scale.z)
+                rawMeshShape,
+                JPH::Vec3(trans.scale.x, trans.scale.y, trans.scale.z)
             );
             shape = scaledSettings.Create().Get();
         }

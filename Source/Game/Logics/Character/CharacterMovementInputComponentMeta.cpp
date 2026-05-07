@@ -1,4 +1,4 @@
-#include "Game/Logic/Character/CharacterMovementInputComponent.h"
+#include "Game/Logics/Character/CharacterMovementInputComponent.h"
 #include "Editor/Inspector/ComponentGuiRegistry.h"
 #include "Engine/Serialization/ComponentRegistry.h"
 #include "Engine/Serialization/Meta/ComponentMeta.h"

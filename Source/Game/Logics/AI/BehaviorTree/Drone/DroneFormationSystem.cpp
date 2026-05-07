@@ -10,7 +10,7 @@
 #include <imgui.h>
 #include "Engine/Serialization/Factory/Prefab.h"
 #include "Engine/Serialization/Factory/EntityFactory.h"
-#include "Game/Logic/AI/BehaviorTree/BossActionComponent.h"
+#include "Game/Logics/AI/BehaviorTree/BossActionComponent.h"
 
 
 using namespace CCL::ECS;

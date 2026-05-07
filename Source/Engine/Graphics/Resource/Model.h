@@ -101,6 +101,16 @@ public:
 	void ComputeAnimation(int animationIndex, int nodeIndex, float time, NodePose& nodePose) const;
 	void ComputeAnimation(int animationIndex, float time, std::vector<NodePose>& nodePoses) const;
 
+	// アニメーション計算（デルタ算出付き・ルートモーション対応）
+	void ComputeAnimationWithDelta(
+		int animationIndex,
+		float currentTime,
+		float previousTime,
+		std::vector<NodePose>& outNodePoses,
+		bool extractRootMotion,
+		int rootNodeIndex, // ★ std::string から int へ変更
+		DirectX::XMVECTOR* outDeltaPosition) const;
+
 	// ノードポーズ設定
 	void SetNodePoses(const std::vector<NodePose>& nodePoses);
 

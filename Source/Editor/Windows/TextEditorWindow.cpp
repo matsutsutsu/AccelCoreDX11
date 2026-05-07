@@ -32,16 +32,15 @@ void TextEditorWindow::DrawContents(EditorContext &context)
         char filename[256] = {0};
         HWND hWnd          = Graphics::Instance().GetWindowHandle();
 
-        // 対応フォーマットを増やしたフィルタ
-        const char *filter = "Supported Files\0*.json;*.lua;*.cpp;*.h;*.hlsl;*.hlsli\0"
-                             "HLSL Shaders\0*.hlsl;*.hlsli\0"
-                             "JSON Files\0*.json\0"
-                             "Lua Scripts\0*.lua\0"
-                             "All Files\0*.*\0";
+        // シェーダー用途なら DialogPreset::Shader を利用する
+        if (Dialog::OpenFileName(filename, sizeof(filename), DialogPreset::Shader, GetActiveWindow()) == DialogResult::OK) {
 
-        if (Dialog::OpenFileName(filename, 256, filter, "Select File to Edit", hWnd) ==
-            DialogResult::OK) {
-            strcpy_s(_filePath, sizeof(_filePath), filename);
+            namespace fs = std::filesystem;
+            std::error_code ec;
+            fs::path relPath = fs::relative(filename, fs::current_path(), ec);
+
+            std::string finalPath = (!ec && !relPath.empty()) ? relPath.generic_string() : filename;
+            strcpy_s(_filePath, sizeof(_filePath), finalPath.c_str());
             LoadFile(_filePath);
         }
     }

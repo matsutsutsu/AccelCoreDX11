@@ -1,27 +1,24 @@
 #include "JoltDebugDrawSystem.h"
-#include "Engine/Graphics/ShapeRenderer.h"
-#include "Engine/Assets/ModelResource.h"
+#include "Engine/Graphics/Renderer/ShapeRenderer.h"
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Game/Core/SystemPriority.h"
 #include <DirectXMath.h>
 #include <algorithm>
 #include <cmath>
 
-#include "Engine/Graphics/RenderPacket.h"
-
 using namespace DirectX;
 
 namespace {
     // クォータニオンからオイラー角(ラジアン)への変換関数 (ShapeRendererのDrawBox用)
-    DirectX::XMFLOAT3 QuatToEulerRadian(const DirectX::XMFLOAT4 &q) {
+    DirectX::XMFLOAT3 QuatToEulerRadian(const DirectX::XMFLOAT4& q) {
         float pitch = std::asin(std::clamp(2.0f * (q.w * q.x - q.y * q.z), -1.0f, 1.0f));
-        float yaw   = std::atan2(2.0f * (q.w * q.y + q.z * q.x), 1.0f - 2.0f * (q.x * q.x + q.y * q.y));
-        float roll  = std::atan2(2.0f * (q.w * q.z + q.x * q.y), 1.0f - 2.0f * (q.x * q.x + q.z * q.z));
-        return {pitch, yaw, roll};
+        float yaw = std::atan2(2.0f * (q.w * q.y + q.z * q.x), 1.0f - 2.0f * (q.x * q.x + q.y * q.y));
+        float roll = std::atan2(2.0f * (q.w * q.z + q.x * q.y), 1.0f - 2.0f * (q.x * q.x + q.z * q.z));
+        return { pitch, yaw, roll };
     }
-    
+
     // デバッグ用の色（薄い緑色など、お好みで変更してください）
-    const DirectX::XMFLOAT4 COLLIDER_COLOR = {0.2f, 1.0f, 0.2f, 1.0f}; 
+    const DirectX::XMFLOAT4 COLLIDER_COLOR = { 0.2f, 1.0f, 0.2f, 1.0f };
 }
 
 // ===================================================================================
@@ -36,8 +33,8 @@ void JoltBoxDebugDrawSystem::Update(float dt)
 
     ForEach([&](const TransformComponent& trans, const JoltBoxColliderComponent& box) {
         // ====================================================================
-       // ★ 修正: ローカルではなく、計算済みのワールド座標と回転を取得
-       // ====================================================================
+        // ★ 修正: ローカルではなく、計算済みのワールド座標と回転を取得
+        // ====================================================================
         DirectX::XMFLOAT3 worldPos = trans.GetWorldPosition();
         DirectX::XMFLOAT4 worldRotQuat = trans.GetWorldRotation();
 
@@ -67,7 +64,7 @@ void JoltBoxDebugDrawSystem::Update(float dt)
 
         DirectX::XMFLOAT3 size = box.halfExtent;
 
-        renderer->DrawBox(finalPos, finalEuler, size, COLLIDER_COLOR,ShapeLayer::Wire);
+        renderer->DrawBox(finalPos, finalEuler, size, COLLIDER_COLOR);
         });
 }
 
@@ -101,8 +98,7 @@ void JoltSphereDebugDrawSystem::Update(float dt)
         XMFLOAT3 finalPos;
         XMStoreFloat3(&finalPos, outTrans);
 
-        // ★変更: maxScaleの掛け算を削除。生のradiusを使用。
-        renderer->DrawSphere(finalPos, sphere.radius, COLLIDER_COLOR,ShapeLayer::Wire);
+        renderer->DrawSphere(finalPos, sphere.radius, COLLIDER_COLOR);
         });
 }
 
@@ -137,10 +133,10 @@ void JoltCapsuleDebugDrawSystem::Update(float dt)
         XMFLOAT4X4 mat;
         XMStoreFloat4x4(&mat, finalMat);
 
-        // ★変更: maxScaleの掛け算を削除。生のradiusとhalfHeightを使用。
-        renderer->DrawCapsule(mat, capsule.radius, capsule.halfHeight * 2.0f, COLLIDER_COLOR,ShapeLayer::Wire);
+        renderer->DrawCapsule(mat, capsule.radius, capsule.halfHeight * 2.0f, COLLIDER_COLOR);
         });
 }
+
 
 // ===================================================================================
 // 4. MeshCollider の描画
@@ -148,20 +144,55 @@ void JoltCapsuleDebugDrawSystem::Update(float dt)
 void JoltMeshDebugDrawSystem::Update(float dt)
 {
     if (!isDebugVisible) return;
+    if (!_world->HasResource<ShapeRenderer*>()) return;
+    auto* renderer = _world->GetResource<ShapeRenderer*>();
+    if (!renderer) return;
 
-    // ★ ShapeRenderer ではなく RenderPacket を取得する
-    if (!_world->HasResource<RenderPacket*>()) return;
-    auto* packet = _world->GetResource<RenderPacket*>();
-
-    // Transform, Meshタグ, Modelの3つが揃っているエンティティ
+    // Transform, Meshタグ, Modelの3つが揃っているエンティティだけを描画
     ForEach([&](const TransformComponent& trans,
         const JoltMeshColliderComponent& meshCol,
         const ModelComponent& modelComp) {
 
+            // タグがOFF、またはモデルがロードされていない場合はスキップ
             if (!meshCol.isEnabled || !modelComp.GetModel()) return;
 
-            // ★ モデルを丸ごとワイヤーフレーム伝票に登録するだけ！
-            packet->DrawWireframeModel(modelComp.GetModel());
+            const ModelResource* res = modelComp.GetModel()->GetResource();
+            if (!res) return;
+
+            // ====================================================================
+            // ★ 究極の最適化: TransformComponent はすでに「完全なワールド行列(worldMatrix)」
+            // を持っているため、個別の成分を掛け合わせる必要すらありません。
+            // ====================================================================
+            XMMATRIX worldMat = XMLoadFloat4x4(&trans.worldMatrix);
+
+            // 全メッシュの全ポリゴンをループして三角形を描画
+            for (const auto& mesh : res->GetMeshes()) {
+
+                // indices は 3つで1つの三角形を構成する
+                for (size_t i = 0; i < mesh.indices.size(); i += 3) {
+                    uint32_t i0 = mesh.indices[i + 0];
+                    uint32_t i1 = mesh.indices[i + 1];
+                    uint32_t i2 = mesh.indices[i + 2];
+
+                    // 頂点のローカル座標を取得
+                    XMVECTOR v0 = XMLoadFloat3(&mesh.vertices[i0].position);
+                    XMVECTOR v1 = XMLoadFloat3(&mesh.vertices[i1].position);
+                    XMVECTOR v2 = XMLoadFloat3(&mesh.vertices[i2].position);
+
+                    // ワールド空間（実際の画面上の位置）に変換
+                    v0 = XMVector3Transform(v0, worldMat);
+                    v1 = XMVector3Transform(v1, worldMat);
+                    v2 = XMVector3Transform(v2, worldMat);
+
+                    XMFLOAT3 p0, p1, p2;
+                    XMStoreFloat3(&p0, v0);
+                    XMStoreFloat3(&p1, v1);
+                    XMStoreFloat3(&p2, v2);
+
+                    // 3点を結んで三角形（ワイヤーフレーム）を描画
+                    renderer->DrawTriangle(p0, p1, p2, COLLIDER_COLOR);
+                }
+            }
         });
 }
 
@@ -169,8 +200,7 @@ void JoltMeshDebugDrawSystem::Update(float dt)
 // システムの登録
 // ===================================================================================
 // ※ OnDrawDebug はシステムの実行順序に依存しないため、適当なLogicフェーズに登録しておくだけで機能します。
-REGISTER_RENDER_SYSTEM(JoltBoxDebugDrawSystem,     Priority::RenderStage::R08_Main);
-REGISTER_RENDER_SYSTEM(JoltSphereDebugDrawSystem,  Priority::RenderStage::R08_Main);
+REGISTER_RENDER_SYSTEM(JoltBoxDebugDrawSystem, Priority::RenderStage::R08_Main);
+REGISTER_RENDER_SYSTEM(JoltSphereDebugDrawSystem, Priority::RenderStage::R08_Main);
 REGISTER_RENDER_SYSTEM(JoltCapsuleDebugDrawSystem, Priority::RenderStage::R08_Main);
-
-//REGISTER_RENDER_SYSTEM(JoltMeshDebugDrawSystem,    Priority::RenderStage::R08_Main);
+REGISTER_RENDER_SYSTEM(JoltMeshDebugDrawSystem, Priority::RenderStage::R08_Main);

@@ -1,6 +1,6 @@
 #pragma once
 #include "ECS/System/CCL_System.h"
-#include "Game/Logic/Combat/CombatComponents.h"
+#include "Game/Logics/Combat/CombatComponents.h"
 
 /**
  * @brief ジャスト回避イベントを解決し、ゲーム世界に結果を反映するシステム

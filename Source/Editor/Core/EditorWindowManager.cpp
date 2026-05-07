@@ -45,7 +45,7 @@ void EditorWindowManager::Initialize()
     RegisterWindow<ConsoleWindow>();
     RegisterWindow<AnimationSequencerWindow>();
     RegisterWindow<AnimGraphWindow>();
-    RegisterWindow<UIEditorWindow>();
+    //RegisterWindow<UIEditorWindow>();
     RegisterWindow<BehaviorTreeWindow>();
 
     // ※まだ実装中で完全に読み込みたくない（クラッシュする等の）場合は、

@@ -373,9 +373,6 @@
     <Filter Include="Source\Engine\Audio\_Meta">
       <UniqueIdentifier>{7083e5f6-6cef-4b8b-af6a-10e584fd4c40}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Game\Logics\Audio">
-      <UniqueIdentifier>{bd33aae1-4ce7-4c0d-9064-6e2358abc38b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Game\Logics\Test\TestAnimation">
       <UniqueIdentifier>{00716ee6-69ac-43bd-9ea5-b3f334cf8a0d}</UniqueIdentifier>
     </Filter>
@@ -390,24 +387,6 @@
     </Filter>
     <Filter Include="External\imgui-node-editor">
       <UniqueIdentifier>{f1fed5a5-b31c-4a17-a80d-f659d2c8ca2d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Game\Logics\AI\NavAI">
-      <UniqueIdentifier>{2736be5b-ab12-43f4-b1fa-02081e070a29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Game\Logics\AI\NavAI\_Meta">
-      <UniqueIdentifier>{f92e7382-d177-443e-845f-dd7f35fc0091}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Game\Logics\AI\NavAI\01_Priority">
-      <UniqueIdentifier>{907a29c2-cbfc-42ec-bdbc-a43e4ebbe965}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Game\Logics\AI\NavAI\02_Priority">
-      <UniqueIdentifier>{5eeb6637-93a0-47a6-94ed-e6191de0b100}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Game\Logics\AI\NavAI\03_Priority">
-      <UniqueIdentifier>{f4cafca4-a522-4a5d-b00e-d007c57d13ac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Game\Logics\AI\NavAI\Events">
-      <UniqueIdentifier>{f95c9ba8-4fb9-49d1-b3ac-36951014e133}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Game\Logics\AI\BehaviorTree">
       <UniqueIdentifier>{8dd7befc-98d6-4365-99c8-9534556837c6}</UniqueIdentifier>
@@ -444,6 +423,9 @@
     </Filter>
     <Filter Include="Source\Game\Logics\Character\Player\TPS">
       <UniqueIdentifier>{2891d3b1-3302-4034-a70b-4caf707e7bf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Game\System">
+      <UniqueIdentifier>{5db5ed1f-d8d6-4b21-a130-a1f1281f64a4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1269,17 +1251,8 @@
     <ClInclude Include="Source\Game\Logics\Character\CharacterMovementInputComponent.h">
       <Filter>Source\Game\Logics\Character</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Logics\Audio\DistractionItemComponent.h">
-      <Filter>Source\Game\Logics\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\Audio\DistractionItemSystem.h">
-      <Filter>Source\Game\Logics\Audio</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\GamePlay\Camera\CameraListenerSystem.h">
       <Filter>Source\Engine\GamePlay\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\Audio\DistractionItemDebugDrawSystem.h">
-      <Filter>Source\Game\Logics\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Logics\Test\TestAnimationPlayerSystem.h">
       <Filter>Source\Game\Logics\Test\TestAnimation</Filter>
@@ -1332,34 +1305,7 @@
     <ClInclude Include="Source\Engine\GamePlay\Animation\Data\AnimStateMachine.h">
       <Filter>Source\Engine\GamePlay\Animation\Data</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Logics\AI\NavAI\AIHearingSystem.h">
-      <Filter>Source\Game\Logics\AI\NavAI\01_Priority</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\AI\NavAI\AIPerceptionSystem.h">
-      <Filter>Source\Game\Logics\AI\NavAI\01_Priority</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\AI\NavAI\AIPatrolSystem.h">
-      <Filter>Source\Game\Logics\AI\NavAI\02_Priority</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\AI\NavAI\AIMovementControlSystem.h">
-      <Filter>Source\Game\Logics\AI\NavAI\03_Priority</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\AI\NavAI\Events\AISoundEvent.h">
-      <Filter>Source\Game\Logics\AI\NavAI\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\AI\NavAI\AIComponents.h">
-      <Filter>Source\Game\Logics\AI\NavAI</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\AI\NavAI\AIDebugDrawSystem.h">
-      <Filter>Source\Game\Logics\AI\NavAI</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game\Logics\AI\BehaviorTree\BossAISystem.h">
-      <Filter>Source\Game\Logics\AI\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\AI\BehaviorTree\TestEnemyActionComponent.h">
-      <Filter>Source\Game\Logics\AI\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\AI\BehaviorTree\TestEnemyActionSystem.h">
       <Filter>Source\Game\Logics\AI\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Logics\Test\LissajousOrbitComponent.h">
@@ -1393,9 +1339,6 @@
       <Filter>Source\Editor\Windows\Animation</Filter>
     </ClInclude>
     <ClInclude Include="Source\Editor\Windows\AnimGraphWindow.h">
-      <Filter>Source\Editor\Windows\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\Windows\CurveEditorWindow.h">
       <Filter>Source\Editor\Windows\Animation</Filter>
     </ClInclude>
     <ClInclude Include="Source\Editor\Windows\AssetBrowserWindow.h">
@@ -1518,9 +1461,6 @@
     <ClInclude Include="Source\Game\Logics\Character\Player\PhysicsTag.h">
       <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Logics\Character\Player\PlayerHidingSystem.h">
-      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game\Logics\Character\Player\PlayerStateComponent.h">
       <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
     </ClInclude>
@@ -1559,6 +1499,18 @@
     </ClInclude>
     <ClInclude Include="Source\Game\UI\UICommonEvents.h">
       <Filter>Source\Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\System\BlackboardComponent.h">
+      <Filter>Source\Game\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\System\Modifier\ModifierComponent.h">
+      <Filter>Source\Game\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\System\Modifier\ModifierSystem.h">
+      <Filter>Source\Game\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\Windows\UIEditorWindow.h">
+      <Filter>Source\Editor\Windows\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2189,17 +2141,8 @@
     <ClCompile Include="Source\Game\Logics\Character\CharacterMovementInputComponentMeta.cpp">
       <Filter>Source\Game\Logics\Character</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Logics\Audio\DistractionItemSystem.cpp">
-      <Filter>Source\Game\Logics\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\Audio\DistractionItemComponentMeta.cpp">
-      <Filter>Source\Game\Logics\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\GamePlay\Camera\CameraListenerSystem.cpp">
       <Filter>Source\Engine\GamePlay\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\Audio\DistractionItemDebugDrawSystem.cpp">
-      <Filter>Source\Game\Logics\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Logics\Test\TestAnimationPlayerSystem.cpp">
       <Filter>Source\Game\Logics\Test\TestAnimation</Filter>
@@ -2225,24 +2168,6 @@
     <ClCompile Include="Source\Engine\GamePlay\Animation\Data\AnimGraphSerializer.cpp">
       <Filter>Source\Engine\GamePlay\Animation\Data</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Logics\AI\NavAI\AIComponentsMeta.cpp">
-      <Filter>Source\Game\Logics\AI\NavAI\_Meta</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\AI\NavAI\AIHearingSystem.cpp">
-      <Filter>Source\Game\Logics\AI\NavAI\01_Priority</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\AI\NavAI\AIPerceptionSystem.cpp">
-      <Filter>Source\Game\Logics\AI\NavAI\01_Priority</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\AI\NavAI\AIPatrolSystem.cpp">
-      <Filter>Source\Game\Logics\AI\NavAI\02_Priority</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\AI\NavAI\AIMovementControlSystem.cpp">
-      <Filter>Source\Game\Logics\AI\NavAI\03_Priority</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\AI\NavAI\AIDebugDrawSystem.cpp">
-      <Filter>Source\Game\Logics\AI\NavAI</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\BossAISystem.cpp">
       <Filter>Source\Game\Logics\AI\BehaviorTree</Filter>
     </ClCompile>
@@ -2251,12 +2176,6 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Logics\Test\TestAnimationPlayerComponentMeta.cpp">
       <Filter>Source\Game\Logics\Test\TestAnimation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\TestEnemyActionSystem.cpp">
-      <Filter>Source\Game\Logics\AI\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\TestEnemyActionComponentMeta.cpp">
-      <Filter>Source\Game\Logics\AI\BehaviorTree\__Meta</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Logics\Test\LissajousOrbitSystem.cpp">
       <Filter>Source\Game\Logics\Test</Filter>
@@ -2277,9 +2196,6 @@
       <Filter>Source\Editor\Windows\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Source\Editor\Windows\AnimGraphWindow.cpp">
-      <Filter>Source\Editor\Windows\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\Windows\CurveEditorWindow.cpp">
       <Filter>Source\Editor\Windows\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Source\Editor\Windows\ConsoleWindow.cpp">
@@ -2384,9 +2300,6 @@
     <ClCompile Include="Source\Game\Logics\Character\Player\FPSPlayerViewSystem.cpp">
       <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Logics\Character\Player\PlayerHidingSystem.cpp">
-      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game\Logics\Character\Enemy\EnemyTagMeta.cpp">
       <Filter>Source\Game\Logics\Character\Enemy</Filter>
     </ClCompile>
@@ -2416,6 +2329,18 @@
     </ClCompile>
     <ClCompile Include="Source\Game\UI\UICommonEvents.cpp">
       <Filter>Source\Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\System\BlackboardComponentMeta.cpp">
+      <Filter>Source\Game\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\System\Modifier\ModifierComponentMeta.cpp">
+      <Filter>Source\Game\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\System\Modifier\ModifierSystem.cpp">
+      <Filter>Source\Game\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\Windows\UIEditorWindow.cpp">
+      <Filter>Source\Editor\Windows\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

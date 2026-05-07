@@ -370,6 +370,43 @@ void Model::ComputeAnimation(int animationIndex, float time, std::vector<NodePos
     }
 }
 
+void Model::ComputeAnimationWithDelta(
+    int animationIndex,
+    float currentTime,
+    float previousTime,
+    std::vector<NodePose>& outNodePoses,
+    bool extractRootMotion,
+    int rootNodeIndex, 
+    DirectX::XMVECTOR* outDeltaPosition) const
+{
+    // 1. 現在の時間で全ノードのポーズを計算
+    ComputeAnimation(animationIndex, currentTime, outNodePoses);
+
+    // 2. ルートモーション抽出フラグが有効、かつインデックスが有効な場合
+    if (extractRootMotion && rootNodeIndex >= 0 && rootNodeIndex < nodes.size())
+    {
+        if (outDeltaPosition)
+        {
+            NodePose prevPose, currPose;
+            ComputeAnimation(animationIndex, rootNodeIndex, previousTime, prevPose);
+            ComputeAnimation(animationIndex, rootNodeIndex, currentTime, currPose);
+
+            DirectX::XMVECTOR prevPos = DirectX::XMLoadFloat3(&prevPose.position);
+            DirectX::XMVECTOR currPos = DirectX::XMLoadFloat3(&currPose.position);
+            *outDeltaPosition = DirectX::XMVectorSubtract(currPos, prevPos);
+        }
+
+        // 描画キャンセルのため、0フレーム目の位置を取得して固定
+        NodePose initialPose;
+        ComputeAnimation(animationIndex, rootNodeIndex, 0.0f, initialPose);
+        outNodePoses[rootNodeIndex].position = initialPose.position;
+    }
+    else if (outDeltaPosition)
+    {
+        *outDeltaPosition = DirectX::XMVectorZero();
+    }
+}
+
 // ノードポーズ設定
 void Model::SetNodePoses(const std::vector<NodePose>& nodePoses)
 {

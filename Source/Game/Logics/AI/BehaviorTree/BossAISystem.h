@@ -1,11 +1,11 @@
 #pragma once
 #include "ECS/System/CCL_System.h"
-#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
-#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeData.h"
-#include "Game/Logic/AI/BehaviorTree/BossActionComponent.h"      
+#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
+#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeData.h"
+#include "Game/Logics/AI/BehaviorTree/BossActionComponent.h"      
 #include "Engine/GamePlay/Transform/TransformComponent.h" 
 #include "Engine/GamePlay/Core/Time/TimeState.h"
-#include "Game/Logic/Combat/HealthComponent.h"
+#include "Game/Logics/Combat/HealthComponent.h"
 
 /**
  * @file BossAISystem.h

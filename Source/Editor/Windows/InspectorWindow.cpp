@@ -5,7 +5,6 @@
 #include <string>
 #include <windows.h>
 
-#include "Engine/Graphics/DX12System.h"
 #include "Engine/Platform/Dialog.h"
 #include "Engine/Serialization/PrefabSerializer.h"
 #include "Game/Core/AllComponents.h"
@@ -84,11 +83,16 @@ void InspectorWindow::DrawContents(EditorContext &context)
         }
 
         HWND               hWnd   = GetActiveWindow();
-        static const char *filter = "JSON Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
+        // 新しい DialogConfig を使って設定を構築する
+        DialogConfig cfg;
+        cfg.title = "Save Prefab";
+        cfg.filter = "JSON Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
+        cfg.defaultDir = "Data/Prefabs";
+        cfg.ext = "json";
+        cfg.historyKey = "PrefabSave"; // プレハブ保存用の履歴キー
 
-        if (Dialog::SaveFileName(filename, 256, filter, "Save Prefab", "json",
-            "Data/Prefabs", hWnd) ==
-            DialogResult::OK) {
+        // 第3引数に cfg を渡す
+        if (Dialog::SaveFileName(filename, 256, cfg, hWnd) == DialogResult::OK) {
             PrefabSerializer::Save(filename, world, selected, std::string(filenameBuf));
         }
     }

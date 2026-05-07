@@ -1,5 +1,5 @@
 #include "HealthSystem.h"
-#include "Game/Logic/Combat/DeadTag.h"
+#include "Game/Logics/Combat/DeadTag.h"
 
 #include <algorithm>
 

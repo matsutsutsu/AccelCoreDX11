@@ -116,12 +116,13 @@ template <> struct ComponentMeta<FogComponent> {
             ImGui::SameLine();
             if (ImGui::Button("Load...##FogNoise")) {
                 char        filename[256] = {};
-                const char* filter = "Image Files\0*.png;*.jpg;*.dds\0All Files\0*.*\0";
-                if (Dialog::OpenFileName(filename,
-                    256,
-                    filter,
-                    "Load Noise",
-                    Graphics::Instance().GetWindowHandle()) == DialogResult::OK) {
+                DialogConfig cfg;
+                cfg.title = "Select Environment Map";
+                cfg.filter = "HDR/DDS Files\0*.hdr;*.dds\0All Files\0*.*\0";
+                cfg.defaultDir = "Assets/Environment";
+                cfg.historyKey = "EnvironmentMap";
+
+                if (Dialog::OpenFileName(filename, 256, cfg, Graphics::Instance().GetWindowHandle()) == DialogResult::OK) {
                     strcpy_s(comp.noiseTexturePath, filename);
                     GpuResourceUtils::LoadTexture(Graphics::Instance().GetDevice(),
                         filename,

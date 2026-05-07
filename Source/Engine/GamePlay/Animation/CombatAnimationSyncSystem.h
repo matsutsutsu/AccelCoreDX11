@@ -5,7 +5,7 @@
 #pragma once
 #include "ECS/System/CCL_System.h"
 #include "Engine/GamePlay/Animation/AnimatorComponent.h"
-#include "Game/Logic/Combat/CombatRosterComponent.h"
+#include "Game/Logics/Combat/CombatRosterComponent.h"
 
 class CombatAnimationSyncSystem : public CCL::ECS::IfSystem<CombatAnimationSyncSystem,
     CCL::ECS::Read<AnimatorComponent>,

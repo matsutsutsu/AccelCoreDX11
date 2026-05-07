@@ -1,6 +1,6 @@
 #include "ECS/Core/CCL_World.h"
-#include "Game/Logic/Combat/CombatComponents.h"
-#include "Game/Logic/Combat/CombatRosterComponent.h"
+#include "Game/Logics/Combat/CombatComponents.h"
+#include "Game/Logics/Combat/CombatRosterComponent.h"
 #include "Engine/GamePlay/Transform/BoneAttachmentComponent.h"
 #include "Editor/Inspector/ComponentGuiRegistry.h"
 #include "Engine/Serialization/ComponentRegistry.h"
@@ -8,11 +8,11 @@
 #include "Engine/Serialization/Meta/ComponentMetaImGui.h"
 #include "Engine/Serialization/Meta/ComponentMetaJson.h"
 
-#include "Game/Logic/Combat/HealthComponent.h" // ※環境に合わせて適宜パスを調整してください
+#include "Game/Logics/Combat/HealthComponent.h" // ※環境に合わせて適宜パスを調整してください
 #include "Engine/GamePlay/Transform/TransformComponent.h"
 #include "Engine/GamePlay/Transform/PendingParentComponent.h"
 #include "Engine/GamePlay/Graphics/Core/ModelComponent.h"
-#include "Engine/Assets/Model.h"
+#include "Engine/Graphics/Resource/Model.h"
 #include "Engine/Serialization/SerializationContext.h"
 
 // ===================================================================
@@ -105,10 +105,10 @@ template <> struct ComponentMeta<BoneAttachmentComponent> {
 
                             for (int i = 0; i < nodes.size(); ++i) {
                                 // std::string の == 演算子で比較
-                                bool isSelected = (comp.boneName == nodes[i].m_Name);
-                                if (ImGui::Selectable(nodes[i].m_Name.c_str(), isSelected)) {
+                                bool isSelected = (comp.boneName == nodes[i].name);
+                                if (ImGui::Selectable(nodes[i].name.c_str(), isSelected)) {
                                     // std::string の代入演算子を使用
-                                    comp.boneName = nodes[i].m_Name;
+                                    comp.boneName = nodes[i].name;
                                     comp.cachedBoneIndex = -1;
                                     changed = true;
                                 }

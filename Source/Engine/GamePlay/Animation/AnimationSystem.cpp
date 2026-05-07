@@ -1,6 +1,6 @@
 #include "AnimationSystem.h"
 #include "ECS/Core/CCL_World.h"
-//#include "Engine/Assets/Model.h"
+//#include "Engine/Graphics/Resource/Model.h"
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Game/Core/SystemPriority.h"
 #include <cmath>
@@ -11,9 +11,11 @@
 #include "Engine/GamePlay/Animation/Data/AnimationCurve.h"
 
 #include "Engine/GamePlay/Transform/Motion/MotionComponent.h"
-#include "Game/Logic/System/BlackboardComponent.h"
+#include "Game/Logics/System/BlackboardComponent.h"
 #include "Engine/GamePlay/Transform/TransformComponent.h"
 
+#include <SimpleMath.h>
+using namespace DirectX::SimpleMath;
 
 // ===================================================================================
 // ファイル: AnimationSystem.h
@@ -173,19 +175,30 @@ void AnimationSystem::Update(float rawDt)
                 // ルートモーション抽出フラグの判定
                 bool extractMode = (motion != nullptr) && (!animator.disableRootMotion);
 
+                // ========================================================
+                // ★ O(1) アクセスのためのインデックス・キャッシュ解決
+                // ========================================================
+                if (extractMode && modelComp.rootNodeIndex == -1) {
+                    // 初回実行時、またはモデルが変更された場合のみ文字列検索を行う
+                    // ※ AnimatorComponent 側にエディタ等で設定された std::string rootNodeName が
+                    //   存在すると仮定しています。もしなければ "mixamorig:Hips" などを直接渡すか、
+                    //   Animator側に持たせてください。
+                    modelComp.rootNodeIndex = model->GetNodeIndex(animator.rootNodeName.c_str());
+                }
+
                 // ブレンド中の場合は2つのアニメーションを計算して混ぜる
                 if (animator.isBlending && animator.previousSequence) {
                     int prevAnimIndex = model->GetAnimationIndex(animator.previousSequence->targetAnimName.c_str());
 
                     if (prevAnimIndex != -1) {
                         model->ComputeAnimationWithDelta(
-                            prevAnimIndex, animator.previousTimer, animator.previousTimer, // 過去はデルタ不要なので同値
-                            animator.poseBufferB, extractMode, modelComp.rootNodeName, nullptr
+                            prevAnimIndex, animator.previousTimer, animator.previousTimer,
+                            animator.poseBufferB, extractMode, modelComp.rootNodeIndex, nullptr // ★ インデックスを渡す
                         );
 
                         model->ComputeAnimationWithDelta(
                             animIndex, currTimeForDelta, prevTimeForDelta,
-                            animator.poseBufferA, extractMode, modelComp.rootNodeName, extractMode ? &deltaVec : nullptr
+                            animator.poseBufferA, extractMode, modelComp.rootNodeIndex, extractMode ? &deltaVec : nullptr // ★ インデックスを渡す
                         );
 
                         float blendRate = std::fmax(0.0f, std::fmin(animator.currentBlendTime / animator.blendDuration, 1.0f));
@@ -194,7 +207,7 @@ void AnimationSystem::Update(float rawDt)
                     else {
                         model->ComputeAnimationWithDelta(
                             animIndex, currTimeForDelta, prevTimeForDelta,
-                            animator.poseBufferA, extractMode, modelComp.rootNodeName, extractMode ? &deltaVec : nullptr
+                            animator.poseBufferA, extractMode, modelComp.rootNodeIndex, extractMode ? &deltaVec : nullptr
                         );
                     }
                 }
@@ -202,7 +215,7 @@ void AnimationSystem::Update(float rawDt)
                     // 通常の単独再生
                     model->ComputeAnimationWithDelta(
                         animIndex, currTimeForDelta, prevTimeForDelta,
-                        animator.poseBufferA, extractMode, modelComp.rootNodeName, extractMode ? &deltaVec : nullptr
+                        animator.poseBufferA, extractMode, modelComp.rootNodeIndex, extractMode ? &deltaVec : nullptr
                     );
                 }
 
@@ -275,7 +288,7 @@ void AnimationSystem::UpdateManual(CCL::ECS::EntityID entity, float time)
     if (animIndex != -1) {
         model->ComputeAnimationWithDelta(
             animIndex, time, time, // エディタ中はデルタ移動しない
-            animator->poseBufferA, animator->disableRootMotion, modelComp->rootNodeName, nullptr
+            animator->poseBufferA, animator->disableRootMotion, modelComp->rootNodeIndex, nullptr
         );
         model->SetNodePoses(animator->poseBufferA);
     }

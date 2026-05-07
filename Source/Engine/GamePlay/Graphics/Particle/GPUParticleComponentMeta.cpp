@@ -142,12 +142,14 @@ template <> struct ComponentMeta<GPUParticleComponent> {
         // 1. 管理・システム設定
         if (ImGui::Button(u8"プリセット保存 (Save Preset)")) {
             char filename[256] = {};
-            if (Dialog::SaveFileName(filename,
-                256,
-                "JSON Files\0*.json\0",
-                "Save Particle Preset",
-                "json",
-                Graphics::Instance().GetWindowHandle()) == DialogResult::OK) {
+
+            DialogConfig DialogCfg;
+            DialogCfg.title = "Select Particle Preset";
+            DialogCfg.filter = "JSON Files\0*.json\0";
+            DialogCfg.defaultDir = "Assets/Particles";
+            DialogCfg.historyKey = "ParticlePreset"; // グラフとシーケンスで履歴を分けても良い
+            if (Dialog::SaveFileName(filename, sizeof(filename), DialogCfg, Graphics::Instance().GetWindowHandle()) == DialogResult::OK) {
+
                 std::ofstream o(filename);
                 o << std::setw(4) << ConfigToJson(cfg, p->texturePath, p->colorRampPath)
                     << std::endl;
@@ -156,11 +158,16 @@ template <> struct ComponentMeta<GPUParticleComponent> {
         ImGui::SameLine();
         if (ImGui::Button(u8"プリセット読込 (Load Preset)")) {
             char filename[256] = {};
-            if (Dialog::OpenFileName(filename,
-                256,
-                "JSON Files\0*.json\0",
-                "Load Particle Preset",
-                Graphics::Instance().GetWindowHandle()) == DialogResult::OK) {
+
+
+            DialogConfig DialogCfg;
+            DialogCfg.title = "Select Particle Preset";
+            DialogCfg.filter = "JSON Files\0*.json\0";
+            DialogCfg.defaultDir = "Assets/Particles";
+            DialogCfg.historyKey = "ParticlePreset"; // グラフとシーケンスで履歴を分けても良い
+            if (Dialog::OpenFileName(filename, sizeof(filename), DialogCfg, Graphics::Instance().GetWindowHandle()) == DialogResult::OK) {
+
+
                 std::ifstream i(filename);
                 if (i.is_open()) {
                     json j;
@@ -314,10 +321,14 @@ template <> struct ComponentMeta<GPUParticleComponent> {
 
             if (ImGui::Button(u8"読込##Main")) {
                 char        filename[256] = {};
-                HWND        hWnd = Graphics::Instance().GetWindowHandle();
-                const char* filter = "Image Files\0*.png;*.jpg;*.tga;*.bmp;*.dds\0All Files\0*.*\0";
-                if (Dialog::OpenFileName(
-                    filename, sizeof(filename), filter, "Select Texture", hWnd) == DialogResult::OK) {
+                DialogConfig cfg;
+                cfg.title = "Select Particle Texture";
+                cfg.filter = "Image Files\0*.png;*.jpg;*.tga;*.dds\0All Files\0*.*\0";
+                cfg.defaultDir = "Assets/Particles";
+                cfg.historyKey = "ParticleTexture";
+
+                if (Dialog::OpenFileName(filename, MAX_PATH, cfg, Graphics::Instance().GetWindowHandle()) == DialogResult::OK) {
+
                     namespace fs = std::filesystem;
                     fs::path absPath = filename;
                     fs::path currentPath = fs::current_path();
@@ -363,10 +374,14 @@ template <> struct ComponentMeta<GPUParticleComponent> {
 
             if (ImGui::Button(u8"読込##Ramp")) {
                 char        filename[256] = {};
-                HWND        hWnd = Graphics::Instance().GetWindowHandle();
-                const char* filter = "Image Files\0*.png;*.jpg;*.tga;*.bmp;*.dds\0All Files\0*.*\0";
-                if (Dialog::OpenFileName(
-                    filename, sizeof(filename), filter, "Select Color Ramp", hWnd) == DialogResult::OK) {
+                DialogConfig cfg;
+                cfg.title = "Select Color Ramp";
+                cfg.filter = "Image Files\0*.png;*.jpg;*.tga;*.dds\0All Files\0*.*\0";
+                cfg.defaultDir = "Assets/Particles/Ramps";
+                cfg.historyKey = "ParticleRamp";
+
+                if (Dialog::OpenFileName(filename, MAX_PATH, cfg, Graphics::Instance().GetWindowHandle()) == DialogResult::OK) {
+
                     namespace fs = std::filesystem;
                     fs::path absPath = filename;
                     fs::path currentPath = fs::current_path();

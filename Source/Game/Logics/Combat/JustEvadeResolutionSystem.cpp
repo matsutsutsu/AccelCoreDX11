@@ -1,12 +1,12 @@
 #include "JustEvadeResolutionSystem.h"
 
-#include "Game/Logic/Combat/CombatComponents.h"
+#include "Game/Logics/Combat/CombatComponents.h"
 #include "ECS/Core/CCL_World.h"
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Game/Core/SystemPriority.h"
 #include "Engine/Platform/Logger.h"
-#include "Game/Logic/Character/Player/PlayerStateComponent.h"
-#include "Game/Logic/Combat/StaminaComponent.h"
+#include "Game/Logics/Character/Player/PlayerStateComponent.h"
+#include "Game/Logics/Combat/StaminaComponent.h"
 
 // ヒットストップを付与するために時間をインクルード
 #include "Engine/GamePlay/Core/Time/TimeState.h" 

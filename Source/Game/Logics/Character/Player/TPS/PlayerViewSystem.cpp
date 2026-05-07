@@ -8,11 +8,11 @@
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Game/Core/SystemPriority.h"
 
-#include "Game/Logic/Combat/StaminaComponent.h"
+#include "Game/Logics/Combat/StaminaComponent.h"
 #include "Engine/GamePlay/Camera/VirtualCameraComponents.h"
-#include "Game/Logic/System/Modifier/ModifierComponent.h"
+#include "Game/Logics/System/Modifier/ModifierComponent.h"
 #include "Engine/GamePlay/Transform/TransformComponent.h"
-#include "Game/Logic/Character/Enemy/EnemyTag.h"
+#include "Game/Logics/Character/Enemy/EnemyTag.h"
 
 #include <vector>
 

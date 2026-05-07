@@ -3,16 +3,16 @@
 #include "Game/Core/AllComponents.h"
 #include "Engine/Serialization/Factory/Prefab.h"
 #include "Engine/Serialization/Factory/EntityFactory.h"
-#include "Game/Logic/Character/Player/FPSPlayerComponent.h"
-#include "Game/Logic/Character/Player/TPS/TPSPlayerComponent.h"
-#include "Game/Logic/Character/Player/PlayerStateComponent.h"
-#include "Game/Logic/Combat/StaminaComponent.h"
+#include "Game/Logics/Character/Player/FPSPlayerComponent.h"
+#include "Game/Logics/Character/Player/TPS/TPSPlayerComponent.h"
+#include "Game/Logics/Character/Player/PlayerStateComponent.h"
+#include "Game/Logics/Combat/StaminaComponent.h"
 #include "Engine/GamePlay/Transform/TransformComponent.h"
-#include "Game/Logic/Character/Player/PhysicsTag.h"
-#include "Game/Logic/Character/Enemy/EnemyTag.h"
-#include "Game/Logic/Character/Player/FPSPlayerViewComponent.h"
-#include "Game/Logic/Character/Player/TPS/PlayerViewComponent.h"
-#include "Game/Logic/System/Modifier/ModifierComponent.h"
+#include "Game/Logics/Character/Player/PhysicsTag.h"
+#include "Game/Logics/Character/Enemy/EnemyTag.h"
+#include "Game/Logics/Character/Player/FPSPlayerViewComponent.h"
+#include "Game/Logics/Character/Player/TPS/PlayerViewComponent.h"
+#include "Game/Logics/System/Modifier/ModifierComponent.h"
 #include <random>
 #include <vector>
 
@@ -162,8 +162,8 @@ void SceneInitializer::SpawnTPSPlayer(CCL::ECS::Core::World& world)
 }
 
 // ※あなたのプロジェクトにおけるDroneComponent等の正しいパスをインクルードしてください
-#include "Game/Logic/AI/BehaviorTree/Drone/DroneComponent.h"
-#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
+#include "Game/Logics/AI/BehaviorTree/Drone/DroneComponent.h"
+#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
 
 
 void SceneInitializer::SpawnBossAndDronesTest(CCL::ECS::Core::World& world, int TOTAL_DRONES)
@@ -306,7 +306,7 @@ void SceneInitializer::SpawnPhysicsAvalancheTest(
     }
 }
 
-#include "Game/Logic/Test/ZeroGDebrisComponent.h"
+#include "Game/Logics/Test/ZeroGDebrisComponent.h"
 
 void SceneInitializer::SpawnBossVFXTest(CCL::ECS::Core::World& world)
 {

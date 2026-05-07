@@ -2,8 +2,8 @@
  * @file DamageResolutionSystem.cpp
  */
 #include "DamageResolutionSystem.h"
-#include "Game/Logic/Combat/CombatComponents.h"
-#include "Game/Logic/Combat/HealthComponent.h"
+#include "Game/Logics/Combat/CombatComponents.h"
+#include "Game/Logics/Combat/HealthComponent.h"
 #include "ECS/Core/CCL_World.h"
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Game/Core/SystemPriority.h"
@@ -16,8 +16,8 @@
 
 // 脊髄反射（被弾モーション）を直接叩くためのインクルード
 #include "Engine/GamePlay/Animation/AnimParametersComponent.h"
-#include "Game/Logic/AI/BehaviorTree/BossActionComponent.h" 
-#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeComponents.h" 
+#include "Game/Logics/AI/BehaviorTree/BossActionComponent.h" 
+#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeComponents.h" 
 #include "Engine/Core/Math/StringHash.h"
 
 using namespace CCL::ECS;

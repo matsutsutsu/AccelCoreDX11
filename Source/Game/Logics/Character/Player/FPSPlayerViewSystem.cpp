@@ -5,9 +5,9 @@
 
 #include "FPSPlayerComponent.h"
 #include "FPSPlayerViewComponent.h"
-#include "Game/Logic/Combat/StaminaComponent.h"
+#include "Game/Logics/Combat/StaminaComponent.h"
 #include "Engine/GamePlay/Camera/VirtualCameraComponents.h"
-#include "Game/Logic/System/Modifier/ModifierComponent.h"
+#include "Game/Logics/System/Modifier/ModifierComponent.h"
 
 #include <vector>
 

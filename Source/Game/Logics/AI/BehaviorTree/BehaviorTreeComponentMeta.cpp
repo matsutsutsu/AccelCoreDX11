@@ -2,9 +2,9 @@
  * @file BehaviorTreeComponentMeta.cpp
  * @brief AI関連コンポーネントのエディタ/シリアライズ用メタデータ定義
  */
-#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
-#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeLoader.h"
-#include "Game/Logic/AI/BehaviorTree/Drone/DroneComponent.h"
+#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
+#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeLoader.h"
+#include "Game/Logics/AI/BehaviorTree/Drone/DroneComponent.h"
 #include "Editor/Inspector/ComponentGuiRegistry.h"
 #include "Engine/Serialization/ComponentRegistry.h"
 #include "Engine/Serialization/Meta/ComponentMeta.h"

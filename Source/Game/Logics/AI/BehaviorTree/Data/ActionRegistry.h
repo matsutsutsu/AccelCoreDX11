@@ -4,7 +4,7 @@
  */
 #pragma once
 #include <cstdint>
-#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeData.h"
+#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeData.h"
 
  // ============================================================================
  // 【単一情報源】AIの「行動」と「条件」のID定義

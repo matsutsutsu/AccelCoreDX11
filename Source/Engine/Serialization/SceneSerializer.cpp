@@ -7,7 +7,7 @@
 
 #include "Engine/GamePlay/Transform/PendingParentComponent.h"
 #include "Engine/GamePlay/Transform/TransformComponent.h"
-#include "Game/Logic/Combat/CombatRosterComponent.h"
+#include "Game/Logics/Combat/CombatRosterComponent.h"
 #include "Engine/GamePlay/Camera/VirtualCameraComponents.h"
 
 #include "Engine/GamePlay/Core/DestroyTag.h"

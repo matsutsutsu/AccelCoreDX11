@@ -7,8 +7,8 @@
 //#include "Engine/Serialization/Meta/ComponentMeta.h"
 //#include "Engine/Serialization/Meta/ComponentMetaImGui.h"
 //#include "Engine/Serialization/Meta/ComponentMetaJson.h"
-//#include "Game/Logic/Combat/HealthComponent.h"
-//#include "Game/Logic/World/Triggers/TriggerComponent.h"
+//#include "Game/Logics/Combat/HealthComponent.h"
+//#include "Game/Logics/World/Triggers/TriggerComponent.h"
 //#include <algorithm>
 //
 //// ============================================================================

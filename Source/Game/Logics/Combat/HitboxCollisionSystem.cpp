@@ -6,7 +6,7 @@
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Engine/Platform/Logger.h"
 
-#include "Game/Logic/Character/Player/PlayerStateComponent.h"
+#include "Game/Logics/Character/Player/PlayerStateComponent.h"
 #include "Engine/GamePlay/Transform/TransformComponent.h"
 
 /**

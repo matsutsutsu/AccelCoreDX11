@@ -1,6 +1,6 @@
 #pragma once
 #include "ECS/System/CCL_System.h"
-#include "Game/Logic/Combat/CombatComponents.h"
+#include "Game/Logics/Combat/CombatComponents.h"
 
 /**
  * @file DamageResolutionSystem.h

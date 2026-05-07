@@ -66,10 +66,9 @@ template <> struct ComponentMeta<ModelComponent> {
         // 実行中の動的ロードボタン
         if (ImGui::Button("Load New Model... (Dynamic)", ImVec2(-1, 0))) {
             char filename[256] = {};
-            const char* filter = "Model Files\0*.gltf;*.glb;*.fbx;*.obj\0All Files\0*.*\0";
 
-            if (Dialog::OpenFileName(filename, 256, filter, "Select 3D Model", Graphics::Instance().GetWindowHandle()) == DialogResult::OK) {
-
+            // プリセット DialogPreset::Model を直接渡すだけ
+            if (Dialog::OpenFileName(filename, sizeof(filename), DialogPreset::Model, GetActiveWindow()) == DialogResult::OK) {
                 namespace fs = std::filesystem;
                 fs::path absPath = filename;
                 fs::path currentPathFs = fs::current_path();
