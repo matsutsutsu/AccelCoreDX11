@@ -1,6 +1,7 @@
 #pragma once
 #include "ECS/System/CCL_System.h"
-#include "Game/Logics/Combat/HealthComponent.h"
+#include "Game/Logic/Combat/HealthComponent.h"
+#include "Engine/GamePlay/Core/Time/TimeState.h"
 
 /**
  * @file HealthSystem.h
@@ -31,8 +32,9 @@
 
 // 【解決】HPの増減と死亡判定（Tagの付与）のみを行うシステム
 class HealthSystem : public CCL::ECS::IfSystem<HealthSystem,
-                         CCL::ECS::Write<HealthComponent>> {
-  public:
+    CCL::ECS::Write<HealthComponent>,
+    CCL::ECS::Read<TimeState>> { // ★追加
+public:
     HealthSystem() : IfSystem("HealthSystem") {}
     void Update(float dt) override;
 };

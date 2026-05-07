@@ -1,7 +1,11 @@
 #pragma once
 #include "ECS/System/CCL_System.h"
-#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
-#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeData.h"
+#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
+#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeData.h"
+#include "Game/Logic/AI/BehaviorTree/BossActionComponent.h"      
+#include "Engine/GamePlay/Transform/TransformComponent.h" 
+#include "Engine/GamePlay/Core/Time/TimeState.h"
+#include "Game/Logic/Combat/HealthComponent.h"
 
 /**
  * @file BossAISystem.h
@@ -13,11 +17,15 @@
  * TaskScheduler による自動並列化（マルチスレッド）に対応している。
  */
 
- // IfSystemのテンプレート引数で要求コンポーネントを厳密に定義
+
 class BossAISystem : public CCL::ECS::IfSystem<
     BossAISystem,
     CCL::ECS::Write<BehaviorTreeComponent>,
-    CCL::ECS::Write<BossCommandComponent>
+    CCL::ECS::Write<BossCommandComponent>,
+    CCL::ECS::Read<TransformComponent>,  // ★自分の位置を知るため
+    CCL::ECS::Read<BossActionComponent>,
+    CCL::ECS::Read<TimeState>,
+    CCL::ECS::Read<HealthComponent> // HPを読み取る権限
 >
 {
 public:
@@ -26,18 +34,28 @@ public:
 
     virtual void Update(float dt) override;
 
+    virtual void OnGui() override; // GUI描画用関数
+
 private:
+    bool m_showFloatingText = true; // 3Dテキスト表示のON/OFFフラグ
+
+    // 視認性向上のためのパラメータ群
+    float m_debugFontSize = 72.0f;    // 文字の基本サイズ
+    bool m_useDepthScaling = true;    // 遠近法（遠いと文字が小さくなる）を適用するか
+    bool m_showTextBackground = true; // 文字の背景に黒い半透明の板（座布団）を敷くか
+
+
+    // アクション強制デバッグ用の変数
+    bool m_enableActionOverride = false;
+    int  m_selectedOverrideIndex = 0;
 
     /*
     * @param 再起処理で評価する
     */
-    BTNodeState EvaluateTreeRecursive(
-        BTNodeID nodeId,
-        BehaviorTreeComponent& btComp,
-        BossCommandComponent& cmdComp,
-        const BTAsset& asset,
-        float dt
-    );
+    BTNodeState EvaluateTreeRecursive(BTNodeID nodeId, 
+        BehaviorTreeComponent& btComp, BossCommandComponent& cmdComp,
+        const TransformComponent& myTrans, const BossActionComponent& myAction,
+        const BTAsset& asset, float dt);
 
     /*
     * @brief 条件ノードを評価する
@@ -58,7 +76,9 @@ private:
 	* 物理演算やアニメーションのトリガーなどの副作用は、cmdCompへの書き込みに限定されるべきである。
     * タイマー機能（Wait）を利用するため、nodeId と dt を追加
     */
-    BTNodeState ExecuteAction(ActionID actionId, BehaviorTreeComponent& btComp, BossCommandComponent& cmdComp, BTNodeID nodeId, float dt);
+    BTNodeState ExecuteAction(ActionID actionId, BehaviorTreeComponent& btComp, BossCommandComponent& cmdComp,
+        const TransformComponent& myTrans, const BossActionComponent& myAction,
+        BTNodeID nodeId, float dt);
 
 
 };

@@ -1,4 +1,4 @@
-#include "Game/Logics/Character/CharacterMovementInputComponent.h"
+#include "Game/Logic/Character/CharacterMovementInputComponent.h"
 #include "Editor/Inspector/ComponentGuiRegistry.h"
 #include "Engine/Serialization/ComponentRegistry.h"
 #include "Engine/Serialization/Meta/ComponentMeta.h"
@@ -45,6 +45,9 @@ template <> struct ComponentMeta<CharacterMovementInputComponent> {
         ImGui::BeginDisabled();
         ImGui::Checkbox("Jump Requested", &comp.jumpRequested);
         ImGui::EndDisabled();
+
+		ImGui::InputFloat("Custom Jump Velocity", &comp.customJumpVelocity, 0.1f, 1.0f, "%.2f", ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputFloat("Custom Gravity", &comp.customGravity, 0.1f, 1.0f, "%.2f", ImGuiInputTextFlags_ReadOnly);
 
         return changed; // ReadOnlyなので常にfalseを返す
     }

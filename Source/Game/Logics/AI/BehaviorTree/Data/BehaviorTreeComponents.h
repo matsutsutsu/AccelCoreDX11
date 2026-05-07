@@ -2,8 +2,8 @@
 #include <cstdint>
 #include <memory>
 #include "SimpleMath.h"
-#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeData.h"
-#include "Game/Logics/AI/BehaviorTree/Drone/DroneComponent.h"
+#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeData.h"
+#include "Game/Logic/AI/BehaviorTree/Drone/DroneComponent.h"
 
 /**
  * @file BehaviorTreeComponents.h
@@ -18,36 +18,45 @@
 
  // AIの判断材料を格納するブラックボード（Blackboard）
 struct AIBlackboard {
+    // --- 座標・空間データ ---
     DirectX::SimpleMath::Vector3 targetPosition; // ターゲットの座標
     float distanceToTarget = 0.0f;               // ターゲットとの距離
-    float healthPercentage = 100.0f;             // 自分の残りHP
 
-    // ボスの現在のフェーズ（1=前半戦, 2=後半戦）
-    int currentPhase = 1;
+    // --- ステータス・フェーズデータ ---
+    float healthPercentage = 100.0f;             // 自分の残りHP
+    int currentPhase = 1;                        // ボスの現在のフェーズ（1=前半戦, 2=後半戦）
+
+    // --- ダメージ蓄積・回避システム ---
+    float accumulatedDamage = 0.0f;              // 現在溜まっているダメージ量
+    float evadeDamageThreshold = 20.0f;          // いくつダメージを受けたら逃げるかの閾値
 };
 
 // AIの内部状態とブラックボード（直列化対象）
 // 例えば、どのノードを実行中か、どのアセットを使うかなどの情報を持つ
 struct BehaviorTreeComponent {
-    std::string assetPath = "Assets/AI/BossAI.json";     // 読み込むJSONのパス
-    std::string loadedAssetPath = "";                    // エンジンが「現在メモリに読み込んでいる」パス
-
-    AssetID assetId = 0;        // どの知能（BTAsset）を使うか
-    BTNodeID runningNodeId = 0; // 現在実行中のノード    
-    ActionID lastLogActionId = 0xFFFF;  // ログ出力制御用（前回実行したアクションIDを記憶）
-
-    // 実体ではなく、共有ポインタに変更する（容量削減！）
+    // --- 巨大なオブジェクト群 (ポインタ/コンテナ系) ---
     std::shared_ptr<BTAsset> sharedAsset;
 
-    // 判断材料をここに内包する（Blackboard）
+    std::string assetPath = "Data/BehaviorTree/BossAI.json";
+    std::string loadedAssetPath = "";
+    std::string phase2AssetPath = "Data/BehaviorTree/BossAI_Phase2.json";
+    std::string lastFrameTreeLog = "";
+
+    std::vector<BTDebugState> debugNodeStates;
+    std::vector<float> nodeTimers;
+    std::vector<int> runningNodes;
+
+    // --- 構造体 ---
     AIBlackboard blackboard;
 
-    // エディタ可視化用の状態バッファ (配列サイズは BTAsset のノード数と同じになる)
-    std::vector<BTDebugState> debugNodeStates;
+    // --- プリミティブ型 (4バイト) ---
+    AssetID assetId = 0;
+    float phase2HealthThreshold = 50.0f;
 
-    // デコレーター（クールダウン等）のタイマーを記憶するバッファ
-    std::vector<float> nodeTimers;
-
+    // --- プリミティブ型 (2バイト) ---
+    BTNodeID runningNodeId = 0;
+    BTNodeID previousRunningNodeId = 0xFFFF;
+    ActionID lastLogActionId = 0xFFFF;
 };
 
 
@@ -55,11 +64,9 @@ struct BehaviorTreeComponent {
 // AIシステムからの「出力」を受け取るコンポーネント（毎フレームリセットされる使い捨てデータ）
 // 例えば、AIが「近接攻撃してほしい」「ここに移動してほしい」といった命令をこのコンポーネントに書き込む
 struct BossCommandComponent {
-    bool requestMeleeAttack = false; // 近接攻撃をしてほしい！
-    bool requestCharge = false;      // 突進してほしい！
-    bool requestGuard = false;
-    bool requestMove = false; // ★この1行を追加！
-    DirectX::SimpleMath::Vector3 moveTarget; // ここに移動してほしい！
+
+    // AIが現在「筋肉にやってほしい」と要求しているActionIDをそのまま渡す
+    ActionID currentActionId = 0;
 
     DroneFormationType requestFormation = DroneFormationType::Hidden;
     CCL::ECS::EntityID targetPlayerId = CCL::ECS::InvalidEntityID; // 誰を狙うか

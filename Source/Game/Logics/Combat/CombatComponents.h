@@ -8,8 +8,8 @@
  // --- 1. 攻撃側の判定データ ---
 struct HitboxComponent {
     CCL::ECS::EntityID ownerID;     // 誰の攻撃か（剣ならプレイヤーのID）
-    float damageAmount;   // 基礎ダメージ量
-    bool isActive = false;        // 判定が生きているか（アニメーションからON/OFFする）
+    float damageAmount;             // 基礎ダメージ量
+    bool isActive = false;          // 判定が生きているか（アニメーションからON/OFFする）
 
     // ★多段ヒット防止用の固定長配列
     static constexpr uint8_t MAX_HIT_TARGETS = 8;
@@ -18,6 +18,10 @@ struct HitboxComponent {
 
     // ※アニメーションが開始し、isActiveがtrueになる瞬間に
     // hitCount = 0 にリセットすることで、次の攻撃で再度当たるようになる。
+
+    // 台本からコピーされてくるヒットストップの性能
+    float hitStopDuration = 0.0f;
+    float hitStopFreezeScale = 0.0f;
 };
 
 // --- 2. 被弾側の判定データ ---
@@ -31,4 +35,20 @@ struct DamageEventComponent {
     CCL::ECS::EntityID attackerID;    // 誰が攻撃したか（キルログや吸収などに使用）
     float finalDamage;      // 計算済みの最終ダメージ量
     // ※必要に応じてヒット位置(Vector3)などを追加可能
+    
+    //  判定システムから解決システムへ送るヒットストップの命令
+    float hitStopDuration = 0.0f;
+    float hitStopFreezeScale = 0.0f;
+};
+
+// --- 3. ダメージイベント・エンティティ用コンポーネント（★重要） ---
+struct JustEvadeEventComponent {
+    CCL::ECS::EntityID targetID;      // 誰がダメージを受けるか
+    CCL::ECS::EntityID attackerID;    // 誰が攻撃したか（キルログや吸収などに使用）
+    float finalDamage;      // 計算済みの最終ダメージ量
+    // ※必要に応じてヒット位置(Vector3)などを追加可能
+    
+    //  判定システムから解決システムへ送るヒットストップの命令
+    float hitStopDuration = 0.0f;
+    float hitStopFreezeScale = 0.0f;
 };

@@ -2,25 +2,29 @@
  * @file BehaviorTreeComponentMeta.cpp
  * @brief AI関連コンポーネントのエディタ/シリアライズ用メタデータ定義
  */
-#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
-#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeLoader.h"
-#include "Game/Logics/AI/BehaviorTree/Drone/DroneComponent.h"
+#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
+#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeLoader.h"
+#include "Game/Logic/AI/BehaviorTree/Drone/DroneComponent.h"
 #include "Editor/Inspector/ComponentGuiRegistry.h"
 #include "Engine/Serialization/ComponentRegistry.h"
 #include "Engine/Serialization/Meta/ComponentMeta.h"
 #include "Engine/Serialization/Meta/ComponentMetaImGui.h"
 #include "Engine/Serialization/Meta/ComponentMetaJson.h"
 #include "Engine/Platform/Dialog.h"
-#include "Engine/Graphics/Core/Graphics.h"
 #include <imgui.h>
 #include <filesystem>
+#include <iterator>
 
  // =======================================================================
  // エディタ表示用のEnum文字列定義（プルダウンメニュー用）
  // =======================================================================
-static const char* DroneFormationNames[] = { "Hidden", "OrbitCircle", "SequentialAttack", "DeathRing", "AegisShield" };
-static const char* DroneStateNames[] = { "Idle", "MoveToTarget", "LockOn", "FireCharge" };
-
+static const char* DroneFormationNames[] = {
+    "Hidden", "OrbitCircle", "SequentialAttack", "DeathRing", "AegisShield",
+    "HighOrbit", "LowOrbit", "SpreadLockOn", "AllCharge","CloseGuard", "ChargeTunnel" // ★前回追加した4つを追記
+};
+static const char* DroneStateNames[] = {
+    "Idle", "MoveToTarget", "LockOn", "FireCharge"
+};
 
 template <> struct ComponentMeta<BehaviorTreeComponent> {
     static constexpr bool registered = true;
@@ -39,7 +43,8 @@ template <> struct ComponentMeta<BehaviorTreeComponent> {
         if (ImGui::Button("Load Behavior Tree... (JSON)", ImVec2(-1, 0))) {
             char filename[MAX_PATH] = {};
             // ウィンドウハンドルを渡してダイアログを親ウィンドウの中央に出す
-            if (Dialog::OpenFileName(filename, MAX_PATH, "JSON Files\0*.json\0", "Select Behavior Tree", Graphics::Instance().GetWindowHandle()) == DialogResult::OK) {
+            if (Dialog::OpenFileName(filename, MAX_PATH, "JSON Files\0*.json\0", "Select Behavior Tree",
+                "Data/BehaviorTree", GetActiveWindow()) == DialogResult::OK) {
 
                 // 絶対パスからプロジェクト相対パスへの変換処理（チーム開発対応）
                 namespace fs = std::filesystem;
@@ -78,6 +83,7 @@ template <> struct ComponentMeta<BehaviorTreeComponent> {
 
         ImGui::Separator();
 
+
         // nullチェックを入れてからサイズを表示する
         size_t nodeCount = comp.sharedAsset ? comp.sharedAsset->nodes.size() : 0;
         ImGui::LabelText("Nodes", "%zu", nodeCount);
@@ -88,7 +94,9 @@ template <> struct ComponentMeta<BehaviorTreeComponent> {
 
     static const std::vector<FieldDescriptor>& Fields() {
         static const std::vector<FieldDescriptor> fields = {
-            { "AIパス", "assetPath", FieldKind::String, offsetof(BehaviorTreeComponent, assetPath), 0, 0, 0, "File", nullptr, 0, true }
+            { "AIパス", "assetPath", FieldKind::String, offsetof(BehaviorTreeComponent, assetPath), 0, 0, 0, "File", nullptr, 0, true },
+            {"第2形態AIパス", "phase2AssetPath", FieldKind::String, offsetof(BehaviorTreeComponent, phase2AssetPath), 0, 0, 0, "File", nullptr, 0, true },
+		    { "第2形態移行HP閾値", "phase2HealthThreshold", FieldKind::Float, offsetof(BehaviorTreeComponent, phase2HealthThreshold), 0.1f, 0.0f, 100.0f, "File", nullptr, 0, true }   
         };
         return fields;
     }
@@ -106,13 +114,10 @@ template <> struct ComponentMeta<BossCommandComponent> {
 
     static const std::vector<FieldDescriptor>& Fields() {
         static const std::vector<FieldDescriptor> fields = {
-            { "近接攻撃要求", "requestMeleeAttack", FieldKind::Bool, offsetof(BossCommandComponent, requestMeleeAttack), 1.0f, 0.0f, 0.0f, "Melee", nullptr, 0, false },
-            { "突進要求", "requestCharge", FieldKind::Bool, offsetof(BossCommandComponent, requestCharge), 1.0f, 0.0f, 0.0f, "Melee", nullptr, 0, false },
-            { "移動要求", "requestMove", FieldKind::Bool, offsetof(BossCommandComponent, requestMove), 1.0f, 0.0f, 0.0f, "Movement", nullptr, 0, false },
-            { "移動目標座標", "moveTarget", FieldKind::Float3, offsetof(BossCommandComponent, moveTarget), 0.1f, 0.0f, 0.0f, "Movement", nullptr, 0, false },
+			{ "現在のActionID", "currentActionId", FieldKind::UInt16, offsetof(BossCommandComponent, currentActionId), 1.0f, 0.0f, 0.0f, "Current Command", nullptr, 0, false },
 
             // ★追加: ドローンに対するフォーメーション要求とターゲットID
-            { "フォーメーション要求", "requestFormation", FieldKind::EnumU8, offsetof(BossCommandComponent, requestFormation), 1.0f, 0.0f, 0.0f, "Drone Control", DroneFormationNames, 5, false },
+            { "フォーメーション要求", "requestFormation", FieldKind::EnumU8, offsetof(BossCommandComponent, requestFormation), 1.0f, 0.0f, 0.0f, "Drone Control", DroneFormationNames, std::size(DroneFormationNames), false },
             { "ターゲット(Player)ID", "targetPlayerId", FieldKind::EntityID, offsetof(BossCommandComponent, targetPlayerId), 1.0f, 0.0f, 0.0f, "Drone Control", nullptr, 0, false }
         };
         return fields;
@@ -136,8 +141,8 @@ template <> struct ComponentMeta<DroneComponent> {
             { "総ドローン数", "totalDrones", FieldKind::UInt16, offsetof(DroneComponent, totalDrones), 1.0f, 0.0f, 0.0f, "Formation", nullptr, 0, true },
 
             // ★追加: 現在のフォーメーションとステートをプルダウン表示
-            { "現在の指示", "currentFormation", FieldKind::EnumU8, offsetof(DroneComponent, currentFormation), 1.0f, 0.0f, 0.0f, "State", DroneFormationNames, 5, false },
-            { "現在ステート", "currentState", FieldKind::EnumU8, offsetof(DroneComponent, currentState), 1.0f, 0.0f, 0.0f, "State", DroneStateNames, 4, false },
+            { "現在の指示", "currentFormation", FieldKind::EnumU8, offsetof(DroneComponent, currentFormation), 1.0f, 0.0f, 0.0f, "State", DroneFormationNames, std::size(DroneFormationNames), false },
+            { "現在ステート", "currentState", FieldKind::EnumU8, offsetof(DroneComponent, currentState), 1.0f, 0.0f, 0.0f, "State", DroneStateNames, std::size(DroneStateNames), false },
             { "状態タイマー", "stateTimer", FieldKind::Float, offsetof(DroneComponent, stateTimer), 0.1f, 0.0f, 0.0f, "State", nullptr, 0, false },
 
             { "目標座標", "targetPosition", FieldKind::Float3, offsetof(DroneComponent, targetPosition), 0.1f, 0.0f, 0.0f, "State", nullptr, 0, false },

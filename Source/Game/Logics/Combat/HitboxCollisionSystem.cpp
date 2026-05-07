@@ -6,6 +6,9 @@
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Engine/Platform/Logger.h"
 
+#include "Game/Logic/Character/Player/PlayerStateComponent.h"
+#include "Engine/GamePlay/Transform/TransformComponent.h"
+
 /**
  * @file HitboxCollisionSystem.cpp（※各システム名に読み替える）
  * @brief パイプラインにおける本システムの役割とフローはヘッダーファイル (.h) を参照。
@@ -42,6 +45,57 @@ void HitboxCollisionSystem::CheckAndSpawnDamageEvent(EntityID attackerCandidate,
 
     // 2. 条件を満たしているかチェック
     if (hitbox && hitbox->isActive && hurtbox) {
+        // プレイヤーの現在のステート情報を取得
+        auto* state = _world->GetComponent<TPSPlayerStateComponent>(victimCandidate);
+        // --- 回避判定の追加 ---
+        // 被害者がダッシュ（回避）タグを持っているか確認
+        if (_world->HasComponent<PlayerStateTag::IsDashingTag>(victimCandidate)) {
+
+            // 【ジャスト回避判定】ダッシュ開始直後の特定のフレーム（例: 0.15秒以内）か
+                // ※ stateTimerはステート遷移時に0リセットされる想定
+            if (state && state->stateTimer <= 0.2f)
+            {
+
+                // ジャスト回避イベントエンティティの生成
+                static const Archetype evadeArchetype = ArchetypeHelper::Generate<JustEvadeEventComponent>();
+                auto eventRef = _world->Spawn(evadeArchetype);
+
+                eventRef.Set(JustEvadeEventComponent{
+                    victimCandidate,
+                    hitbox->ownerID,
+                    2.5f,  // slowDuration
+                    0.1f   // slowScale (ウィッチタイム)
+                    });
+
+                CCL_LOG_INFO(LogCategory::Game, "Just Evade Triggered! Player[%llu]", victimCandidate);
+
+                // ジャスト回避成立時はダメージ計算をスキップして終了
+                return;
+            }
+            return;
+        }
+
+        // =========================================================================
+        // ownerIDの遅延初期化 (Lazy Initialization)
+        // 剣などの武器に ownerID が設定されていない場合、Transform階層を遡って「真の親」を自動検知してキャッシュする
+        // =========================================================================
+        if (hitbox->ownerID == 0 || hitbox->ownerID == CCL::ECS::InvalidEntityID) {
+
+            CCL::ECS::EntityID currentRoot = attackerCandidate;
+            auto* trans = _world->GetComponent<TransformComponent>(currentRoot);
+
+            // 親がいなくなる（ルートに到達する）まで while ループで遡り続ける
+            while (trans && trans->parentID != 0 && trans->parentID != CCL::ECS::InvalidEntityID) {
+                currentRoot = trans->parentID;
+                trans = _world->GetComponent<TransformComponent>(currentRoot);
+            }
+
+            // 見つけたルート(ボスやプレイヤー本体)のIDを、次回から遡らなくていいようにキャッシュ(焼き付け)する
+            hitbox->ownerID = currentRoot;
+
+            CCL_LOG_INFO(LogCategory::Game, "Hitbox ownerID auto-resolved: Weapon[%llu] -> Owner[%llu]", attackerCandidate, currentRoot);
+        }
+        // =========================================================================
 
         // 3. ダメージ計算（防御力やバフの計算もここで行うとよい）
         float actualDamage = hitbox->damageAmount * hurtbox->damageMultiplier;
@@ -58,7 +112,10 @@ void HitboxCollisionSystem::CheckAndSpawnDamageEvent(EntityID attackerCandidate,
         entityRef.Set(DamageEventComponent{
             victimCandidate,     // targetID
             hitbox->ownerID,     // attackerID
-            actualDamage         // finalDamage
+            actualDamage,        // finalDamage
+            // 判定箱(Hitbox)が持っているヒットストップの性能を、付箋(DamageEvent)に転写する
+            hitbox->hitStopDuration,    // hitStopDuration
+            hitbox->hitStopFreezeScale  // hitStopFreezeScale
             });
 
         // （オプション）多段ヒットを防ぐために、一度当たった相手のIDを

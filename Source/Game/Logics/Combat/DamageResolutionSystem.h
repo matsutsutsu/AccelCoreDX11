@@ -1,6 +1,6 @@
 #pragma once
 #include "ECS/System/CCL_System.h"
-#include "Game/Logics/Combat/CombatComponents.h"
+#include "Game/Logic/Combat/CombatComponents.h"
 
 /**
  * @file DamageResolutionSystem.h
@@ -32,8 +32,14 @@
 class DamageResolutionSystem : public CCL::ECS::IfSystem<DamageResolutionSystem,
                             CCL::ECS::Write<DamageEventComponent>> {
 public:
-    DamageResolutionSystem() : IfSystem("DamageResolutionSystem") {}
+    DamageResolutionSystem() : IfSystem("DamageResolutionSystem") 
+    {
+        hasGui = true;
+    }
+
     void Update(float dt) override;
+
+    void OnGui() override;
 };
 
 //: public CCL::ECS::IfSystem<PlayerInputSystem, CCL::ECS::Write<PlayerComponent>>{

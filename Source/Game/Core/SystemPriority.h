@@ -11,6 +11,10 @@ namespace Priority {
     enum class LogicStage : int {
         L01_Input       = 100, // 全ての入力・外部イベントの受付
 
+        // 時間管理フェーズ
+        L01_TimeSetup   = 110, // 動的なTimeStateの付与 (TimeScaleSetupSystem)
+        L01_TimeScale   = 120, // 全エンティティの実効dtの計算 (TimeScaleSystem)
+
         L02_Update      = 200, // AI、移動、弾の更新など (並列化の主戦場)
 
         L02_AI_Sense    = 210, // ① Perception, Hearing

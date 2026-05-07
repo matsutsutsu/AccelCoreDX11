@@ -331,12 +331,6 @@
     <Filter Include="Shader\Pass\SkyBox">
       <UniqueIdentifier>{7aa7b402-62ad-4c1d-bdb8-5ade6932aa53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Game\Logics\Character\PlayerCar">
-      <UniqueIdentifier>{54b1b67f-81d4-4299-b7c1-3e7a0a3f50b7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Game\Logics\Character\PlayerCar\_Meta">
-      <UniqueIdentifier>{49c1eceb-c993-4721-abbb-5824797ecbae}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Engine\Physics\API">
       <UniqueIdentifier>{b2182144-7934-4bf7-a398-35153ad43535}</UniqueIdentifier>
     </Filter>
@@ -441,6 +435,15 @@
     </Filter>
     <Filter Include="Source\Game\Logics\Combat\_Meta">
       <UniqueIdentifier>{0a94ac07-4f26-4cc2-a563-eb0d04156a23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\GamePlay\Core\Time">
+      <UniqueIdentifier>{dc514066-3cf5-4497-9b72-4277b900ef28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Game\Logics\Character\Player\FPS">
+      <UniqueIdentifier>{1e810ae4-8739-455e-b1cf-b0ffcad65223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Game\Logics\Character\Player\TPS">
+      <UniqueIdentifier>{2891d3b1-3302-4034-a70b-4caf707e7bf2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -879,15 +882,6 @@
     <ClInclude Include="Source\Game\Logics\Combat\HealthComponent.h">
       <Filter>Source\Game\Logics\Combat</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Logics\Character\Player\PlayerComponent.h">
-      <Filter>Source\Game\Logics\Character\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\Character\Player\PlayerInputSystem.h">
-      <Filter>Source\Game\Logics\Character\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\Character\Player\PlayerMoveSystem.h">
-      <Filter>Source\Game\Logics\Character\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game\Scenes\EditorScene.h">
       <Filter>Source\Game\Scenes</Filter>
     </ClInclude>
@@ -999,9 +993,6 @@
     <ClInclude Include="Source\Game\Logics\Combat\CombatComponents.h">
       <Filter>Source\Game\Logics\Combat</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Logics\Character\Player\PlayerFeedbackSystem.h">
-      <Filter>Source\Game\Logics\Character\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\GamePlay\Graphics\Core\EnvironmentSystem.h">
       <Filter>Source\Engine\GamePlay\Graphics\Core</Filter>
     </ClInclude>
@@ -1046,9 +1037,6 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Serialization\Factory\EntityFactory.h">
       <Filter>Source\Engine\Serialization\Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\Character\Enemy\EnemyComponent.h">
-      <Filter>Source\Game\Logics\Character\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\GamePlay\Physics\Collision\JoltCollisionEvent.h">
       <Filter>Source\Engine\GamePlay\Physics\Collision</Filter>
@@ -1151,21 +1139,6 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Graphics\Shader\Pass\ShadowUtils.h">
       <Filter>Source\Engine\Graphics\Shader\Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\Character\PlayerCar\PlayerCarComponent.h">
-      <Filter>Source\Game\Logics\Character\PlayerCar</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\Character\PlayerCar\PlayerCarInputSystem.h">
-      <Filter>Source\Game\Logics\Character\PlayerCar</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\Character\PlayerCar\PlayerCarMoveSystem.h">
-      <Filter>Source\Game\Logics\Character\PlayerCar</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\Character\PlayerCar\PlayerCarSphereTag.h">
-      <Filter>Source\Game\Logics\Character\PlayerCar</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Logics\Character\PlayerCar\CarCollisionSystem.h">
-      <Filter>Source\Game\Logics\Character\PlayerCar</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Physics\IPhysicsAPI.h">
       <Filter>Source\Engine\Physics\API</Filter>
@@ -1488,6 +1461,105 @@
     <ClInclude Include="Source\Engine\GamePlay\Animation\CombatAnimationSyncSystem.h">
       <Filter>Source\Engine\GamePlay\Animation\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\GamePlay\Core\Time\TimeScaleSetupSystem.h">
+      <Filter>Source\Engine\GamePlay\Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\GamePlay\Core\Time\TimeScaleSystem.h">
+      <Filter>Source\Engine\GamePlay\Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\GamePlay\Core\Time\TimeState.h">
+      <Filter>Source\Engine\GamePlay\Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\TPS\DodgeMovementSystem.h">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\TPS\PlayerViewComponent.h">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\TPS\PlayerViewSystem.h">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\TPS\TPSPlayerAttackSystem.h">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\TPS\TPSPlayerChainAttackSystem.h">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\TPS\TPSPlayerComponent.h">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\TPS\TPSPlayerInputSystem.h">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\TPS\TPSPlayerMoveSystem.h">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\TPS\TPSPlayerStateSystem.h">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\TPS\TPSPlayerTargetingSystem.h">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\FPSPlayerComponent.h">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\FPSPlayerInputSystem.h">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\FPSPlayerMoveSystem.h">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\FPSPlayerViewComponent.h">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\FPSPlayerViewSystem.h">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\PhysicsTag.h">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\PlayerHidingSystem.h">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\PlayerStateComponent.h">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Player\PlayerTag.h">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Character\Enemy\EnemyTag.h">
+      <Filter>Source\Game\Logics\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Combat\JustEvadeResolutionSystem.h">
+      <Filter>Source\Game\Logics\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Combat\StaminaComponent.h">
+      <Filter>Source\Game\Logics\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Combat\StaminaSystem.h">
+      <Filter>Source\Game\Logics\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\UI\BossHUD.h">
+      <Filter>Source\Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\UI\BossHUDData.h">
+      <Filter>Source\Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\UI\BossHUDSystem.h">
+      <Filter>Source\Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\UI\PlayerHUD.h">
+      <Filter>Source\Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\UI\PlayerHUDSystem.h">
+      <Filter>Source\Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\UI\UIButton.h">
+      <Filter>Source\Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\UI\UICommonEvents.h">
+      <Filter>Source\Game\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\implot-master\implot.cpp">
@@ -1805,12 +1877,6 @@
     <ClCompile Include="Source\Engine\Serialization\Factory\SceneInitializer.cpp">
       <Filter>Source\Engine\Serialization\Factory</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Logics\Character\Player\PlayerInputSystem.cpp">
-      <Filter>Source\Game\Logics\Character\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\Character\Player\PlayerMoveSystem.cpp">
-      <Filter>Source\Game\Logics\Character\Player</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game\Scenes\EditorScene.cpp">
       <Filter>Source\Game\Scenes</Filter>
     </ClCompile>
@@ -1867,9 +1933,6 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\GamePlay\Utils\TimerSystem.cpp">
       <Filter>Source\Engine\GamePlay\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\Character\Player\PlayerFeedbackSystem.cpp">
-      <Filter>Source\Game\Logics\Character\Player</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\GamePlay\Graphics\Core\EnvironmentSystem.cpp">
       <Filter>Source\Engine\GamePlay\Graphics\Core</Filter>
@@ -1993,18 +2056,6 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\Graphics\Renderer\Pipeline\SkyboxPass.cpp">
       <Filter>Source\Engine\Graphics\Renderer\Pipeline\Pass</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\Character\PlayerCar\PlayerCarInputSystem.cpp">
-      <Filter>Source\Game\Logics\Character\PlayerCar</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\Character\PlayerCar\PlayerCarMoveSystem.cpp">
-      <Filter>Source\Game\Logics\Character\PlayerCar</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\Character\PlayerCar\PlayerCarComponentMeta.cpp">
-      <Filter>Source\Game\Logics\Character\PlayerCar\_Meta</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Logics\Character\PlayerCar\CarCollisionSystem.cpp">
-      <Filter>Source\Game\Logics\Character\PlayerCar</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Physics\JoltPhysicsFacade.cpp">
       <Filter>Source\Engine\Physics\API</Filter>
@@ -2272,6 +2323,99 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Logics\Combat\CombatComponentsMeta.cpp">
       <Filter>Source\Game\Logics\Combat\_Meta</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\GamePlay\Core\Time\TimeComponentMeta.cpp">
+      <Filter>Source\Engine\GamePlay\Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\GamePlay\Core\Time\TimeScaleSetupSystem.cpp">
+      <Filter>Source\Engine\GamePlay\Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\GamePlay\Core\Time\TimeScaleSystem.cpp">
+      <Filter>Source\Engine\GamePlay\Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\TPS\DodgeMovementSystem.cpp">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\TPS\PlayerStateComponentMeta.cpp">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\TPS\PlayerViewComponentMeta.cpp">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\TPS\PlayerViewSystem.cpp">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\TPS\TPSPlayerAttackSystem.cpp">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\TPS\TPSPlayerChainAttackSystem.cpp">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\TPS\TPSPlayerComponentMeta.cpp">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\TPS\TPSPlayerInputSystem.cpp">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\TPS\TPSPlayerMoveSystem.cpp">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\TPS\TPSPlayerStateSystem.cpp">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\TPS\TPSPlayerTargetingSystem.cpp">
+      <Filter>Source\Game\Logics\Character\Player\TPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\FPSCameraViewSystem.cpp">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\FPSPlayerComponentMeta.cpp">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\FPSPlayerInputSystem.cpp">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\FPSPlayerMoveSystem.cpp">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\FPSPlayerViewComponentMeta.cpp">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\FPSPlayerViewSystem.cpp">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Player\PlayerHidingSystem.cpp">
+      <Filter>Source\Game\Logics\Character\Player\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Character\Enemy\EnemyTagMeta.cpp">
+      <Filter>Source\Game\Logics\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Combat\JustEvadeResolutionSystem.cpp">
+      <Filter>Source\Game\Logics\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Combat\StaminaComponentMeta.cpp">
+      <Filter>Source\Game\Logics\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Combat\StaminaSystem.cpp">
+      <Filter>Source\Game\Logics\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\UI\BossHUD.cpp">
+      <Filter>Source\Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\UI\BossHUDSystem.cpp">
+      <Filter>Source\Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\UI\PlayerHUD.cpp">
+      <Filter>Source\Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\UI\PlayerHUDSystem.cpp">
+      <Filter>Source\Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\UI\UIButton.cpp">
+      <Filter>Source\Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\UI\UICommonEvents.cpp">
+      <Filter>Source\Game\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

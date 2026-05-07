@@ -32,7 +32,8 @@ enum class BTDebugState : uint8_t {
 enum class BTDecoratorType : uint8_t {
     Inverter = 0, // 結果を反転 (Success <-> Failure)
     Cooldown = 1, // クールダウン (指定秒数経過するまでFailure)
-    Retry = 2     // 失敗しても指定回数リトライする
+    Retry = 2,     // 失敗しても指定回数リトライする
+    Async = 3     // 非同期実行（筋肉を待たずに即Successを返す）
 };
 
 
@@ -62,13 +63,15 @@ enum class BTNodeState : uint8_t {
 // 1つのノード定義。メモリレイアウトを意識し、8バイトに収める。
 struct BTNode {
 	BTNodeType type;                // ノードの種類（Selector, Sequence, Condition, Action）
-	uint8_t    childCount;          // 子ノードの数 1バイトで最大255まで対応（Selector/Sequenceのみ使用）
-	BTNodeID   firstChildIndex;    // 子ノードへのオフセット（配列内のインデックス）。子ノードは連続して配置される前提。0なら子なし。
     ActionID   actionOrConditionId; // Action/Conditionの種類を判別するID
 
     // デコレーター用パラメータ
     BTDecoratorType decoratorType;
     float decoratorParam; // クールダウン秒数やリトライ回数など
+
+
+    // 確実に子ノードのID（配列のインデックス）を保持するリストに変更
+    std::vector<BTNodeID> children;
 };
 
 // 全Entityで共有される不変データ（アセット）

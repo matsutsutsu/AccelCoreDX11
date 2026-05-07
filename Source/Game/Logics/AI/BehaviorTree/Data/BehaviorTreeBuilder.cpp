@@ -1,4 +1,4 @@
-#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeBuilder.h"
+#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeBuilder.h"
 #include "Engine/Platform/Logger.h"
 
 /**
@@ -78,22 +78,21 @@ void BehaviorTreeBuilder::Bake(BTAsset& outAsset) {
         auto [edNode, flatIndex] = queue[head++];
 
         if (edNode->children.empty()) {
-            outAsset.nodes[flatIndex].childCount = 0;
-            outAsset.nodes[flatIndex].firstChildIndex = 0;
             continue;
         }
-
-        BTNodeID firstChildIdx = static_cast<BTNodeID>(outAsset.nodes.size());
-        outAsset.nodes[flatIndex].firstChildIndex = firstChildIdx;
-        outAsset.nodes[flatIndex].childCount = static_cast<uint8_t>(edNode->children.size());
 
         for (auto& childPtr : edNode->children) {
             BTNode childRuntime{};
             childRuntime.type = childPtr->type;
             childRuntime.actionOrConditionId = childPtr->actionOrConditionId;
-            outAsset.nodes.push_back(childRuntime);
 
-            queue.push_back({ childPtr.get(), static_cast<BTNodeID>(outAsset.nodes.size() - 1) });
+            BTNodeID newChildIndex = static_cast<BTNodeID>(outAsset.nodes.size());
+
+            // ★修正: 親ノードの children 配列に、子のインデックスを追加する
+            outAsset.nodes[flatIndex].children.push_back(newChildIndex);
+
+            outAsset.nodes.push_back(childRuntime);
+            queue.push_back({ childPtr.get(), newChildIndex });
         }
     }
 

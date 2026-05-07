@@ -7,8 +7,8 @@
 //#include "Engine/Serialization/Meta/ComponentMeta.h"
 //#include "Engine/Serialization/Meta/ComponentMetaImGui.h"
 //#include "Engine/Serialization/Meta/ComponentMetaJson.h"
-//#include "Game/Logics/Combat/HealthComponent.h"
-//#include "Game/Logics/World/Triggers/TriggerComponent.h"
+//#include "Game/Logic/Combat/HealthComponent.h"
+//#include "Game/Logic/World/Triggers/TriggerComponent.h"
 //#include <algorithm>
 //
 //// ============================================================================
@@ -160,7 +160,7 @@
 //                    256,
 //                    "Lua\0*.lua\0All\0*.*\0",
 //                    "Select Script",
-//                    Graphics::Instance().GetWindowHandle()) == DialogResult::OK) {
+//                    GetActiveWindow()) == DialogResult::OK) {
 //                // 絶対パスから相対パスへの変換 (既存のロジックを踏襲)
 //                namespace fs = std::filesystem;
 //                std::error_code ec;
