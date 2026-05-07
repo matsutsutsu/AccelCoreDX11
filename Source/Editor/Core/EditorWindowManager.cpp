@@ -52,6 +52,7 @@ void EditorWindowManager::Initialize()
     // 引き続きコメントアウトで対応してください。
     RegisterWindow<TextEditorWindow>()->SetVisible(false);
     RegisterWindow<InputEditorWindow>()->SetVisible(false);
+
     //RegisterWindow<SceneViewWindow>();
     //RegisterWindow<GameViewWindow>();
 }

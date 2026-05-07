@@ -7,7 +7,8 @@
 
 #include "Engine/GamePlay/Transform/PendingParentComponent.h"
 #include "Engine/GamePlay/Transform/TransformComponent.h"
-#include "Game/Logics/Combat/CombatRosterComponent.h"
+#include "Game/Logic/Combat/CombatRosterComponent.h"
+#include "Engine/GamePlay/Camera/VirtualCameraComponents.h"
 
 #include "Engine/GamePlay/Core/DestroyTag.h"
 #include "Engine/GamePlay/Core/PersistentTag.h"
@@ -260,7 +261,75 @@ std::vector<EntityID> SceneSerializer::DeserializeRaw(World* world, const json& 
                 }
             }
         }
+
+        // ③ ★追加: CameraBodyFollow のターゲット解決
+        if (components.contains("CameraBodyFollow")) {
+            auto* follow = world->GetComponent<CameraBodyFollow>(newID);
+            if (follow) {
+                uint64_t oldTargetID = static_cast<uint64_t>(follow->target);
+                if (oldTargetID != 0) {
+                    if (localIdMap.find(oldTargetID) != localIdMap.end()) {
+                        follow->target = localIdMap[oldTargetID];
+                    }
+                    else {
+                        follow->target = 0; // リンク切れの場合は無効化
+                    }
+                }
+            }
+        }
+
+        // ④ ★追加: CameraLockOn のターゲット解決
+        if (components.contains("CameraLockOn")) {
+            auto* lockOn = world->GetComponent<CameraLockOn>(newID);
+            if (lockOn) {
+                uint64_t oldTargetID = static_cast<uint64_t>(lockOn->targetEntity);
+                if (oldTargetID != 0) {
+                    if (localIdMap.find(oldTargetID) != localIdMap.end()) {
+                        lockOn->targetEntity = localIdMap[oldTargetID];
+                    }
+                    else {
+                        lockOn->targetEntity = 0;
+                    }
+                }
+            }
+        }
+
+        // ⑤ ★追加: CameraBodyTPS (三人称) のターゲット解決
+        if (components.contains("CameraBodyTPS")) {
+            auto* tps = world->GetComponent<CameraBodyTPS>(newID);
+            if (tps) {
+                uint64_t oldTargetID = static_cast<uint64_t>(tps->targetEntity);
+                if (oldTargetID != 0) {
+                    if (localIdMap.find(oldTargetID) != localIdMap.end()) {
+                        tps->targetEntity = localIdMap[oldTargetID];
+                    }
+                    else {
+                        tps->targetEntity = 0;
+                        CCL_LOG_WARN(LogCategory::ECS, "[SceneSerializer] CameraBodyTPS target lost for old ID %llu", oldTargetID);
+                    }
+                }
+            }
+        }
+
+        // ⑥ ★追加: CameraBodyFPS (一人称) のターゲット解決
+        if (components.contains("CameraBodyFPS")) {
+            auto* fps = world->GetComponent<CameraBodyFPS>(newID);
+            if (fps) {
+                uint64_t oldTargetID = static_cast<uint64_t>(fps->targetEntity);
+                if (oldTargetID != 0) {
+                    if (localIdMap.find(oldTargetID) != localIdMap.end()) {
+                        fps->targetEntity = localIdMap[oldTargetID];
+                    }
+                    else {
+                        fps->targetEntity = 0;
+                        CCL_LOG_WARN(LogCategory::ECS, "[SceneSerializer] CameraBodyFPS target lost for old ID %llu", oldTargetID);
+                    }
+                }
+            }
+        }
+
     }
+
 
     // ★ 最後に PendingParent などを適用して階層を完成させる
     world->ScrutinyAndApply();

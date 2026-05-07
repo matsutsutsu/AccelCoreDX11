@@ -3,11 +3,20 @@
 #include "Game/Core/AllComponents.h"
 #include "Engine/Serialization/Factory/Prefab.h"
 #include "Engine/Serialization/Factory/EntityFactory.h"
-#include "Engine/Platform/Logger.h"
+#include "Game/Logic/Character/Player/FPSPlayerComponent.h"
+#include "Game/Logic/Character/Player/TPS/TPSPlayerComponent.h"
+#include "Game/Logic/Character/Player/PlayerStateComponent.h"
+#include "Game/Logic/Combat/StaminaComponent.h"
+#include "Engine/GamePlay/Transform/TransformComponent.h"
+#include "Game/Logic/Character/Player/PhysicsTag.h"
+#include "Game/Logic/Character/Enemy/EnemyTag.h"
+#include "Game/Logic/Character/Player/FPSPlayerViewComponent.h"
+#include "Game/Logic/Character/Player/TPS/PlayerViewComponent.h"
+#include "Game/Logic/System/Modifier/ModifierComponent.h"
 #include <random>
 #include <vector>
 
-#include "Game/Logics/Test/OrbitBenchmarkComponent.h"
+
 
 using namespace CCL::ECS;
 
@@ -29,147 +38,92 @@ void SceneInitializer::SpawnCameraTest(
     Prefab::SpawnPrefab(world, "Assets/Prefabs/Stage/Map_Floor.json");
 }
 
-void SceneInitializer::SpawnLightStartSet(CCL::ECS::Core::World &world, ID3D11Device *device)
+void SceneInitializer::SpawnFPSPlayer(CCL::ECS::Core::World& world)
 {
-    // ライティングセットアップ
-    Prefab::SpawnPrefab(world, "Assets/Prefabs/Light/LightingSetup.json");
+   
+
+    const auto FPSPlayerArch = ArchetypeHelper::Generate<
+        TransformComponent,
+        FPSPlayerComponent,
+        StaminaComponent,
+        FPSPlayerViewComponent,
+        ModifierComponent,
+        ModifierStatusComponent,
+        ModelComponent,
+        MaterialComponent,
+        JoltCharacterConfigComponent, // 物理設定
+        JoltBoxColliderComponent, // 衝突形状
+        JoltRigidbodyComponent // 衝突形状
+    >();
+
+    // 2. 見た目エンティティ (ModelEnty) の生成
+    auto FPSPlayer = EntityFactory::SpawnNamed(world, "Player_Model", FPSPlayerArch);
+
+    ModelComponent modelComp;
+    modelComp.SetModel("Data/Model/Jammo/Jammo.gltf");
+
+    FPSPlayer.Set(TransformComponent{ .rotation = {0.0f, 0.0f, 0.0f, 1.0f},.position = {0, 0, 0},.scale{0,0,0} })
+        .Set(FPSPlayerComponent())
+        .Set(StaminaComponent())
+        .Set(FPSPlayerViewComponent())
+        .Set(ModifierComponent())
+        .Set(ModifierStatusComponent())
+        .Set(std::move(modelComp))
+        .Set(MaterialComponent())
+        .Set(JoltRigidbodyComponent{
+                    .motionType = JPH::EMotionType::Dynamic,
+                    .objectLayer = PhysicsLayers::MOVING,
+                    .restitution = 0.0f,   // 反発係数（跳ねない）
+                    .friction = 0.05f,   // 摩擦係数（よく滑るように低く）
+                    .gravityFactor = 0
+                    })
+        .Set(JoltCharacterConfigComponent{ .walkSpeed = 7.0f, .jumpSpeed = 8.0f })
+        .Set(JoltBoxColliderComponent{ .halfExtent = {1.0f, 1.4f, 1.0f} });
+
+    // 3. 相互リンクの構築 (IDの書き込み)
+    // 見た目 -> 物理
+    FPSPlayer.Patch<FPSPlayerComponent>([&](FPSPlayerComponent& fps)
+        {
+        fps.physicsBodyID = FPSPlayer.id; 
+        });
+
 }
 
-
-void SceneInitializer::SpawnJoltTest(CCL::ECS::Core::World &world, ID3D11Device *device)
+void SceneInitializer::SpawnTPSPlayer(CCL::ECS::Core::World& world)
 {
-    // ──────────────────────────────────────────
-    // 1. 床の生成 (Box)
-    // ──────────────────────────────────────────
+    //──────────────────────────────────────────
+    //1. 床の生成 (Box)
+    //──────────────────────────────────────────
     const auto floorArch = ArchetypeHelper::Generate<
         TransformComponent,
+        ModelComponent,
+        MaterialComponent,
         PrimitiveComponent,
         JoltRigidbodyComponent,
-        JoltBoxColliderComponent
+        JoltBoxColliderComponent,
+        EnemyTag
     >();
-
+    
     auto floor = EntityFactory::SpawnNamed(world, "Floor_Box", floorArch);
-
-    floor.Set(TransformComponent{ .position = {0.0f, 0.0f, 0.0f}, .rotation = {0.0f, 0.0f, 0.0f, 1.0f}, .scale = {1.0f, 1.0f, 1.0f} })
+    
+    floor.Set(TransformComponent{ .rotation = {0.0f, 0.0f, 0.0f, 1.0f},.position = {0, 0, 0},.scale{1.0f,1.0f,1.0f} })
          .Set(JoltRigidbodyComponent{ .motionType = JPH::EMotionType::Static, .objectLayer = PhysicsLayers::NON_MOVING })
          .Set(JoltBoxColliderComponent{ .halfExtent = {50.0f, 1.0f, 50.0f} })
-         .Set(PrimitiveComponent{ .type = PrimitiveType::Box, .size = {50.0f, 1.0f, 50.0f}, .color = {0.5f, 0.5f, 0.5f, 1.0f} });
+         .Set(PrimitiveComponent{ .type = PrimitiveType::Box, .size = {50.0f, 1.0f, 50.0f}, .color = {0.5f, 0.5f, 0.5f, 1.0f} })
+         .Set(EnemyTag());
 
+        auto playerHitArch = ArchetypeHelper::Generate<
+            TransformComponent,
+            JoltCapsuleColliderComponent,
+            JoltRigidbodyComponent,
+            PhysicsTag
+        >();
 
-    // ──────────────────────────────────────────
-    // 2. 落下する球の生成 (Sphere)
-    // ──────────────────────────────────────────
-    const auto sphereArch = ArchetypeHelper::Generate<
-        TransformComponent,
-        PrimitiveComponent,
-        JoltRigidbodyComponent,
-        JoltSphereColliderComponent
-    >();
-
-    auto sphere = EntityFactory::SpawnNamed(world, "Bouncing_Sphere", sphereArch);
-
-    sphere.Set(TransformComponent{ .position = {0.0f, 15.0f, 0.0f}, .rotation = {0.0f, 0.0f, 0.0f, 1.0f}, .scale = {1.0f, 1.0f, 1.0f} })
-          .Set(JoltRigidbodyComponent{
-            .motionType = JPH::EMotionType::Dynamic, 
-            .objectLayer = PhysicsLayers::MOVING, 
-            .restitution = 0.8f,
-            .initialVelocity = {0.0f, -5.0f, 0.0f},
-            .gravityFactor = 1.0f })
-          .Set(JoltSphereColliderComponent{ .radius = 1.0f })
-          .Set(PrimitiveComponent{ .type = PrimitiveType::Sphere, .radius = 1.0f, .color = {1.0f, 0.2f, 0.2f, 1.0f} });
-
-
-    // ──────────────────────────────────────────
-    // 3. テスト用プレイヤー (CharacterVirtual) の生成
-    // ──────────────────────────────────────────
-    const auto playerArch = ArchetypeHelper::Generate<
-        TransformComponent, 
-        PrimitiveComponent,
-        PlayerComponent,
-        JoltCharacterConfigComponent, // ★修正: パフォーマンス低下を防ぐため設計図に含める
-        JoltCapsuleColliderComponent,
-        ModelComponent,   
-        AnimatorComponent 
-    >();
-
-    auto player = EntityFactory::SpawnNamed(world, "Test_Player", playerArch);
-
-    // ※ ModelComponent は SetModel() という関数呼び出しが必要なため、一度変数を作ってから流し込む
-    ModelComponent modelComp;
-    modelComp.SetModel("Assets/Models/Player/Player.glb");
-
-    player.Set(TransformComponent{ .position = {0.0f, 5.0f, 0.0f}, .rotation = {0.0f, 0.0f, 0.0f, 1.0f}, .scale = {1.0f, 1.0f, 1.0f} })
-          .Set(PlayerComponent{ .moveSpeed = 6.0f, .turnSpeed = 10.0f })
-          .Set(JoltCharacterConfigComponent{ .maxSlopeAngle = 45.0f, .maxStepHeight = 0.5f, .walkSpeed = 6.0f, .jumpSpeed = 10.0f, .characterMass = 70.0f })
-          .Set(JoltCapsuleColliderComponent{ .halfHeight = 0.5f, .radius = 0.5f })
-          .Set(PrimitiveComponent{ .type = PrimitiveType::Capsule, .size = {0.0f, 1.0f, 0.0f}, .radius = 0.5f, .color = {0.2f, 0.8f, 0.2f, 1.0f} })
-          .Set(std::move(modelComp)) // 作っておいた ModelComponent をムーブ（無駄なコピー回避）
-          .Set(AnimatorComponent{}); // 空の初期化
-
-    // 2. カメラの生成とターゲット設定が、一気に書ける！
-    auto camera = EntityFactory::SpawnPrefab(world, "Assets/Prefabs/Camera/PlayerFollowCamera.json");
-    
-    // player.ID() を渡してメソッドチェーンでPatchする
-    camera.Patch<CameraBodyFollow>([pid = player.ID()](auto& body) { body.target = pid; })
-          .Patch<CameraAimLookAt> ([pid = player.ID()](auto& aim)  { aim.target = pid; });
-
-}
-
-void SceneInitializer::SpawnAnimationTest(CCL::ECS::Core::World& world, ID3D11Device* device)
-{
-    EntityFactory::SpawnPrefab(world, "Assets/Prefabs/Camera/FreeCamera.json");
-    EntityFactory::SpawnPrefab(world, "Assets/Prefabs/World/ExampleStage.json");
-    EntityFactory::SpawnPrefab(world, "Assets/Prefabs/AnimationModel.json");
-   
-}
-
-void SceneInitializer::SpawnShaderTest(CCL::ECS::Core::World& world, ID3D11Device* device)
-{
-    EntityFactory::SpawnPrefab(world, "Assets/Prefabs/Camera/FreeCamera.json");
-    EntityFactory::SpawnPrefab(world, "Assets/Prefabs/Sponza.json");
-    EntityFactory::SpawnPrefab(world, "Assets/Prefabs/PBRModel.json");
-}
-
-
-#include "Game/Logics/Character/PlayerCar/PlayerCarSphereTag.h"
-
-// ============================================================================
-// 球体カーコントローラーのテスト環境
-// ============================================================================
-void SceneInitializer::SpawnPlayerCarTest(CCL::ECS::Core::World& world, ID3D11Device* device)
-{
-    // ──────────────────────────────────────────
-    // 1. 床の生成 (Box)
-    // ──────────────────────────────────────────
-    EntityFactory::SpawnPrefab(world, "Assets/Prefabs/World/JoltExampleStage.json");
-
-    // ========================================================================
-    // 2. アーキタイプ（設計図）の作成
-    // ========================================================================
-    auto sphereArch = ArchetypeHelper::Generate<
-        TransformComponent,
-        JoltSphereColliderComponent,
-        JoltRigidbodyComponent,
-        PlayerCarSphereTag
-    >();
-
-    auto pinArch = ArchetypeHelper::Generate<
-        TransformComponent,
-		PrimitiveComponent,
-        JoltCapsuleColliderComponent,
-        JoltRigidbodyComponent,
-        EnemyComponent
-    >();
-
-    // ========================================================================
-    // 3. 物理球体（見えないボウリングの球）の生成
-    // ========================================================================
-    auto sphere = EntityFactory::SpawnNamed(world, "PhysicsSphere", sphereArch);
+    auto playerHit = EntityFactory::SpawnNamed(world, "PhysicsBox", playerHitArch);
 
     // ★修正: JoltRigidbodyComponentの定義順（motionType -> objectLayer -> restitution -> friction）を厳守
-    // ※ mass は Jolt が球の大きさ(Radius)から自動計算してくれるため不要です。
-    sphere.Set(TransformComponent{ .position = {0.0f, 5.0f, 0.0f}, .rotation = {0,0,0,1}, .scale = {1.0f, 1.0f, 1.0f} })
-        .Set(JoltSphereColliderComponent{ .radius = 1.0f })
+    playerHit.Set(TransformComponent{ .rotation = {0.0f, 0.0f, 0.0f, 1.0f},.position = {0, 0, 0},.scale{1.0f,1.0f,1.0f} })
+        .Set(JoltCapsuleColliderComponent{ })
         .Set(JoltRigidbodyComponent{
             .motionType = JPH::EMotionType::Dynamic,
             .objectLayer = PhysicsLayers::MOVING,
@@ -178,70 +132,41 @@ void SceneInitializer::SpawnPlayerCarTest(CCL::ECS::Core::World& world, ID3D11De
             });
 
 
-    // ========================================================================
-    // 4. 車両（見た目）の生成とリンク
-    // ========================================================================
-	auto car = EntityFactory::SpawnPrefab(world, "Assets/Prefabs/Player/PlayerCar.json");
 
-    car.Patch<PlayerCarComponent>([sphereId = sphere.id](auto& comp) {
-        comp.physicsSphereID = sphereId; // 後でsphere.ID()を入れるから、今はダミーで0を入れておく
-		});
-
-    sphere.Set(PlayerCarSphereTag{ .parentCarID = car.id });
-
-   // ========================================================================
-    // 5. TPSカメラの生成と追従リンク
-    // ========================================================================
-    auto camArch = ArchetypeHelper::Generate<
+    const auto TPSPlayerArch = ArchetypeHelper::Generate<
         TransformComponent,
-        VirtualCamera,
-        CameraBodyTPS
+        TPSPlayerComponent,
+        TPSPlayerStateComponent,
+        PlayerViewComponent,
+        StaminaComponent,
+        ModifierComponent,
+        ModifierStatusComponent,
+        ModelComponent,
+        MaterialComponent,
+        JoltCharacterConfigComponent, // 物理設定
+        JoltRigidbodyComponent // 衝突形状
     >();
 
-    auto cam = EntityFactory::SpawnNamed(world, "CarTPSCamera", camArch);
-    
-    cam.Set(TransformComponent{ .position = {0,0,0}, .rotation = {0,0,0,1}, .scale = {1,1,1} })
-       .Set(VirtualCamera{ .priority = 10 })
-       .Set(CameraBodyTPS{
-           .targetEntity = car.id,       // ★ 車のEntityIDをターゲットに設定！
-           .distance     = 12.0f,        // 車体全体が見えるように少し遠めから
-           .currentPitch = 15.0f,        // 少し見下ろす角度
-           .lookSpeedX   = 150.0f,
-           .lookSpeedY   = 100.0f,
-           .targetOffset = {0.0f, 2.0f, 0.0f} // 車の少し上を注視する
-       });
+    auto TPSPlayer = EntityFactory::SpawnPrefab(world, "Data/Prefabs/Player/JammoPlayer.json");
 
-    // ========================================================================
-    // 6. 敵（ボーリングのピン）の生成
-    // ========================================================================
-    for (int i = 0; i < 15; ++i) {
-        auto pin = EntityFactory::SpawnNamed(world, "PinEnemy", pinArch);
 
-        float posX = (float)(i % 5) * 2.5f - 5.0f;
-        float posZ = (float)(i / 5) * 2.5f + 10.0f;
+    playerHit.Set(PhysicsTag{ .parentID = TPSPlayer.id });
 
-        // ★修正: こちらもRigidBodyの初期化順序を厳守
-        pin.Set(TransformComponent{ .position = {posX, 2.0f, posZ}, .rotation = {0,0,0,1}, .scale = {1.0f, 1.0f, 1.0f} })
-			.Set(PrimitiveComponent{ .type = PrimitiveType::Capsule, .size = {0.0f, 1.0f, 0.0f}, .radius = 0.4f, .color = {0.8f, 0.8f, 0.2f, 1.0f} })
-            .Set(JoltCapsuleColliderComponent{ .halfHeight = 1.0f, .radius = 0.4f })
-            .Set(JoltRigidbodyComponent{
-                .motionType = JPH::EMotionType::Dynamic,
-                .objectLayer = PhysicsLayers::MOVING,
-                .restitution = 0.2f,
-                .friction = 0.5f
-                });
-    }
+    // 4. カメラのECS化とプレハブ生成
+    EntityFactory::SpawnPrefab(world, "Data/Prefabs/Camera/TPSCamera.json");
+    EntityFactory::SpawnPrefab(world, "Data/Prefabs/Camera/FPSCamera.json");
+    EntityFactory::SpawnPrefab(world, "Data/Prefabs/Object/HideSpot.json");
+    EntityFactory::SpawnPrefab(world, "Data/Prefabs/World/Sponza.json");
+    auto allEnt = world.View<TransformComponent>();
+
 }
 
 // ※あなたのプロジェクトにおけるDroneComponent等の正しいパスをインクルードしてください
-#include "Game/Logics/AI/BehaviorTree/Drone/DroneComponent.h"
-#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
+#include "Game/Logic/AI/BehaviorTree/Drone/DroneComponent.h"
+#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
 
 
-// =======================================================
-// ボスとドローン群の生成テスト
-// =======================================================
-void SceneInitializer::SpawnBossAndDronesTest(CCL::ECS::Core::World& world, ID3D11Device* device)
+void SceneInitializer::SpawnBossAndDronesTest(CCL::ECS::Core::World& world, int TOTAL_DRONES)
 {
     EntityFactory::SpawnPrefab(world, "Assets/Prefabs/Camera/FreeCamera.json");
     EntityFactory::SpawnPrefab(world, "Assets/Prefabs/World/ExampleStage.json");
@@ -254,7 +179,6 @@ void SceneInitializer::SpawnBossAndDronesTest(CCL::ECS::Core::World& world, ID3D
 
 
     // 2. ドローン群の生成
-    const uint16_t TOTAL_DRONES = 12; // 12機のドローンを展開
     for (uint16_t i = 0; i < TOTAL_DRONES; ++i) {
 
         // ドローンの生成（ボスの少し上にSpawn）
@@ -274,163 +198,29 @@ void SceneInitializer::SpawnBossAndDronesTest(CCL::ECS::Core::World& world, ID3D
         droneRef.Set(droneComp);
     }
 
-    CCL_LOG_SUCCESS(LogCategory::Game, "[SceneInit] Boss and %d Drones spawned successfully.", TOTAL_DRONES);
+}
+
+void SceneInitializer::SpawnLightStartSet(CCL::ECS::Core::World &world, ID3D11Device *device)
+{
+    // ライティングセットアップ
+    Prefab::SpawnPrefab(world, "Assets/Prefabs/Light/LightingSetup.json");
 }
 
 
-// ============================================================================
-// 指定した数のモデルを並べるテスト環境
-// ============================================================================
-void SceneInitializer::SpawnModelGridTest(
-    CCL::ECS::Core::World& world, ID3D11Device* device, int count)
+void SceneInitializer::SpawnAnimationTest(CCL::ECS::Core::World& world, ID3D11Device* device)
 {
-    // 1. 空間を見るためのフリーカメラを配置
     EntityFactory::SpawnPrefab(world, "Assets/Prefabs/Camera/FreeCamera.json");
-
-    // 2. アーキタイプ（設計図）の生成
-    // メモリを連続して確保するため、アーキタイプを事前に定義します
-    const auto modelArch = CCL::ECS::ArchetypeHelper::Generate<
-        TransformComponent,
-        ModelComponent,
-        MaterialComponent
-    >();
-
-    // 3. モデルデータのキャッシュ（★アーキテクトの極意）
-    // ループの中で毎回 SetModel を呼ぶと、数万回もパスの検索とロードが走ってしまいます。
-    // そのため、あらかじめ1つだけ「マスターとなる ModelComponent」を作り、使い回します。
-    ModelComponent baseModelComp;
-    baseModelComp.SetModel("Assets/Models/Test/DamagedHelmet.glb"); // ※お手持ちのモデルのパスに変更してください
-
-    // 4. グリッド配置の計算
-    // count の平方根を切り上げて、XとZの1辺あたりの配置数を決めます
-    int sideSize = static_cast<int>(std::ceil(std::sqrt(count)));
-
-    float spacing = 2.0f; // モデル同士の間隔（モデルの大きさに合わせて調整してください）
-    float offset = (sideSize * spacing) / 2.0f; // 全体の中心を (0,0) に持ってくるためのオフセット
-
-    // 5. 大量生成ループ
-    int spawned = 0;
-    for (int z = 0; z < sideSize && spawned < count; ++z) {
-        for (int x = 0; x < sideSize && spawned < count; ++x) {
-
-            // アーキタイプを使って最速でエンティティを生成
-            auto ref = EntityFactory::SpawnNamed(world, "GridModel", modelArch);
-
-            // 座標の計算
-            float posX = (x * spacing) - offset;
-            float posZ = (z * spacing) - offset;
-
-            // コンポーネントの流し込み
-            ref.Set(TransformComponent{
-                    .position = {posX, 0.0f, posZ},
-                    .rotation = {0.0f, 0.0f, 0.0f, 1.0f},
-                    .scale = {1.0f, 1.0f, 1.0f}
-                })
-                .Set(ModelComponent{ baseModelComp }); // キャッシュしたモデルをコピー
-
-            spawned++;
-        }
-    }
+    EntityFactory::SpawnPrefab(world, "Assets/Prefabs/World/ExampleStage.json");
+    EntityFactory::SpawnPrefab(world, "Assets/Prefabs/AnimationModel.json");
+   
 }
 
-
-void SceneInitializer::SpawnECSBenchmarkTest(
-    CCL::ECS::Core::World& world, ID3D11Device* device, int count)
+void SceneInitializer::SpawnShaderTest(CCL::ECS::Core::World& world, ID3D11Device* device)
 {
-    // 1. アーキタイプの生成（圧倒的スピードでメモリを確保するため）
-    const auto benchmarkArch = CCL::ECS::ArchetypeHelper::Generate<
-        TransformComponent,
-        //ModelComponent,         // キューブ描画用
-        //MaterialComponent,         // キューブ描画用
-        PrimitiveComponent,         // キューブ描画用
-        OrbitBenchmarkComponent     // 軌道計算用
-    >();
-
-    //ModelComponent baseModelComp;
-    //baseModelComp.SetModel("Assets/Models/Shape/Sphere.glb");
-    // ※すでにResourceManager等を経由して安全にロードされ、内部の modelPtr にセットされている
-
-
-    std::mt19937 gen(12345);
-    std::uniform_real_distribution<float> radiusDist(5.0f, 150.0f); // 5m〜150mの範囲
-    std::uniform_real_distribution<float> angleDist(0.0f, 6.28318f); // 0〜2π
-    std::uniform_real_distribution<float> speedDist(0.1f, 2.0f);
-    std::uniform_real_distribution<float> waveDist(0.5f, 3.0f);
-
-    for (int i = 0; i < count; ++i) {
-        auto ref = EntityFactory::SpawnNamed(world, "BenchmarkCube", benchmarkArch);
-
-        // 視覚的に綺麗にするため、インデックスからグラデーション色を作る
-        float hue = (float)i / count;
-        DirectX::XMFLOAT4 color = {
-            0.5f + 0.5f * std::sin(hue * 10.0f),
-            0.5f + 0.5f * std::cos(hue * 10.0f),
-            1.0f,
-            1.0f
-        };
-
-
-        // コンポーネントの初期値をセット
-        ref.Set(TransformComponent{ .position = {0,0,0}, .rotation = {0,0,0,1}, .scale = {0.2f, 0.2f, 0.2f} })
-            .Set(PrimitiveComponent{ .type = PrimitiveType::Box, .size = {1.0f, 1.0f, 1.0f}, .color = color })
-            //.Set(ModelComponent{ baseModelComp }) // ★ Primitiveではなくモデルをセット
-            .Set(OrbitBenchmarkComponent{
-                .angle = angleDist(gen),
-                .orbitSpeed = speedDist(gen),
-                .radius = radiusDist(gen),
-                .waveSpeed = waveDist(gen)
-                });
-    }
+    EntityFactory::SpawnPrefab(world, "Assets/Prefabs/Camera/FreeCamera.json");
+    EntityFactory::SpawnPrefab(world, "Assets/Prefabs/Sponza.json");
+    EntityFactory::SpawnPrefab(world, "Assets/Prefabs/PBRModel.json");
 }
-
-#include "Game/Logics/Test/VoxelOceanComponent.h"
-
-
-void SceneInitializer::SpawnVoxelOceanTest(
-    CCL::ECS::Core::World& world, ID3D11Device* device, int gridSize){
-    
-
-    Prefab::SpawnPrefab(world, "Assets/Prefabs/Camera/FreeCamera.json");
-    // 1. アーキタイプの生成（圧倒的スピードでメモリを確保）
-    const auto oceanArch = CCL::ECS::ArchetypeHelper::Generate<
-        TransformComponent,
-        PrimitiveComponent,   // ★ ModelComponent から PrimitiveComponent に変更
-        VoxelOceanComponent   // 海の波計算用
-    >();
-
-    float spacing = 1.0f; // キューブとキューブの間隔
-    float offset = (gridSize * spacing) / 2.0f; // 中心を(0,0)に合わせるためのオフセット
-
-    // 海らしい色を定義（青緑系）
-    DirectX::XMFLOAT4 oceanColor = { 0.1f, 0.6f, 0.8f, 1.0f };
-
-    // グリッド状に配置
-    for (int x = 0; x < gridSize; ++x) {
-        for (int z = 0; z < gridSize; ++z) {
-
-            auto ref = EntityFactory::SpawnNamed(world, "OceanVoxel", oceanArch);
-
-            // XとZの座標を計算
-            float posX = (x * spacing) - offset;
-            float posZ = (z * spacing) - offset;
-
-            // コンポーネントの初期値をセット
-            ref.Set(TransformComponent{
-                    .position = {posX, 0.0f, posZ},
-                    .rotation = {0,0,0,1},
-                    .scale = {0.8f, 0.8f, 0.8f} // spacingより少し小さくして隙間を空けると綺麗です
-                })
-                // ★ PrimitiveComponentでBox(キューブ)を指定して色をセット
-                .Set(PrimitiveComponent{ 
-                    .type = PrimitiveType::Box, 
-                    .size = {1.0f, 1.0f, 1.0f}, 
-                    .color = oceanColor 
-                })
-                .Set(VoxelOceanComponent{});
-        }
-    }
-}
-
 
 
 #include <cmath>
@@ -466,7 +256,7 @@ void SceneInitializer::SpawnPhysicsAvalancheTest(
     DirectX::XMFLOAT4 rot;
     DirectX::XMStoreFloat4(&rot, q);
 
-    slope.Set(TransformComponent{ .position = {0.0f, -10.0f, 30.0f}, .rotation = rot, .scale = {1.0f, 1.0f, 1.0f} })
+    slope.Set(TransformComponent{ .rotation = rot,.position = {0, -10, 30},.scale{1.0f,1.0f,1.0f} })
         .Set(PrimitiveComponent{ .type = PrimitiveType::Box, .size = {120.0f, 3.0f, 120.0f}, .color = {0.3f, 0.3f, 0.3f, 1.0f} })
         .Set(JoltBoxColliderComponent{ .halfExtent = {120.0f, 3.0f, 120.0f} }) // sizeの半分
         .Set(JoltRigidbodyComponent{
@@ -500,7 +290,7 @@ void SceneInitializer::SpawnPhysicsAvalancheTest(
                 // ランダムな色（視覚的に個体を見分けやすくする）
                 DirectX::XMFLOAT4 color = { colorDist(gen), colorDist(gen), 1.0f, 1.0f };
 
-                cube.Set(TransformComponent{ .position = {posX, posY, posZ}, .rotation = {0,0,0,1}, .scale = {1.0f, 1.0f, 1.0f} })
+                cube.Set(TransformComponent{ .rotation = {0,0,0,1},.position = {posX, posY, posZ},.scale{1.0f,1.0f,1.0f} })
                     .Set(PrimitiveComponent{ .type = PrimitiveType::Box, .size = {1.0f, 1.0f, 1.0f}, .color = color })
                     .Set(JoltBoxColliderComponent{ .halfExtent = {1.0f, 1.0f, 1.0f} })
                     .Set(JoltRigidbodyComponent{
@@ -516,81 +306,45 @@ void SceneInitializer::SpawnPhysicsAvalancheTest(
     }
 }
 
+#include "Game/Logic/Test/ZeroGDebrisComponent.h"
 
-#include "Game/Logics/Test/LissajousOrbitComponent.h"
-#include "Game/Logics/Test/TornadoVortexComponent.h"
-#include "Game/Logics/Test/VectorFlowComponent.h"
-// ※PrimitiveComponent などのインクルードは適宜行ってください
+void SceneInitializer::SpawnBossVFXTest(CCL::ECS::Core::World& world)
+{
+    // ボス中心座標
+    DirectX::SimpleMath::Vector3 bossCenter(0.0f, 20.0f, 0.0f);
 
-void SceneInitializer::SpawnLissajousTest(CCL::ECS::Core::World& world, ID3D11Device* device, int count) {
-    std::mt19937 gen(1001);
-    std::uniform_real_distribution<float> distPhase(0.0f, DirectX::XM_2PI);
-    std::uniform_real_distribution<float> distAmp(5.0f, 20.0f);
-    std::uniform_real_distribution<float> distFreq(1.0f, 5.0f);
-
-    auto arch = CCL::ECS::ArchetypeHelper::Generate<TransformComponent, PrimitiveComponent, LissajousOrbitComponent>();
-
-    for (int i = 0; i < count; ++i) {
-        auto e = EntityFactory::SpawnNamed(world, "LissajousNode", arch);
-        e.Set(TransformComponent{ .position = {0, 10, 0}, .scale = {0.2f, 0.2f, 0.2f} });
-        e.Set(PrimitiveComponent{ .type = PrimitiveType::Sphere, .color = {0.0f, 1.0f, 1.0f, 1.0f} }); // シアン系
-
-        e.Set(LissajousOrbitComponent{
-            .amplitude = {distAmp(gen), distAmp(gen) * 0.5f, distAmp(gen)},
-            .frequency = {distFreq(gen), distFreq(gen) * 1.5f, distFreq(gen) * 0.8f},
-            .phase = {distPhase(gen), distPhase(gen), distPhase(gen)},
-            .timeAcc = 0.0f,
-            .speed = 0.5f,
-            .centerPos = {0, 15, 0}
-            });
-    }
-}
-
-void SceneInitializer::SpawnTornadoTest(CCL::ECS::Core::World& world, ID3D11Device* device, int count) {
-    std::mt19937 gen(2002);
-    std::uniform_real_distribution<float> distRadius(5.0f, 20.0f);
+    std::mt19937 gen(777);
     std::uniform_real_distribution<float> distAngle(0.0f, DirectX::XM_2PI);
-    std::uniform_real_distribution<float> distHeight(0.0f, 50.0f);
+    std::uniform_real_distribution<float> dist1_0(0.0f, 1.0f);
+    std::uniform_real_distribution<float> distRadius(40.0f, 100.0f); // アリーナの広さ
+    std::uniform_real_distribution<float> distHeight(30.0f, 70.0f);
 
-    auto arch = CCL::ECS::ArchetypeHelper::Generate<TransformComponent, PrimitiveComponent, TornadoVortexComponent>();
+    // ========================================================
+    // 1. 瓦礫の波紋 (ZeroG Debris) - 約500個
+    // ========================================================
+    auto debrisArch = ArchetypeHelper::Generate<TransformComponent, PrimitiveComponent, ZeroGDebrisComponent>();
+    for (int i = 0; i < 500; ++i) {
+        auto e = EntityFactory::SpawnNamed(world, "Debris", debrisArch);
 
-    for (int i = 0; i < count; ++i) {
-        auto e = EntityFactory::SpawnNamed(world, "TornadoDebris", arch);
-        e.Set(TransformComponent{ .scale = {1.0f, 1.0f, 1.0f} });
-        e.Set(PrimitiveComponent{ .type = PrimitiveType::Box, .color = {0.8f, 0.2f, 0.8f, 1.0f} }); // 紫系
+        float angle = distAngle(gen);
+        float radius = distRadius(gen);
+        float baseY = distHeight(gen);
 
-        e.Set(TornadoVortexComponent{
-            .radius = distRadius(gen),
-            .angle = distAngle(gen),
-            .height = distHeight(gen),
-            .shrinkSpeed = 2.0f,
-            .rotationSpeed = 3.0f + distRadius(gen) * 0.1f, // 外側ほど速い等の調整
-            .riseSpeed = 5.0f + distRadius(gen) * 0.2f,
-            .maxRadius = 25.0f,
-            .centerPos = {20, 0, 20}
-            });
-    }
-}
-
-void SceneInitializer::SpawnVectorFlowTest(CCL::ECS::Core::World& world, ID3D11Device* device, int count) {
-    std::mt19937 gen(3003);
-    std::uniform_real_distribution<float> distPos(-30.0f, 30.0f);
-
-    auto arch = CCL::ECS::ArchetypeHelper::Generate<TransformComponent, PrimitiveComponent, VectorFlowComponent>();
-
-    for (int i = 0; i < count; ++i) {
-        auto e = EntityFactory::SpawnNamed(world, "FlowParticle", arch);
         e.Set(TransformComponent{
-            .position = {distPos(gen), distPos(gen) + 30.0f, distPos(gen)},
-            .scale = {0.1f, 0.1f, 0.5f} // 進行方向へ長くする(疑似モーションブラー)
+            .position = { bossCenter.x + std::cos(angle) * radius, baseY, bossCenter.z + std::sin(angle) * radius },
+            .scale = {0.5f, 0.5f, 0.5f}
             });
-        e.Set(PrimitiveComponent{ .type = PrimitiveType::Capsule, .color = {0.2f, 1.0f, 0.2f, 0.5f} }); // 半透明の緑
+        e.Set(PrimitiveComponent{ .type = PrimitiveType::Box, .color = {1.0f, 1.0f, 1.0f, 1.0f} });
 
-        e.Set(VectorFlowComponent{
-            .timeAcc = distPos(gen), // 個体ごとの時間ズレ
-            .frequency = 0.1f,
-            .amplitude = 15.0f,
-            .baseSpeed = 1.5f
+        e.Set(ZeroGDebrisComponent{
+            .baseY = baseY,
+            .distanceFromCenter = radius,
+            .floatAmplitude = 2.0f + dist1_0(gen) * 2.0f,
+            .floatFrequency = 1.0f,
+            .waveSpeed = 1.0f,
+            .rotationAxis = { dist1_0(gen), dist1_0(gen), dist1_0(gen) },
+            .rotationSpeed = dist1_0(gen) * 2.0f,
+            .timeAcc = 0.0f
             });
     }
 }
