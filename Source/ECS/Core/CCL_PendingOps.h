@@ -49,11 +49,6 @@ namespace CCL::ECS::Core
 
         // デバッグ用の型名（XMTLで読み取り用）
         const char *name = nullptr;
-
-        // ★ 修正: Spawn時のアーキタイプを値で保持する
-        //   旧実装: data = FrameAllocator上のArchetype* → Reset()後にダングリング→クラッシュ
-        //   新実装: spawnArchetype に直接コピー → FrameAllocatorに依存しないので安全
-        Archetype spawnArchetype;
     };
 
     // ECSの実行フェーズ（Systemの更新中など）で発生したエンティティへの
@@ -81,9 +76,21 @@ namespace CCL::ECS::Core
             {
                 if (op.data == nullptr) continue;
 
-                if (op.kind == PendingOpKind::AddComponent)
+                switch (op.kind)
+                {
+                case PendingOpKind::Spawn:
+                {
+                    // data は Archetype*
+                    Archetype* archPtr = reinterpret_cast<Archetype*>(op.data);
+                    break;
+                }
+                case PendingOpKind::AddComponent:
                 {
                     op.destructor.Destruct(op.data);
+                    break;
+                }
+                default:
+                    break;
                 }
 
                 op.data = nullptr;

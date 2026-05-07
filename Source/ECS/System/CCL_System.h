@@ -14,6 +14,8 @@
 // スレッドに名前を付ける
 #include "tracy/Tracy.hpp"
 
+#include <chrono>       // high_resolution_clock, duration 等に必要
+#include <shared_mutex> // std::shared_mutex, std::shared_lock に必要
 
 #include <tuple> // 追加
 
@@ -67,14 +69,21 @@ namespace CCL::ECS
             ZoneName(_name.c_str(), _name.size());
 
 
-            auto start = std::chrono::high_resolution_clock::now();
+        /*    auto start = std::chrono::high_resolution_clock::now();*/
 
-            Update(dt);
+            // ★読み取りロックを取得（複数スレッド並列OK）
+            if (_structureMutex) {
+                std::shared_lock<std::shared_mutex> lock(*_structureMutex);
+                Update(dt); // ← 実際の処理はこちら
+            }
+            else {
+                Update(dt);
+            }
 
-            auto end = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<float, std::milli> elapsed = end - start;
-            _lastUpdateTime                                  = elapsed.count();
-            _displayUpdateTime = _displayUpdateTime * 0.9f + _lastUpdateTime * 0.1f;
+            //auto end = std::chrono::high_resolution_clock::now();
+            //std::chrono::duration<float, std::milli> elapsed = end - start;
+            //_lastUpdateTime                                  = elapsed.count();
+            //_displayUpdateTime = _displayUpdateTime * 0.9f + _lastUpdateTime * 0.1f;
         }
 
 
@@ -82,6 +91,9 @@ namespace CCL::ECS
         bool isDebugVisible = false;
 
         bool IsDebugVisible() const { return isDebugVisible; }
+
+        // このシステムがエディタ用のGUIを持っているかどうか
+        bool hasGui = false;
 
 		// ImGuiによるデバッグGUI描画 (必要なら派生側でオーバーライド)
         virtual void OnGui() {}

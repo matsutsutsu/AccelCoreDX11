@@ -552,13 +552,12 @@ namespace CCL::ECS::Core
 
             // srcChunkを基準にするかSpawnで新規作成するか
             // opsの中に Spawn があるか探す
-            for (auto* op : ops)
-            {
-                if (op->kind == PendingOpKind::Spawn)
-                {
-                    // spawnArchetype は PendingOp のメンバ（値）なので、
-                    // FrameAllocator のライフタイムに無関係。常に安全にアクセスできる。
-                    nextArch = op->spawnArchetype;
+            for (auto* op : ops) {
+                if (op->kind == PendingOpKind::Spawn) {
+                    // ① void*から本来の型を復元
+                    // PendingOpは汎用構造体、型情報を持たないため明示的に戻す
+                    // Spawn時はこのEntityは最初からこのArchetypeですと確定させる
+                    nextArch = *(reinterpret_cast<Archetype*>(op->data)); // Archetypeデータを復元
                     isNewSpawn = true;
                     break;
                 }

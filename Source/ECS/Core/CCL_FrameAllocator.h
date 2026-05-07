@@ -13,7 +13,6 @@ namespace CCL::ECS::Core {
     // フレーム毎にリセットする超高速アロケータ
     class FrameAllocator {
       public:
-        // 1024 * 1024 = 1MB  
         FrameAllocator(size_t pageSize = 1024 * 1024) : _pageSize(pageSize)
         {
             // 最初から1ページ確保しておく
@@ -37,28 +36,29 @@ namespace CCL::ECS::Core {
             }
         }
 
-        // メモリ確保（アライメント対応の最強版）
-        void* Alloc(size_t size, size_t alignment = 16)
+        // メモリ確保（ポインタをずらすだけ）
+        void *Alloc(size_t size)
         {
-            // ★変更点1: サイズではなく「現在の書き込み位置(_offset)」を、
-            // 指定されたアライメント（16バイト）の倍数にぴったり揃うように切り上げます。
-            // これにより、CPUが最も高速・安全に読み込める「16の倍数の番地」が確定します。
-            size_t alignedOffset = (_offset + alignment - 1) & ~(alignment - 1);
+            // 8バイトアライメント
+            // これは **「きりの良い数字（8の倍数）に切り上げる」 **という計算です。
+            // CPUはデータを読むとき、8バイト区切り（64bit）で並んでいると一番速く読めます。
+            // 例えば「1バイト欲しい」と言われても、「8バイト」確保して渡します。隙間を開けて整列させるためです。
+            size = (size + 7) & ~7;
 
-            // ★変更点2: 切り上げた安全な位置 + 今回使うサイズ が、ページに収まるかチェック
-            if (alignedOffset + size > _pageSize) {
+            //「今のページ（落書き帳）の余白」が足りるかチェックします。g           
+            //足りなければ AllocateNewPageで新しいページ（次の紙）を用意します。
+            if (_offset + size > _pageSize) {
                 AllocateNewPage(size);
-
-                // 新しいページをもらったので、書き込み位置はページの先頭（0）になります。
-                // （OSがくれる新しいメモリは、必ず16バイトの境界に揃っているため安全です）
-                alignedOffset = 0;
             }
 
-            // 安全な開始位置からポインタを計算
-            void* ptr = _currentPage + alignedOffset;
+            //ここが爆速の理由です
+            //「ここを使っていいよ」という場所（ポインタ）は、「ページの先頭 +
+            //現在位置」 だけで決まります。OSへの問い合わせは一切ありません。
+            void *ptr = _currentPage + _offset;
 
-            // 「次に書き始める位置」は、今回データを置いた末尾に設定します。
-            _offset = alignedOffset + size;
+            //「ここまで使ったから、次はここからね」と、
+            // 現在位置をずらすだけ。これで確保完了です。
+            _offset += size;
 
             return ptr;
         }

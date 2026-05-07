@@ -1,6 +1,6 @@
 #include "CCL_World.h"
 #include "../System/CCL_SystemManager.h"
-#include "Engine/Graphics/Renderer/ShapeRenderer.h"
+//#include "Engine/Graphics/Renderer/ShapeRenderer.h"
 #include <algorithm>
 #include <cassert>
 #include <cstring>
@@ -134,19 +134,14 @@ namespace CCL::ECS::Core {
         EntityID id = EntityHandle::Combine(index, generation);
 
         // --- Phase 2: PendingOp への登録 ---
-         // ★ 修正: FrameAllocator に Archetype を置いてポインタを渡す方式をやめる
-         //   旧: Archetype* heapArch = _frameAllocator.New<Archetype>(archetype);
-         //       op.data = reinterpret_cast<void*>(heapArch);
-         //   ↓ FrameAllocator::Reset() のタイミング次第で heapArch が破棄済みになる
-         //
-         //   新: op.spawnArchetype にコピーして保存（PendingOp が生きている限り安全）
+        // アーキタイプ情報はコピーしてヒープに置く（ポインタで渡すため）
+        // ★修正: new Archetype(...) をフレームアロケータに
+        Archetype *heapArch = _frameAllocator.New<Archetype>(archetype);
 
         PendingOp op;
         op.kind   = PendingOpKind::Spawn;
         op.entity = id; // 新しい世代付きIDをセット
-        op.spawnArchetype = archetype; // ★ 値コピーで保存
-        op.data = nullptr;   // 使わない
-
+        op.data   = reinterpret_cast<void *>(heapArch);
 
         _pendingOps.Add(op);
 
