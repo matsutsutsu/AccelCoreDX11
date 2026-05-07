@@ -18,9 +18,12 @@ private:
     void DrawNodeWorkspace();
     void DrawInspector();
 
-    // ★追加: インスペクタの描画を役割ごとに分割
+    // インスペクタの描画を役割ごとに分割
     void DrawStateSettings(uint32_t stateHash);
     void DrawTransitionSettings(int linkId);
+
+    // Transition の共通UI描画
+    void DrawTransitionConditionUI(AnimTransition& trans);
 
     void HandleInteraction();
 
@@ -42,4 +45,15 @@ private:
 
     // ロード直後に座標を復元するためのフラグ
     bool _needRestorePositions = false;
+
+    // 右クリックした瞬間のスクリーン座標を記憶する変数
+    ImVec2 _newNodeSpawnPos = { 0.0f, 0.0f };
+
+    // コンテキストメニューを処理する関数の宣言
+    void HandleContextMenu();
+
+    // =====================================================
+    // デバッグ用の「現在実行中のステート」を保持する変数
+    // =====================================================
+    uint32_t _runtimeActiveStateHash = 0;
 };

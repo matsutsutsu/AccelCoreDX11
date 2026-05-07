@@ -1,7 +1,6 @@
 #include "EditorWindowManager.h"
 
 #include "Engine/Serialization/SceneSerializer.h"
-#include "Engine/Graphics/Core/Graphics.h"
 #include "Engine/GamePlay/Core/Scene/SceneManager.h"
 #include "Engine/Platform/Dialog.h"
 
@@ -19,9 +18,8 @@
 #include "Editor/Windows/TextEditorWindow.h"
 #include "Editor/Windows/InputEditorWindow.h"
 #include "Editor/Windows/ConsoleWindow.h"
-#include "Editor/Windows/NavMeshWindow.h"
 #include "Editor/Windows/AnimGraphWindow.h"
-#include "Editor/Windows/CurveEditorWindow.h"
+#include "Editor/Windows/UIEditorWindow.h"
 #include "Editor/Windows/BehaviorTreeWindow.h"
 
 #include "Engine/Serialization/Factory/Prefab.h"
@@ -37,7 +35,7 @@ void EditorWindowManager::Initialize()
     // =========================================================
     RegisterWindow<InspectorWindow>();
     RegisterWindow<HierarchyWindow>();
-    RegisterWindow<AssetBrowserWindow>();
+    //RegisterWindow<AssetBrowserWindow>();
 
     // =========================================================
     // ★ デフォルトでは「非表示」にするサブウィンドウ
@@ -46,15 +44,14 @@ void EditorWindowManager::Initialize()
     RegisterWindow<ECSDebugWindow>();
     RegisterWindow<ConsoleWindow>();
     RegisterWindow<AnimationSequencerWindow>();
-    RegisterWindow<AnimGraphWindow>()->SetVisible(false);
-    RegisterWindow<CurveEditorWindow>()->SetVisible(false);
-	RegisterWindow<BehaviorTreeWindow>();
+    RegisterWindow<AnimGraphWindow>();
+    RegisterWindow<UIEditorWindow>();
+    RegisterWindow<BehaviorTreeWindow>();
 
     // ※まだ実装中で完全に読み込みたくない（クラッシュする等の）場合は、
     // 引き続きコメントアウトで対応してください。
     RegisterWindow<TextEditorWindow>()->SetVisible(false);
     RegisterWindow<InputEditorWindow>()->SetVisible(false);
-    RegisterWindow<NavMeshWindow>()->SetVisible(false);
     //RegisterWindow<SceneViewWindow>();
     //RegisterWindow<GameViewWindow>();
 }
@@ -66,7 +63,7 @@ void RefreshPrefabList(EditorContext &context)
     context.prefabFiles.clear();
 
     // スキャン対象のディレクトリ (必要に応じて変更してください)
-    std::string targetPath = "Assets/Prefabs";
+    std::string targetPath = "Data/Prefabs";
 
     if (fs::exists(targetPath)) {
         try {
@@ -143,10 +140,11 @@ void EditorWindowManager::DrawMainMenuBar(EditorContext &context)
 
             if (ImGui::MenuItem("Open Scene...", "Ctrl+O")) {
                 char               filename[256] = {0};
-                HWND               hWnd          = Graphics::Instance().GetWindowHandle();
+                HWND               hWnd          = GetActiveWindow();
                 static const char *filter = "Scene Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
 
-                if (Dialog::OpenFileName(filename, 256, filter, "Open Scene", hWnd) ==
+                if (Dialog::OpenFileName(filename, 256, filter, "Open Scene",
+                    "Data/Scene", hWnd) ==
                     DialogResult::OK) {
 
                     //  即時ロードせず、パスを保存して予約する
@@ -161,10 +159,11 @@ void EditorWindowManager::DrawMainMenuBar(EditorContext &context)
 
             if (ImGui::MenuItem("Save Scene", "Ctrl+S")) {
                 char               filename[256] = {};
-                HWND               hWnd          = Graphics::Instance().GetWindowHandle();
+                HWND               hWnd          = GetActiveWindow();
                 static const char *filter = "Scene Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
 
-                if (Dialog::SaveFileName(filename, 256, filter, "Save Scene", "json", hWnd) ==
+                if (Dialog::SaveFileName(filename, 256, filter, "Save Scene", "json",
+                    "Data/Scene", hWnd) ==
                     DialogResult::OK) {
 
                     //  即時ロードせず、パスを保存して予約する

@@ -109,9 +109,44 @@ void InputEditorWindow::DrawContents(EditorContext& context)
     ImGui::Separator();
     ImGui::Spacing();
 
-    // デバイスとキーのコンボボックス用選択肢
-    const char* devices[] = { "Keyboard", "Mouse_Button", "GamePad_Button", "GamePad_AxisLX", "GamePad_AxisLY", "GamePad_AxisRX", "GamePad_AxisRY", "GamePad_TriggerL", "GamePad_TriggerR" };
-    const char* keys[] = { "NONE", "W", "A", "S", "D", "SPACE", "UP", "DOWN", "LEFT", "RIGHT", "BTN_LEFT", "BTN_RIGHT", "BTN_A", "BTN_B", "BTN_X", "BTN_Y", "BTN_RIGHT_TRIGGER", "BTN_LEFT_TRIGGER" };
+    // デバイスの選択肢
+    const char* devices[] = {
+        "Keyboard", "Mouse_Button",
+        "GamePad_Button", "GamePad_AxisLX", "GamePad_AxisLY",
+        "GamePad_AxisRX", "GamePad_AxisRY", "GamePad_TriggerL", "GamePad_TriggerR"
+    };
+
+    // --- キーリストの定義 ---
+    // staticにすることで毎フレームの配列生成を避けます
+    static std::vector<const char*> keyList = {
+        "NONE", "SPACE", "LSHIFT", "RSHIFT", "UP", "DOWN", "LEFT", "RIGHT",
+        "W", "A", "S", "D", // よく使うものを上に
+        "BTN_LEFT", "BTN_RIGHT", "BTN_A", "BTN_B", "BTN_X", "BTN_Y",
+        "BTN_RIGHT_TRIGGER", "BTN_LEFT_TRIGGER"
+    };
+
+    // 初回実行時に A-Z を自動追加（手動で書く手間を省く場合）
+    static bool isKeyListInitialized = false;
+    if (!isKeyListInitialized) {
+        // AからZまでを順番に追加（既存のW,A,S,Dと重複しないようにチェック）
+        for (char c = 'A'; c <= 'Z'; ++c) {
+            std::string s(1, c);
+            bool exists = false;
+            for (const char* k : keyList) {
+                if (std::string(k) == s) { exists = true; break; }
+            }
+            if (!exists) {
+                // 注意: 文字列リテラルではないため、寿命を管理する必要があります。
+                // ここでは簡易化のため new していますが、本来は static な std::string のリストを持つのが安全です。
+                char* dynamicKey = new char[2];
+                dynamicKey[0] = c;
+                dynamicKey[1] = '\0';
+                keyList.push_back(dynamicKey);
+            }
+        }
+        isKeyListInitialized = true;
+    }
+
 
     auto DrawBindingParams = [&](BindingData& b, bool isAxis) {
         // Device コンボボックス
@@ -126,7 +161,7 @@ void InputEditorWindow::DrawContents(EditorContext& context)
 
         // Key コンボボックス（カスタム文字も打てるように InputText にしても良いが、今回はコンボ）
         if (ImGui::BeginCombo("Key", b.key.c_str())) {
-            for (const char* k : keys) {
+            for (const char* k : keyList) {
                 bool isSelected = (b.key == k);
                 if (ImGui::Selectable(k, isSelected)) b.key = k;
                 if (isSelected) ImGui::SetItemDefaultFocus();

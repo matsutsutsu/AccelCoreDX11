@@ -4,8 +4,8 @@
  */
 #include "BehaviorTreeWindow.h"
 #include "Editor/Core/EditorCommandHistory.h"
-#include "Game/Logics/AI/BehaviorTree/Data/ActionRegistry.h"
-#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
+#include "Game/Logic/AI/BehaviorTree/Data/ActionRegistry.h"
+#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeComponents.h"
 #include <imgui_node_editor.h>
 #include <imgui.h>
 #include <algorithm>
@@ -167,8 +167,8 @@ void BehaviorTreeWindow::RestoreGraphState(const nlohmann::json& state) {
         node.posY = jn.value("posY", 0.0f);
 
         if (node.type == EditorBTNodeType::Group) {
-            node.width = jn.value("width", 300.0f);
-            node.height = jn.value("height", 200.0f);
+            node.width = jn.value("width", 400.0f);
+            node.height = jn.value("height", 400.0f);
         }
         if (node.type == EditorBTNodeType::Decorator) {
             node.decoratorType = jn.value("decoratorType", 0);
@@ -239,7 +239,14 @@ void BehaviorTreeWindow::DrawContents(EditorContext& context) {
 
     // カラムを分けて、左側をノードエディタ、右側をインスペクタにする（AnimGraphと同様）
     ImGui::Columns(2, "BTEditorColumns", true);
-    if (ImGui::GetColumnWidth(0) < 100.0f) ImGui::SetColumnWidth(0, ImGui::GetWindowWidth() * 0.75f);
+    // =======================================================
+    // ★ 修正: 初回起動時のみ、ノードエディタの幅を75%にする
+    // =======================================================
+    static bool isFirstLayout = true;
+    if (isFirstLayout) {
+        ImGui::SetColumnWidth(0, ImGui::GetWindowWidth() * 0.75f);
+        isFirstLayout = false;
+    }
 
     DrawToolbar();
     DrawNodeWorkspace(context);
@@ -253,9 +260,10 @@ void BehaviorTreeWindow::DrawContents(EditorContext& context) {
 // 描画：ツールバー（「日本語（英語名）」ボタン）
 // ====================================================================
 void BehaviorTreeWindow::DrawToolbar() {
-    if (ImGui::Button("別名で保存 (Save As...)")) {
+    if (ImGui::Button("保存 ( Save )")) {
         char path[MAX_PATH] = "";
-        if (Dialog::SaveFileName(path, MAX_PATH, "BehaviorTree (*.json)\0*.json\0", "AIグラフを保存", "json") == DialogResult::OK) {
+        // ★修正: 5番目(initialDir)に nullptr を入れ、6番目(ext)に "json" を入れる！
+        if (Dialog::SaveFileName(path, MAX_PATH, "BehaviorTree (*.json)\0*.json\0", "AIグラフを保存", nullptr, "json") == DialogResult::OK) {
             _currentFilePath = path;
             SaveGraph(_currentFilePath);
         }
@@ -263,7 +271,8 @@ void BehaviorTreeWindow::DrawToolbar() {
     ImGui::SameLine();
     if (ImGui::Button("開く (Open...)")) {
         char path[MAX_PATH] = "";
-        if (Dialog::OpenFileName(path, MAX_PATH, "BehaviorTree (*.json)\0*.json\0", "AIグラフを開く") == DialogResult::OK) {
+        // ★こちらも一応 initialDir に nullptr を明示しておく
+        if (Dialog::OpenFileName(path, MAX_PATH, "BehaviorTree (*.json)\0*.json\0", "AIグラフを開く", nullptr) == DialogResult::OK) {
             _currentFilePath = path;
             LoadGraph(_currentFilePath);
         }
@@ -272,20 +281,28 @@ void BehaviorTreeWindow::DrawToolbar() {
     ImGui::Separator();
     
     // ノード追加ボタン
-    if (ImGui::Button("+ セレクター (Selector)")) 
-        CreateNode(EditorBTNodeType::Selector, "セレクター (Selector)", 200, 0); 
+    //if (ImGui::Button("+ セレクター (Selector)")) 
+    //    CreateNode(EditorBTNodeType::Selector, "セレクター (Selector)", 200, 0); 
+    //ImGui::SameLine();
+    //if (ImGui::Button("+ シーケンス (Sequence)")) 
+    //    CreateNode(EditorBTNodeType::Sequence, "シーケンス (Sequence)", 200, 50); 
+    //ImGui::SameLine();
+    //if (ImGui::Button("+ コンディション (Condition)")) 
+    //    CreateNode(EditorBTNodeType::Condition, "コンディション (Condition)", 400, 0); 
+    //ImGui::SameLine();
+    //if (ImGui::Button("+ アクション (Action)")) 
+    //    CreateNode(EditorBTNodeType::Action, "アクション (Action)", 400, 50);
+    //ImGui::SameLine();
+    //if (ImGui::Button("+ デコレーター (Decorator)"))
+    //    CreateNode(EditorBTNodeType::Decorator, "デコレーター (Decorator)", 600, 0);
+
+    //ImGui::SameLine();
+    ImGui::Spacing();
     ImGui::SameLine();
-    if (ImGui::Button("+ シーケンス (Sequence)")) 
-        CreateNode(EditorBTNodeType::Sequence, "シーケンス (Sequence)", 200, 50); 
-    ImGui::SameLine();
-    if (ImGui::Button("+ コンディション (Condition)")) 
-        CreateNode(EditorBTNodeType::Condition, "コンディション (Condition)", 400, 0); 
-    ImGui::SameLine();
-    if (ImGui::Button("+ アクション (Action)")) 
-        CreateNode(EditorBTNodeType::Action, "アクション (Action)", 400, 50);
-    ImGui::SameLine();
-    if (ImGui::Button("+ デコレーター (Decorator)"))
-        CreateNode(EditorBTNodeType::Decorator, "デコレーター (Decorator)", 600, 0);
+    ImGui::Checkbox("自動追従 (Auto Follow)", &_autoFollow);
+    if (ImGui::IsItemHovered()) {
+        ImGui::SetTooltip("チェックを入れると、ゲーム実行中に現在アクティブなノードへカメラが自動で移動します。");
+    }
 }
 
 /**
@@ -343,11 +360,89 @@ void BehaviorTreeWindow::DrawNodeWorkspace(EditorContext& context) {
         activeAI = context.world->GetComponent<BehaviorTreeComponent>(context.selectedEntity);
     }
 
+    uint32_t currentActiveNodeId = 0;
+    bool isActionNodeRunning = false;
 
     for (auto& node : _nodes) {
         if (!node.positionInitialized) {
             ed::SetNodePosition(node.id, ImVec2(node.posX, node.posY));
             node.positionInitialized = true;
+        }
+
+        // =========================================================
+        // グループ（コメント）ノードの専用描画 (安定版ベースのUE5装飾)
+        // =========================================================
+        if (node.type == EditorBTNodeType::Group) {
+
+            // --- A. 選択状態による動的なハイライト（UE5風オレンジ発光） ---
+            bool isSelected = ed::IsNodeSelected(node.id);
+            ImColor borderColor = isSelected ? ImColor(255, 165, 0, 255) : ImColor(150, 150, 150, 80);
+            ImColor bgColor = isSelected ? ImColor(40, 40, 40, 100) : ImColor(30, 30, 30, 60);
+
+            ed::PushStyleColor(ed::StyleColor_GroupBg, bgColor);
+            ed::PushStyleColor(ed::StyleColor_GroupBorder, borderColor);
+            ed::PushStyleVar(ed::StyleVar_NodeRounding, 8.0f);
+
+            // ★ BeginNode を先に呼ぶ
+            ed::BeginNode(node.id);
+            ImGui::PushID(node.id);
+
+            // --- LOD: ズームに応じてフォントサイズを調整してラベルを描画 ---
+            float currentZoom = ed::GetCurrentZoom();
+            ImVec2 labelScreenPos = ImGui::GetCursorScreenPos();
+
+            // ===============================================================
+            // ★ 無限膨張バグを防ぐため、あなたの正解コードである 1.0f x 1.0f を使用！
+            // ===============================================================
+            ImGui::Dummy(ImVec2(1.0f, 1.0f));
+
+            ImDrawList* groupDrawList = ImGui::GetWindowDrawList();
+
+            // --- B. 背景グラフィックとしてのヘッダー帯の描画 ---
+            // ※ ダミーで領域を取るのではなく、文字の後ろに直接「絵」として描くことで膨張を防ぐ
+            float headerHeight = 28.0f;
+            ImVec2 headerMax = ImVec2(labelScreenPos.x + node.width, labelScreenPos.y + headerHeight);
+
+            // ヘッダーの背景色と下部のライン
+            groupDrawList->AddRectFilled(labelScreenPos, headerMax, ImColor(50, 50, 50, 180), 8.0f, ImDrawFlags_RoundCornersTop);
+            groupDrawList->AddLine(ImVec2(labelScreenPos.x, headerMax.y), headerMax, ImColor(0, 0, 0, 150), 2.0f);
+
+            if (currentZoom < 0.6f) {
+                // ズームアウト時はフォントを拡大して視認性を保つ
+                float customFontSize = ImGui::GetFontSize() / currentZoom * 0.8f;
+                groupDrawList->AddText(
+                    ImGui::GetFont(), customFontSize,
+                    labelScreenPos, ImColor(220, 220, 220, 255),
+                    node.name.c_str());
+            }
+            else {
+                // 通常時のテキスト（少し右下にズラして綺麗に配置）
+                ImVec2 textPos = ImVec2(labelScreenPos.x + 8, labelScreenPos.y + 6);
+                groupDrawList->AddText(textPos, ImColor(220, 220, 220, 255), ("// " + node.name).c_str());
+            }
+
+            // ★ ed::Group() がリサイズハンドルを自動描画・管理する
+            ed::Group(ImVec2(node.width, node.height));
+
+            ImGui::PopID();
+            ed::EndNode();
+
+            ed::PopStyleVar(1);
+            ed::PopStyleColor(2);
+
+            // ★ EndNode 後にエディタが管理している実際のサイズを読み返す
+            ImVec2 actualSize = ed::GetNodeSize(node.id);
+            if (actualSize.x > 10.0f && actualSize.y > 10.0f) {
+                // 最小サイズを下回らないようにガード
+                node.width = (std::max)(100.0f, actualSize.x);
+                node.height = (std::max)(50.0f, actualSize.y);
+            }
+
+            // 座標を更新して次のノードへ
+            ImVec2 p = ed::GetNodePosition(node.id);
+            node.posX = p.x;
+            node.posY = p.y;
+            continue;
         }
 
         // =======================================================
@@ -379,6 +474,15 @@ void BehaviorTreeWindow::DrawNodeWorkspace(EditorContext& context) {
                 float blink = (sinf(ImGui::GetTime() * 15.0f) * 0.5f) + 0.5f;
                 borderColor = ImColor(255, 200, 0, 200 + static_cast<int>(55 * blink));
                 borderWidth = 3.0f;
+
+                // 親ノード(Sequence等)もRunningになるが、実際に作業している末端の「Action」ノードを優先してカメラで追う
+                if (!isActionNodeRunning || node.type == EditorBTNodeType::Action) {
+                    currentActiveNodeId = node.id;
+                    if (node.type == EditorBTNodeType::Action) {
+                        isActionNodeRunning = true;
+                    }
+                }
+
             }
             else if (state == BTDebugState::Success) {
                 // 成功（Success）は緑色
@@ -407,7 +511,7 @@ void BehaviorTreeWindow::DrawNodeWorkspace(EditorContext& context) {
         ImDrawList* drawList = ImGui::GetWindowDrawList();
 
         // --- A. 上部入力バー（UE5スタイル） ---
-        if (node.inputPin.id != 0 && node.type != EditorBTNodeType::Group) {
+        if (node.inputPin.id != 0) {
             ed::BeginPin(node.inputPin.id, ed::PinKind::Input);
             ImGui::Dummy(ImVec2(NODE_WIDTH, 20.0f)); // ★高さを12→20に拡大し、掴みやすくした
 
@@ -452,11 +556,16 @@ void BehaviorTreeWindow::DrawNodeWorkspace(EditorContext& context) {
             ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "> %s", actionName);
 
             // =======================================================
-            // Waitアクション時の残り時間リアルタイム表示
-            // =======================================================
+              // ★ 修正：Waitアクション時の残り時間リアルタイム表示
+              // =======================================================
             if (activeAI && node.runtimeFlatIndex >= 0 && node.runtimeFlatIndex < activeAI->nodeTimers.size()) {
                 float currentTimer = activeAI->nodeTimers[node.runtimeFlatIndex];
-                if (currentTimer > 0.0f) {
+
+                // ★ 究極の修正：
+                // タイマーが0.0fより大きい【かつ】、そのノードのIDが本物のWaitノード(100〜111)である時だけ表示する！
+                bool isRealWaitNode = (node.actionOrConditionId >= 100 && node.actionOrConditionId <= 111);
+
+                if (currentTimer > 0.0f && isRealWaitNode) {
                     ImGui::TextColored(ImVec4(1.0f, 0.6f, 0.0f, 1.0f), "Wait: %.1fs", currentTimer);
                 }
             }
@@ -510,13 +619,10 @@ void BehaviorTreeWindow::DrawNodeWorkspace(EditorContext& context) {
         ImGui::Spacing();
         ImGui::EndGroup();
 
-        // グループノードの特殊処理
-        if (node.type == EditorBTNodeType::Group) {
-            ed::Group(ImVec2(node.width, node.height));
-        }
+
 
         // --- D. 下部出力バー（UE5スタイル） ---
-        if (node.outputPin.id != 0 && node.type != EditorBTNodeType::Group) {
+        if (node.outputPin.id != 0) {
             ImGui::Spacing();
             ed::BeginPin(node.outputPin.id, ed::PinKind::Output);
             ImGui::Dummy(ImVec2(NODE_WIDTH, 20.0f)); // ★高さを12→20に拡大
@@ -539,9 +645,82 @@ void BehaviorTreeWindow::DrawNodeWorkspace(EditorContext& context) {
         node.posY = p.y;
     }
     
-    // 線を太くし、色を真っ白にして可視性を高める
+   
+    // =========================================================
+    // ★ 血流の可視化（Execution Flow Debugging）
+    // =========================================================
     for (auto& link : _links) {
-        ed::Link(link.id, link.startPinId, link.endPinId, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), 3.0f);
+        // デフォルトの管の状態（非アクティブ）
+        ImVec4 linkColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f); // 白
+        float linkThickness = 2.0f; // 細い
+
+        // 1. この管に血液を流し込んでいる「親ノード」を検索する
+        auto parentNodeIt = std::find_if(_nodes.begin(), _nodes.end(), [&](const EditorBTNode& n) {
+            return n.outputPin.id == link.startPinId;
+            });
+
+        if (parentNodeIt != _nodes.end()) {
+            // 2. ★修正: ゲーム実行中(activeAI)かつBake済みのノードなら、ランタイムの配列から状態を取得する
+            if (activeAI && parentNodeIt->runtimeFlatIndex >= 0 && parentNodeIt->runtimeFlatIndex < activeAI->debugNodeStates.size()) {
+
+                // 正しい Enum である BTDebugState を取得
+                BTDebugState state = activeAI->debugNodeStates[parentNodeIt->runtimeFlatIndex];
+
+                // 3. 状態に応じた「血流エフェクト」の適用
+                if (state == BTDebugState::Running) { // 実行中
+                    float time = ImGui::GetTime();
+                    float pulse = (std::sin(time * 10.0f) + 1.0f) * 0.5f;
+                    float alpha = 0.5f + (pulse * 0.5f);
+
+                    linkColor = ImVec4(1.0f, 0.6f, 0.0f, alpha);
+                    linkThickness = 4.0f;
+                }
+                else if (state == BTDebugState::Success) { // 成功して通過
+                    linkColor = ImVec4(0.2f, 1.0f, 0.2f, 1.0f); // 鮮やかな緑
+                    linkThickness = 3.0f;
+                }
+                else if (state == BTDebugState::Failure) { // 失敗して遮断
+                    linkColor = ImVec4(1.0f, 0.2f, 0.2f, 1.0f); // 鮮やかな赤
+                    linkThickness = 3.0f;
+                }
+            }
+        }
+
+        // 4. 決定した色と太さでリンクを描画
+        ed::Link(link.id, link.startPinId, link.endPinId, linkColor, linkThickness);
+    }
+
+    // =======================================================
+    // ★ 究極の改修：実行中ノードへのスマート・オートフォロー
+    // =======================================================
+    if (_autoFollow && currentActiveNodeId != 0) {
+        if (_lastTrackedNodeId != currentActiveNodeId) {
+
+            // 1. 現在ユーザーが選択しているノード（インスペクタで見ているもの等）を記憶
+            std::vector<ed::NodeId> selectedNodes;
+            selectedNodes.resize(ed::GetSelectedObjectCount());
+            int count = ed::GetSelectedNodes(selectedNodes.data(), static_cast<int>(selectedNodes.size()));
+            selectedNodes.resize(count);
+
+            // 2. 一瞬だけターゲットを単独選択する
+            ed::ClearSelection();
+            ed::SelectNode(currentActiveNodeId);
+
+            // 3. 選択中のもの（＝ターゲット）へカメラを向ける命令を出す
+            // false = ズームインしない（引き目を維持）, 0.4f = 0.4秒かけて滑らかに移動
+            ed::NavigateToSelection(false, 0.4f);
+
+            // 4. ユーザーの元の選択状態を即座に復元する（インスペクタの表示は切り替わらない）
+            ed::ClearSelection();
+            for (auto id : selectedNodes) {
+                ed::SelectNode(id, true); // true = 追加選択
+            }
+
+            _lastTrackedNodeId = currentActiveNodeId;
+        }
+    }
+    else if (currentActiveNodeId == 0) {
+        _lastTrackedNodeId = 0; // 実行が止まったらリセット
     }
 
 
@@ -586,11 +765,24 @@ void BehaviorTreeWindow::DrawNodeWorkspace(EditorContext& context) {
     }
     ed::EndCreate();
 
+    // =======================================================
+     //  プロフェッショナル向け便利ショートカット機能
+     // =======================================================
+    if (ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows)) {
+        // 2. Ctrl + D キーで選択ノードを瞬時に複製 (Duplicate) のみを残す
+        if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_D)) {
+            DuplicateSelectedNodes();
+        }
+    }
+
+
+    bool itemsDeleted = false; 
     if (ed::BeginDelete()) {
         ed::NodeId deletedNodeId = 0;
         while (ed::QueryDeletedNode(&deletedNodeId)) {
             if (ed::AcceptDeletedItem()) {
                 DeleteNodeAndLinks(deletedNodeId.Get());
+                itemsDeleted = true; 
             }
         }
         ed::LinkId deletedLinkId = 0;
@@ -598,10 +790,17 @@ void BehaviorTreeWindow::DrawNodeWorkspace(EditorContext& context) {
             if (ed::AcceptDeletedItem()) {
                 _links.erase(std::remove_if(_links.begin(), _links.end(),
                     [&](const BTLink& l) { return l.id == deletedLinkId.Get(); }), _links.end());
+                _executionOrderDirty = true; 
+                itemsDeleted = true;         
             }
         }
     }
     ed::EndDelete();
+
+    // ★追加: 削除が完了したらUndoスタックに記録する
+    if (itemsDeleted) {
+        RecordStateForUndo("Delete Node/Link");
+    }
 
     HandleContextMenu();
     ed::End();
@@ -734,7 +933,7 @@ void BehaviorTreeWindow::DrawInspector() {
                 ImGui::Separator();
                 ImGui::Text("デコレーター設定 (Decorator):");
 
-                const char* decNames[] = { "0: 結果反転 (Inverter)", "1: クールダウン (Cooldown)", "2: リトライ (Retry)" };
+                const char* decNames[] = { "0: 結果反転 (Inverter)", "1: クールダウン (Cooldown)", "2: リトライ (Retry)", "3: 非同期 (Async)" }; 
                 if (ImGui::Combo("タイプ", &it->decoratorType, decNames, IM_ARRAYSIZE(decNames))) {
                     _executionOrderDirty = true;
                     needsUndo = true;
@@ -763,14 +962,6 @@ void BehaviorTreeWindow::DrawInspector() {
                 }
             }
 
-            if (it->type == EditorBTNodeType::Group) {
-                ImGui::Separator();
-                ImGui::DragFloat("枠の幅 (Width)", &it->width, 1.0f, 100.0f, 2000.0f);
-                if (ImGui::IsItemDeactivatedAfterEdit()) needsUndo = true;
-
-                ImGui::DragFloat("枠の高さ (Height)", &it->height, 1.0f, 100.0f, 2000.0f);
-                if (ImGui::IsItemDeactivatedAfterEdit()) needsUndo = true;
-            }
 
             // =========================================================
             // ★ 修正の要：すべての `it` の使用が終わった「一番最後」にUndoを記録する！
@@ -808,6 +999,8 @@ void BehaviorTreeWindow::DeleteNodeAndLinks(uint32_t nodeId) {
     // 4. 最後にノード本体を消す
     _nodes.erase(it);
 
+    _executionOrderDirty = true;
+
     CCL_LOG_INFO(LogCategory::Editor, "Node(ID:%u) and its connected links were deleted.", nodeId);
 }
 
@@ -816,6 +1009,14 @@ void BehaviorTreeWindow::DeleteNodeAndLinks(uint32_t nodeId) {
 // ====================================================================
 void BehaviorTreeWindow::HandleContextMenu() {
     ed::Suspend();
+
+    // =======================================================
+    //  Spaceキーでマウスカーソルの位置にメニューを出す
+    // =======================================================
+    if (ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows) && ImGui::IsKeyPressed(ImGuiKey_Space)) {
+        ImGui::OpenPopup("Create New Node");
+        _newNodeSpawnPos = ImGui::GetMousePos(); // Spaceを押した瞬間のマウス座標を記憶
+    }
 
     if (ed::ShowBackgroundContextMenu()) {
         ImGui::OpenPopup("Create New Node");
@@ -914,7 +1115,7 @@ void BehaviorTreeWindow::SaveGraph(const std::string& path) {
 }
 
 // =========================================================
-// セーブ処理の統合 (上書きバグ解消)
+// セーブ処理の統合 (上書きバグ解消 / 新children配列対応版)
 // =========================================================
 nlohmann::json BehaviorTreeWindow::BuildBakedNodes() {
     nlohmann::json jsonNodes = nlohmann::json::array();
@@ -927,7 +1128,7 @@ nlohmann::json BehaviorTreeWindow::BuildBakedNodes() {
     }
     if (!rootNode) return jsonNodes;
 
-    // ヘルパー：特定の出力ピンから繋がっている子ノードを「Y座標順」に取得する
+    // ヘルパー：特定の出力ピンから繋がっている子ノードを「X座標順」に取得する
     auto getSortedChildren = [&](uint32_t outputPinId) {
         std::vector<EditorBTNode*> children;
         for (const auto& link : _links) {
@@ -940,7 +1141,7 @@ nlohmann::json BehaviorTreeWindow::BuildBakedNodes() {
             }
         }
         std::sort(children.begin(), children.end(), [](EditorBTNode* a, EditorBTNode* b) {
-            return a->posX < b->posX; // ★ ベイク時もX座標（左から右）での比較に変更
+            return a->posX < b->posX;
             });
         return children;
         };
@@ -963,13 +1164,19 @@ nlohmann::json BehaviorTreeWindow::BuildBakedNodes() {
         }
         };
 
+    // =======================================================
+    // ユーザーがROOTに複数繋いでしまった場合の警告
+    // =======================================================
+    if (rootChildren.size() > 1) {
+        CCL_LOG_ERROR(LogCategory::Editor, "【BTエラー】ROOTノードには複数の線を繋げません！必ず1つの「Selector」等に繋いでから分岐させてください。");
+    }
+
     EditorBTNode* actualRoot = rootChildren[0];
 
     nlohmann::json rootJson;
     rootJson["type"] = getRuntimeTypeString(actualRoot->type);
-    rootJson["childCount"] = 0;
-    rootJson["firstChildIndex"] = 0; // ★ OffsetからIndexに変更
     rootJson["actionOrConditionId"] = static_cast<int>(actualRoot->actionOrConditionId);
+    rootJson["children"] = nlohmann::json::array(); // ★修正: 配列として初期化
     jsonNodes.push_back(rootJson);
 
     tasks.push({ actualRoot, 0 });
@@ -981,17 +1188,12 @@ nlohmann::json BehaviorTreeWindow::BuildBakedNodes() {
         auto children = getSortedChildren(task.editorNode->outputPin.id);
         if (children.empty()) continue;
 
-        // 親ノードのIndexとカウントを確定
-        jsonNodes[task.flatIndex]["childCount"] = children.size();
-        jsonNodes[task.flatIndex]["firstChildIndex"] = jsonNodes.size(); // ★ Indexに変更
-
         // 子供たちを配列に追加し、次のキューへ
         for (EditorBTNode* child : children) {
             nlohmann::json childJson;
             childJson["type"] = getRuntimeTypeString(child->type);
-            childJson["childCount"] = 0;
-            childJson["firstChildIndex"] = 0;
             childJson["actionOrConditionId"] = static_cast<int>(child->actionOrConditionId);
+            childJson["children"] = nlohmann::json::array(); // ★修正: 配列として初期化
 
             // デコレーター情報のBake
             if (child->type == EditorBTNodeType::Decorator) {
@@ -999,9 +1201,10 @@ nlohmann::json BehaviorTreeWindow::BuildBakedNodes() {
                 childJson["decoratorParam"] = child->decoratorParam;
             }
 
-            // このエディタノードが、フラット配列の「何番目」になるかを記憶！
-            // これにより、ランタイムの debugNodeStates[index] とエディタノードが完全に紐付く。
             child->runtimeFlatIndex = jsonNodes.size();
+
+            // ★修正の要：親ノードの "children" 配列に、この子のインデックスを追加する
+            jsonNodes[task.flatIndex]["children"].push_back(jsonNodes.size());
 
             jsonNodes.push_back(childJson);
             tasks.push({ child, static_cast<int>(jsonNodes.size() - 1) });

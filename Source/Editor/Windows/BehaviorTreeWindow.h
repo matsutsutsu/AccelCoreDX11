@@ -8,7 +8,7 @@
  */
 #pragma once
 #include "Editor/Core/EditorWindow.h"
-#include "Game/Logics/AI/BehaviorTree/Data/BehaviorTreeData.h"
+#include "Game/Logic/AI/BehaviorTree/Data/BehaviorTreeData.h"
 #include <string>
 #include <vector>
 #include <json.hpp>
@@ -76,8 +76,8 @@ struct EditorBTNode {
     int executionOrder = -1;
 
     // グループノード用のサイズ（インスペクタで変更可能にする）
-    float width = 300.0f;
-    float height = 200.0f;
+    float width = 400.0f;
+    float height = 400.0f;
 
     float paramValue1 = 0.0f; // 例: 突進速度
     std::string targetKey = "Player"; // 例: Blackboardのキー
@@ -206,4 +206,7 @@ private:
     nlohmann::json _lastSavedState;   ///< 直前のグラフ状態（Undo判定用）
 
     ImVec2 _newNodeSpawnPos = { 0.0f, 0.0f }; ///< 右クリックした瞬間のスクリーン座標
+
+    bool _autoFollow = false;         ///< 実行中ノードへの自動追従フラグ
+    uint32_t _lastTrackedNodeId = 0;  ///< 最後にカメラが追従したノードID
 };

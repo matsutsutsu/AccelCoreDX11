@@ -27,14 +27,14 @@ void ConsoleWindow::DrawContents(EditorContext& context)
     ImGui::Checkbox("Error", &_showError);
 
     // =======================================================
-    // ★ 追加: カテゴリのフィルター描画 (横に並べる)
+    // カテゴリのフィルター描画 (横に並べる)
     // =======================================================
     ImGui::Separator();
     ImGui::Text("Categories: ");
     ImGui::SameLine();
 
     // カテゴリ名を取得するためのヘルパー配列
-    const char* catNames[] = { "Core","ECS", "Editor", "Physics", "Render", "Audio", "Game", "AI"};
+    const char* catNames[] = { "Core","ECS", "Editor", "Physics", "Render", "Audio", "Game", "AI" };
 
     for (int i = 0; i < (int)LogCategory::Count; ++i) {
         ImGui::Checkbox(catNames[i], &_categoryFilters[i]);
@@ -89,13 +89,11 @@ void ConsoleWindow::DrawContents(EditorContext& context)
             // =======================================================
             //  右クリックで1行だけコピーするコンテキストメニュー
             // =======================================================
-            // 同じ行IDごとに個別のポップアップIDを生成する
             ImGui::PushID(i);
             if (ImGui::BeginPopupContextItem("LogContextMenu")) {
                 if (ImGui::Selectable("Copy this line")) {
                     char copyBuffer[1024];
                     snprintf(copyBuffer, sizeof(copyBuffer), "[%s] [%s:%d] %s", catName, msg.file.c_str(), msg.line, msg.text.c_str());
-                    // OSのクリップボードに文字をセット！
                     ImGui::SetClipboardText(copyBuffer);
                 }
                 ImGui::EndPopup();
@@ -105,18 +103,17 @@ void ConsoleWindow::DrawContents(EditorContext& context)
     }
     clipper.End();
 
-    // Copy All を押したときの挙動の終了宣言
-    if (ImGui::Button("Copy All")) { // UIには描画されないダミー判定（状態リセット用）
-        // 実際には上のツールバーのボタンが押された時に実行済み
-    }
+    // ★修正: 間違ってボタンを描画していた「ダミー判定」を削除しました。
     // ImGui::LogToClipboard() を開始していた場合、ここで終了させる
     ImGui::LogFinish();
 
     // =======================================================
     // 3. 自動スクロール処理
     // =======================================================
-    // 新しいログが追加され、かつ一番下までスクロールされていたら追従する
-    if (_autoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()) {
+    // ★修正: Clipperとの相性が悪い「中途半端な追従判定」を削除。
+    // Auto-Scrollにチェックが入っている間は、強制的に一番下（最新）を表示し続けます。
+    // 過去のログをゆっくり見たい時（上にスクロールしたい時）は、チェックを外してください。
+    if (_autoScroll) {
         ImGui::SetScrollHereY(1.0f);
     }
 

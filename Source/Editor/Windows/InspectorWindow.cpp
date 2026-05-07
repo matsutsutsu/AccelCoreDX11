@@ -5,7 +5,7 @@
 #include <string>
 #include <windows.h>
 
-#include "Engine/Graphics/Core/Graphics.h"
+#include "Engine/Graphics/DX12System.h"
 #include "Engine/Platform/Dialog.h"
 #include "Engine/Serialization/PrefabSerializer.h"
 #include "Game/Core/AllComponents.h"
@@ -83,10 +83,11 @@ void InspectorWindow::DrawContents(EditorContext &context)
             strcpy_s(filename, "NewPrefab.json");
         }
 
-        HWND               hWnd   = Graphics::Instance().GetWindowHandle();
+        HWND               hWnd   = GetActiveWindow();
         static const char *filter = "JSON Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
 
-        if (Dialog::SaveFileName(filename, 256, filter, "Save Prefab", "json", hWnd) ==
+        if (Dialog::SaveFileName(filename, 256, filter, "Save Prefab", "json",
+            "Data/Prefabs", hWnd) ==
             DialogResult::OK) {
             PrefabSerializer::Save(filename, world, selected, std::string(filenameBuf));
         }
@@ -137,7 +138,7 @@ void InspectorWindow::DrawContents(EditorContext &context)
 
         ImGui::PushID((int)typeID);
         bool headerOpen = ImGui::CollapsingHeader(
-            compName.c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
+            compName.c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap);
 
         float buttonSize = 20.0f;
         ImGui::SameLine(ImGui::GetWindowWidth() - buttonSize - 20);
