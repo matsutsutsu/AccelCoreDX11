@@ -129,7 +129,9 @@ template <> struct ComponentMeta<JoltCharacterConfigComponent> {
             META_FIELD_FLOAT(JoltCharacterConfigComponent,
                 jumpSpeed, "jumpSpeed", "Jump Speed", 0.5f, 0.0f, 100.0f, "Character Settings"),
             META_FIELD_FLOAT(JoltCharacterConfigComponent,
-                characterMass, "characterMass", "Character Mass", 1.0f, 0.1f, 1000.0f, "Character Settings")
+                characterMass, "characterMass", "Character Mass", 1.0f, 0.1f, 1000.0f, "Character Settings"),
+            META_FIELD_FLOAT(JoltCharacterConfigComponent,
+				gravityScale, "gravityScale", "Gravity Scale", 0.1f, -10.0f, 10.0f, "Character Settings")
         };
         return fields;
     }

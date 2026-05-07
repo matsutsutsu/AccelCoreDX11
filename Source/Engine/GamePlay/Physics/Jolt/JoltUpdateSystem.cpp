@@ -5,22 +5,32 @@
 #include "Game/Core/SystemPriority.h"
 #include <Jolt/Jolt.h>
 #include "Engine/GamePlay/Physics/Character/JoltCharacterHandleComponent.h"
+#include "Engine/GamePlay/Core/Time/TimeState.h"
 
 void JoltStepSystem::Update(float dt)
 {
     if (!_world->HasResource<JoltPhysicsManager>()) return;
-    auto &joltManager = _world->GetResource<JoltPhysicsManager>();
+    auto& joltManager = _world->GetResource<JoltPhysicsManager>();
+
+    // 物理シミュレーションに渡す時間を、世界の親時計(globalScale)で歪める
+    float physicsDt = dt;
+    if (_world->HasResource<TimeContext>()) {
+        const auto& ctx = _world->GetResource<TimeContext>();
+        physicsDt *= ctx.globalScale;
+    }
 
     // 物理の時間を dt 秒だけ進める
-    joltManager.Step(dt); // ここでJolt内部の並列計算が走る
+    if (physicsDt > 0.0f) {
+        joltManager.Step(physicsDt); // ここでJolt内部の並列計算が走る
+    }
 }
 
 void JoltPullSystem::Update(float dt)
 {
     if (!_world->HasResource<JoltPhysicsManager>()) return;
 
-    auto               &joltManager   = _world->GetResource<JoltPhysicsManager>();
-    JPH::BodyInterface &bodyInterface = joltManager.GetBodyInterface();
+    auto& joltManager = _world->GetResource<JoltPhysicsManager>();
+    JPH::BodyInterface& bodyInterface = joltManager.GetBodyInterface();
 
 
     ForEachWithIDParallel([&](CCL::ECS::EntityID id, TransformComponent& trans, const JoltHandleComponent& joltBody) {
@@ -52,12 +62,12 @@ void JoltPullSystem::Update(float dt)
         bodyInterface.GetPositionAndRotation(joltBody.bodyID, pos, rot);
 
         // ECSのTransformを上書き
-        trans.position = {pos.GetX(), pos.GetY(), pos.GetZ()};
-        trans.rotation = {rot.GetX(), rot.GetY(), rot.GetZ(), rot.GetW()};
+        trans.position = { pos.GetX(), pos.GetY(), pos.GetZ() };
+        trans.rotation = { rot.GetX(), rot.GetY(), rot.GetZ(), rot.GetW() };
 
         // TransformUpdateSystemに変更を知らせて行列を再計算させる
         trans.isStatic = false;
-    });
+        });
 }
 
 // 登録順序がすべてを決定する

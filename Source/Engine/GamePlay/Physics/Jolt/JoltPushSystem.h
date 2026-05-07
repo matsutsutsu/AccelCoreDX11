@@ -23,11 +23,11 @@
 
 
 class JoltPushSystem
-  : public CCL::ECS::IfSystem<JoltPushSystem,
-                                CCL::ECS::Write<TransformComponent>,
-                                CCL::ECS::Read<JoltHandleComponent>,
-                                CCL::ECS::Read<JoltRigidbodyComponent>> { 
-  public:
+    : public CCL::ECS::IfSystem<JoltPushSystem,
+    CCL::ECS::Write<TransformComponent>,
+    CCL::ECS::Read<JoltHandleComponent>,
+    CCL::ECS::Read<JoltRigidbodyComponent>> {
+public:
     JoltPushSystem() : IfSystem("JoltPushSystem") {}
     void Update(float dt) override;
 };

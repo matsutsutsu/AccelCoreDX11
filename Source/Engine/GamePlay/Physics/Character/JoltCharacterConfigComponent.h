@@ -22,4 +22,5 @@ struct JoltCharacterConfigComponent {
     float walkSpeed     = 6.0f;  // 歩行速度
     float jumpSpeed     = 10.0f; // ジャンプの初速
     float characterMass = 70.0f; // 体重（押し出し計算などに影響）
+    float gravityScale   = 1.0f;  // 重力の強さの倍率（1.0が通常、2.0なら倍の重力）
 };

@@ -2,7 +2,9 @@
 #include "ECS/System/CCL_System.h"
 #include "Engine/GamePlay/Transform/TransformComponent.h"
 #include "JoltCharacterHandleComponent.h"
-#include "Game/Logics/Character/CharacterMovementInputComponent.h"
+#include "Game/Logic/Character/CharacterMovementInputComponent.h"
+#include "Engine/GamePlay/Physics/Character/JoltCharacterConfigComponent.h"
+#include "Engine/GamePlay/Core/Time/TimeState.h"
 
 // ===================================================================================
 // ファイル名: JoltCharacterUpdateSystem.h
@@ -26,8 +28,11 @@ class JoltCharacterUpdateSystem
     : public CCL::ECS::IfSystem<JoltCharacterUpdateSystem,
                                 CCL::ECS::Write<TransformComponent>,
                                 CCL::ECS::Read<JoltCharacterHandleComponent>,
-                                CCL::ECS::Read<CharacterMovementInputComponent>> {
-public:
+                                CCL::ECS::Read<CharacterMovementInputComponent>,
+                                CCL::ECS::Read<JoltCharacterConfigComponent>,
+                                CCL::ECS::Read<TimeState >> // ★追加
+{
+    public:
   JoltCharacterUpdateSystem() : IfSystem("JoltCharacterUpdateSystem") {}
   virtual ~JoltCharacterUpdateSystem() = default;
 

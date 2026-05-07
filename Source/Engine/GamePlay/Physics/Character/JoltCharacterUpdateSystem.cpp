@@ -7,6 +7,8 @@
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Game/Core/SystemPriority.h"
 
+using namespace DirectX;
+
 // ===================================================================================
 // 【 物理肉体更新システム : JoltCharacterUpdateSystem 】
 //
@@ -26,89 +28,97 @@
 // ===================================================================================
 
 
-void JoltCharacterUpdateSystem::Update(float dt) {
-    if (!_world->HasResource<JoltPhysicsManager>())
-      return;
-    auto &joltManager = _world->GetResource<JoltPhysicsManager>();
-    JPH::PhysicsSystem *physicsSystem = joltManager.GetPhysicsSystem();
-    //JPH::TempAllocator *tempAllocator = joltManager.GetTempAllocator();
-    JPH::BodyInterface &bodyInterface = joltManager.GetBodyInterface();
+void JoltCharacterUpdateSystem::Update(float rawDt) {
+    if (!_world->HasResource<JoltPhysicsManager>()) return;
+
+    auto& joltManager = _world->GetResource<JoltPhysicsManager>();
+    JPH::PhysicsSystem* physicsSystem = joltManager.GetPhysicsSystem();
+    JPH::BodyInterface& bodyInterface = joltManager.GetBodyInterface();
 
     JPH::TempAllocatorMalloc localTempAllocator;
-
-    // キャラクターのアップデート設定（重力に対する姿勢制御など）
     JPH::CharacterVirtual::ExtendedUpdateSettings updateSettings;
 
-    // 全コアを使って並列でキャラクターの衝突計算を行う
-    ForEachWithID([&](CCL::ECS::EntityID id, TransformComponent &trans,
-                              const JoltCharacterHandleComponent &handle,
-                              const CharacterMovementInputComponent &input) {
-    if (!handle.character) return;
+    ForEachWithID([&](CCL::ECS::EntityID id,
+        TransformComponent& trans,
+        const JoltCharacterHandleComponent& handle,
+        const CharacterMovementInputComponent& input,
+        const JoltCharacterConfigComponent& config,
+        const TimeState& time)
+        {
+            if (!handle.character) return;
 
-    // =======================================================
-    // プレイヤーの強制ワープ処理
-    // =======================================================
-    if (trans.isTeleported) {
-      handle.character->SetPosition(
-          JPH::RVec3(trans.position.x, trans.position.y, trans.position.z));
-      handle.character->SetRotation(
-          JPH::Quat(trans.rotation.x, trans.rotation.y, trans.rotation.z,
-                    trans.rotation.w));
+            // --- 1. テレポート処理 ---
+            if (trans.isTeleported) {
+                handle.character->SetPosition(JPH::RVec3(trans.position.x, trans.position.y, trans.position.z));
+                handle.character->SetRotation(JPH::Quat(trans.rotation.x, trans.rotation.y, trans.rotation.z, trans.rotation.w));
+                trans.isTeleported = false;
+            }
 
-      // フラグを下ろす
-      trans.isTeleported = false;
-    }
- 
+            // ===============================================================
+            // --- 2. 速度と重力の適用（★ここが空中ダッシュの要！） ---
+            // ===============================================================
+            JPH::Vec3 currentVel = handle.character->GetLinearVelocity();
+            float verticalVel = currentVel.GetY();
 
-    // =======================================================
-    // 自分自身の分身（Kinematic剛体）を無視するフィルターを作成
-    // =======================================================
-    JPH::BodyID ignoreBodyID;
-    if (auto *kinBody = _world->GetComponent<JoltHandleComponent>(id)) {
-      ignoreBodyID = kinBody->bodyID;
-    }
-    JPH::IgnoreSingleBodyFilter bodyFilter(ignoreBodyID);
+            // ★追加: 空中直線ダッシュフラグがONなら、重力を完全無視してY軸も上書き！
+            if (input.overrideVerticalVelocity) {
+                verticalVel = input.desiredVelocity.y;
+            }
+            else {
+                // 通常の重力・ジャンプ処理
+                if (handle.character->GetGroundState() == JPH::CharacterVirtual::EGroundState::OnGround) {
+                    verticalVel = 0.0f;
 
-	// キャラクターの現在の速度を取得
-    JPH::Vec3 currentVel = handle.character->GetLinearVelocity();
+                    if (input.jumpRequested) {
+                        // カスタムジャンプ力が指定されていれば優先
+                        verticalVel = (input.customJumpVelocity > 0.01f) ? input.customJumpVelocity : config.jumpSpeed;
+                    }
+                }
+                else {
+                    // カスタム重力があればそれを使用 (Y軸は下向きなのでマイナスにする)
+                    float currentGravityY = (input.customGravity > 0.01f) ? -input.customGravity : (physicsSystem->GetGravity().GetY() * config.gravityScale);
+                    verticalVel += currentGravityY * time.localDt;
+                }
+            }
 
-    // ペダル(input)の踏み込み量を見て、車(Jolt)を動かす
-    handle.character->SetLinearVelocity(JPH::Vec3(
-        input.desiredVelocity.x,
-        currentVel.GetY(), // 重力は維持
-        input.desiredVelocity.z
-    ));
+            // 最終的な速度を Jolt の実体にセット
+            handle.character->SetLinearVelocity(JPH::Vec3(
+                input.desiredVelocity.x,
+                verticalVel,
+                input.desiredVelocity.z
+            ));
 
+            // --- 4. 衝突計算と移動の実行 ---
+            JPH::BodyID ignoreBodyID;
+            if (auto* kinBody = _world->GetComponent<JoltHandleComponent>(id)) {
+                ignoreBodyID = kinBody->bodyID;
+            }
+            JPH::IgnoreSingleBodyFilter bodyFilter(ignoreBodyID);
 
-    // 1. 地形との衝突や段差の乗り越えを計算 (Jolt内部処理)
-    handle.character->ExtendedUpdate(
-        dt, physicsSystem->GetGravity(), updateSettings,
-        physicsSystem->GetDefaultBroadPhaseLayerFilter(PhysicsLayers::MOVING),
-        physicsSystem->GetDefaultLayerFilter(PhysicsLayers::MOVING),
-        bodyFilter,
-        {},
-        localTempAllocator);
+            // ★修正: CharacterVirtual内部の挙動計算にもカスタム重力を渡す
+            JPH::Vec3 joltGravity = (input.customGravity > 0.01f) ? JPH::Vec3(0, -input.customGravity, 0) : (physicsSystem->GetGravity() * config.gravityScale);
 
+            handle.character->ExtendedUpdate(
+                time.localDt,
+                joltGravity, // ← カスタム重力を渡す
+                updateSettings,
+                physicsSystem->GetDefaultBroadPhaseLayerFilter(PhysicsLayers::MOVING),
+                physicsSystem->GetDefaultLayerFilter(PhysicsLayers::MOVING),
+                bodyFilter,
+                {},
+                localTempAllocator);
 
-    // 2. 計算後の「位置」だけをECS側のTransformに同期する
-    JPH::RVec3 pos = handle.character->GetPosition();
-    trans.position = {pos.GetX(), pos.GetY(), pos.GetZ()};
+            // --- 5. 結果をTransformへ同期 ---
+            JPH::RVec3 pos = handle.character->GetPosition();
+            trans.position = { pos.GetX(), pos.GetY(), pos.GetZ() };
+            trans.isStatic = false;
 
-    // ※回転（trans.rotation）は上書きしない！
-    // Joltのカプセルは常に直立しており、振り向く処理はPlayerMoveSystem側で行うため。
-    trans.isStatic = false; // 行列の再計算を要求
-
-    // =======================================================
-    // プレイヤーの「幽霊」を実体化させる同期処理
-    // =======================================================
-    if (auto* kinBody = _world->GetComponent<JoltHandleComponent>(id)) {
-        JPH::Quat joltRot(trans.rotation.x, trans.rotation.y, trans.rotation.z, trans.rotation.w);
-        joltRot = joltRot.Normalized();
-        bodyInterface.SetPositionAndRotation(kinBody->bodyID, pos, joltRot, JPH::EActivation::DontActivate);
-    }
-
-
-  });
+            // 幽霊（Kinematic Body）の同期
+            if (auto* kinBody = _world->GetComponent<JoltHandleComponent>(id)) {
+                JPH::Quat joltRot(trans.rotation.x, trans.rotation.y, trans.rotation.z, trans.rotation.w);
+                bodyInterface.SetPositionAndRotation(kinBody->bodyID, pos, joltRot.Normalized(), JPH::EActivation::DontActivate);
+            }
+        });
 }
 
 // 物理のStepが走る前、または同じPhysicsフェーズで実行する

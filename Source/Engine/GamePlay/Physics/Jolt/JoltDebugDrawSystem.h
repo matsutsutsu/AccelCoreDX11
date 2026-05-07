@@ -42,12 +42,13 @@ public:
 
 // 4. MeshCollider 可視化システム
 class JoltMeshDebugDrawSystem : public CCL::ECS::IfSystem<JoltMeshDebugDrawSystem,
-                                         CCL::ECS::Read<TransformComponent>,
-                                         CCL::ECS::Read<JoltMeshColliderComponent>,
-                                         CCL::ECS::Read<ModelComponent>> {
+    CCL::ECS::Read<TransformComponent>,
+    CCL::ECS::Read<JoltMeshColliderComponent>,
+    CCL::ECS::Read<ModelComponent>> {
 public:
     JoltMeshDebugDrawSystem() : IfSystem("JoltMeshDebugDrawSystem") {
         //this->isDebugVisible = true;
     }
     void Update(float dt) override;
 };
+

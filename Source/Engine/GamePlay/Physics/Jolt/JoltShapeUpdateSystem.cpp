@@ -25,7 +25,8 @@ inline JPH::Quat EulerDegreeToJoltQuat(const XMFLOAT3& eulerDegree) {
 // ===================================================================================
 // 1. BoxCollider の更新
 // ===================================================================================
-void JoltBoxShapeUpdateSystem::Update(float dt) {
+void JoltBoxShapeUpdateSystem::Update(float dt)
+{
     if (!_world->HasResource<JoltPhysicsManager>()) return;
     JPH::BodyInterface &bodyInterface = _world->GetResource<JoltPhysicsManager>().GetBodyInterface();
 
