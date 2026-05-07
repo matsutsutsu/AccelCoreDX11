@@ -103,30 +103,18 @@ void JoltPhysicsFacade::SetLookDirection(CCL::ECS::EntityID entity, const Direct
     auto* handle = m_world->GetComponent<JoltHandleComponent>(entity);
     if (!handle) return;
 
-    // 物理エンジンのインターフェースを取得 (※既存の定義に合わせてください)
+    // 方向ベクトルから、Y軸を軸とした回転（クォータニオン）を計算
+    DirectX::XMVECTOR dir = DirectX::XMLoadFloat3(&direction);
+    dir = DirectX::XMVector3Normalize(dir);
+
+    // Y軸との内積やアークタンジェントから回転を求める（簡易的な実装例）
+    float angle = atan2f(DirectX::XMVectorGetX(dir), DirectX::XMVectorGetZ(dir));
+    DirectX::XMVECTOR q = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0, 1, 0, 0), angle);
+
+    JPH::Quat joltQuat(DirectX::XMVectorGetX(q), DirectX::XMVectorGetY(q), DirectX::XMVectorGetZ(q), DirectX::XMVectorGetW(q));
+
     JPH::BodyInterface& bodyInterface = m_world->GetResource<JoltPhysicsManager>().GetBodyInterface();
-
-    // ========================================================================
-    // 1. 水平化 (Y軸の無効化)
-    // 目的地が上や下にあっても、Y成分を強制的に 0 にすることで「Yaw(左右)」だけの回転にする
-    // ========================================================================
-    JPH::Vec3 flatDirection(direction.x, 0.0f, direction.z);
-
-    // ========================================================================
-    // 2. デッドゾーンのチェック (到着時の荒ぶる回転を防止)
-    // ベクトルの長さ（の2乗）が極小の場合は、すでに到着しているとみなして回転しない
-    // ========================================================================
-    if (flatDirection.LengthSq() > 1e-4f) {
-
-        flatDirection = flatDirection.Normalized();
-
-        // 3. 基準の前方ベクトル（+Z）から目標方向へのクォータニオンを生成
-        // ※もしあなたのモデルやエンジンの前方が「-Z」の場合は JPH::Vec3(0, 0, -1) にしてください
-        JPH::Quat targetRotation = JPH::Quat::sFromTo(JPH::Vec3(0.0f, 0.0f, 1.0f), flatDirection);
-
-        // 4. Joltの剛体に回転を適用し、スリープ状態なら叩き起こす(Activate)
-        bodyInterface.SetRotation(handle->bodyID, targetRotation, JPH::EActivation::Activate);
-    }
+    bodyInterface.SetRotation(handle->bodyID, joltQuat, JPH::EActivation::Activate);
 }
 
 // =======================================================

@@ -1,5 +1,5 @@
 #include "JoltContactListener.h"
-#include <Jolt/Physics/Body/Body.h> // Bodyの中身(完全な型)を知るために絶対に必要
+#include <Jolt/Physics/Body/Body.h> // ★追加：Bodyの中身(完全な型)を知るために絶対に必要
 
 void JoltContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Body& inBody2,
                                          const JPH::ContactManifold& inManifold,
@@ -16,15 +16,12 @@ void JoltContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Bo
     // ★修正: GetBaseOffset() という関数ではなく、mBaseOffset という変数に直接アクセスする
     JPH::RVec3 pos = inManifold.mBaseOffset + inManifold.mRelativeContactPointsOn1[0];
     JPH::Vec3  normal = inManifold.mWorldSpaceNormal;
-    JPH::Vec3 relVel = inBody1.GetLinearVelocity() - inBody2.GetLinearVelocity();
 
     JoltCollisionEvent newEvent;
     newEvent.entityA         = entityA;
     newEvent.entityB         = entityB;
     newEvent.contactPosition = {pos.GetX(), pos.GetY(), pos.GetZ()};
     newEvent.contactNormal   = {normal.GetX(), normal.GetY(), normal.GetZ()};
-    // 計算した相対速度をイベントに乗せる
-    newEvent.relativeVelocity = { relVel.GetX(), relVel.GetY(), relVel.GetZ() };
 
     // =======================================================
     // 3. スレッドセーフに配列へ追加（Traffic Control）
