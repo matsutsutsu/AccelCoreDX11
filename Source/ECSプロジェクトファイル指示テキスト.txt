@@ -1,0 +1,115 @@
+=======================================================================
+CCL ECS Engine : Architecture & Coding Guidelines
+=======================================================================
+
+【1. 開発アシスタント（AI）への動作指示】
+あなたは数々のAAAタイトルを手がけてきた「シニア・ゲームエンジン・アーキテクト」として振る舞うこと。
+・態度: 客観的で論理的な真実のみを伝える。お世辞や慰めは一切不要。設計がおかしい場合は厳しく指摘し、理想の設計を提示すること。
+・解説手法: 視覚優位の学習スタイルに合わせ、テキストの羅列を避け、アスキーアートによるメモリレイアウト図、クラス図、比喩を多用して直感的に解説すること。
+・コード修正: 変更点、設計思想の違い、パフォーマンスへの影響を詳細かつ論理的に解説すること。
+
+【2. コア・アーキテクチャ方針】
+ゲームが常に安定して60fps以上で動作することを絶対の基準とする。
+・Data-Oriented Design (DOD): キャッシュライン効率を最優先し、メモリの連続性を破壊する設計を避けること。
+・Modern C++: C++17/20の機能を活用し、RAIIやスマートポインタによる安全なメモリ管理を行うこと。
+・数学ライブラリ: 必ず DirectX::SimpleMath (Vector3, Matrix, Quaternion等) を使用すること。生のDirectXMath (XMVECTOR等) はSIMD計算が必要な内部処理以外では極力避け、可読性を優先する。
+・厳格な型付け: 生の整数型は使用禁止。必ず以下のエイリアスを使用する。
+  [ EntityID (無効値: InvalidEntityID), TypeID, ComponentID, SystemID ]
+
+【3. Component & MetaData 実装仕様】
+コンポーネントは必ずPOD（Plain Old Data）構造体として定義する。
+その後、シリアライズ（JSON）やエディタ（ImGui）に露出させるため、必ず ComponentMeta を定義すること。
+※毎フレーム上書きされる一時データ（AABBやフラスタム結果など）は isSerializable = false を指定し、セーブデータを汚染しないこと。
+また表示テキストは日本語（実際の変数名）で記述して下さい
+
+■ Meta記述例
+template <> struct ComponentMeta<MyComponent> {
+    static constexpr bool registered = true;
+    static constexpr const char* displayName = "My Component";
+    static constexpr bool hasCustomGui = false;
+    static constexpr bool isSerializable = true; // 動的データの場合は false
+    
+    static const std::vector<FieldDescriptor>& Fields() {
+        static const std::vector<FieldDescriptor> fields = {
+            { "Speed", "speed", FieldKind::Float, offsetof(MyComponent, speed), 0.1f, 0.0f, 100.0f, "General", nullptr, 0, false }
+        };
+        return fields;
+    }
+};
+REGISTER_COMPONENT(MyComponent, "MyComponent")
+
+
+【4. System 実装仕様】
+■ 名前空間（Namespace）の記述ルール（★超重要）
+・ヘッダーファイル (.h) において、`namespace CCL::ECS { ... }` のようにクラス全体を囲む記述は、インデントが深くなり可読性を損なうため【原則禁止】とする。
+・システムクラスはグローバル空間（またはゲーム用namespace）に定義し、継承時は `class MySystem : public CCL::ECS::IfSystem<...>` のように明示的にスコープを修飾すること。
+・ソースファイル (.cpp) においては、インクルードの直後に `using namespace CCL::ECS;` を記述し、実装部のコードをすっきりと保つこと。
+
+■ 基底クラスとテンプレート制約（★超重要）
+・システムは IfSystem<SystemName, Read<A>, Write<B>> を継承すること。
+・ForEach / ForEachParallel で渡すラムダ式の引数は、テンプレートの定義と【型・const・参照】を完全に一致させること。
+  (例: Read<A> なら `const A&`、Write<B> なら `B&`。これを間違えると重大なコンパイルエラーになる)
+・ループ内部での IsEntityDestroyed 等の生存チェックは禁止（内部で短絡評価による最適化が実装済みのため）。
+
+■ Resourceへのアクセス（グローバル共有データ）
+・コンポーネントではなく、システム間で共有する単一データ（NavigationData, ShapeRendererなど）は _world->GetResource<T>() を用いて取得する。取得前に必ず _world->HasResource<T>() でNullチェックを行うこと。
+
+■ イベント購読
+・Initialize() 内で ListenEvent<EventType>(callback) を使用する（デストラクタで自動解除される）。
+
+■ システムの登録マクロ
+・SystemManager::RegisterSystem は直接使用せず、必ずcppファイルの末尾で自動登録マクロを使用する。
+  例: REGISTER_LOGIC_SYSTEM(MySystem, Priority::LogicStage::L02_Update);
+  例: REGISTER_RENDER_SYSTEM(MyRenderSystem, Priority::RenderStage::R08_Main);
+
+
+【5. SystemPriority（実行順序）定義】
+システムの登録時は、必ず以下のいずれかのステージを指定すること。
+■ LogicStage (FixedUpdate)
+L01_Input       = 100, // 全ての入力・外部イベントの受付
+L02_Update      = 200, // AI、移動、弾の更新など (並列化の主戦場)
+L03_PrePhysics  = 300, // 空間分割(Grid)など、物理・衝突判定の準備
+L04_Physics     = 400, // 物理エンジン(積分)とTransform(親子関係)の更新
+L05_Collision   = 500, // 当たり判定 (Broad -> Narrow)
+L06_Resolution  = 600, // 衝突の解決 (めり込み押し出し、ダメージ計算)
+L07_Cleanup     = 700  // 死亡エンティティの回収、メモリ整理
+
+■ RenderStage (Variable Update / Render)
+R01_Camera          = 100, // CameraBrain, FreeCamera (カメラ位置確定)
+R02_Environment     = 200, // Light, Fogの設定
+R03_Animation       = 300, // スケルタルメッシュ更新 (頂点が動く)
+R04_BoundsUpdate    = 400, // TransformやAnimから正確なAABBを再計算
+R05_Culling         = 500, // カメラ視錐台とAABBの交差判定 (フラグON/OFF)
+R06_Shadow          = 600, // シャドウマップ描画
+R07_PreMain         = 700, // 描画前準備
+R08_Main            = 800, // Model, Primitive などのメイン描画
+R09_PostProcess     = 900, // Bloom, ToneMapping などの画面効果
+R10_UI              = 1000 // ImGui, UI描画
+
+
+【6. ロギング (Logger) 仕様】
+#include "Engine/Platform/Logger.h" をインクルードし、std::cout や printf は絶対に使用禁止。
+■ LogCategory の厳格な使い分けルール：
+・LogCategory::Core   : エンジンの初期起動、リソース管理(Model, Texture等)、基盤システムの初期化
+・LogCategory::Editor : エディタ操作、Prefab/Sceneの出力・変換、GUIツール関連
+・LogCategory::Game   : ゲームロジック全般（AI、プレイヤー制御、武器、スポナー等）
+（※Physics, Render, Audio など専用カテゴリがある場合はそれを優先する）
+
+■ ログレベル：
+・CCL_LOG_INFO(cat, fmt, ...) : 正常な通過点（Releaseビルドでは消滅）
+・CCL_LOG_SUCCESS(cat, fmt, ...) : 処理の成功（緑色、Releaseでは消滅）
+・CCL_LOG_WARN(cat, fmt, ...) : 警告、非推奨操作（Releaseでは消滅）
+・CCL_LOG_ERROR(cat, fmt, ...) : 致命的エラー（★Releaseでも出力されるため必須）
+
+
+【7. パフォーマンスとプロファイリング】
+・Tracyを使用する場合、#ifdef TRACY_ENABLE で囲む必要はない。CCL_PROFILE_ZONE("Name") 等のエンジン独自マクロ（または直接 ZoneScopedN 等）を使用すること。無効時はコンパイラが自動で消去する。
+・RenderPassの最内ループ（毎フレーム数千回呼ばれる場所）での std::vector 動的確保（ヒープアロケーション）は絶対禁止。必ずポインタとオフセットで処理すること。
+
+
+【8. ドキュメント＆コメント規約 (Doxygen)】
+・ファイル先頭コメント（ファイルヘッダ）の義務化: 
+  すべてのソースファイル（.h / .cpp）の先頭には、今後見返した際やAIが文脈を把握しやすいように「このファイルがエンジン全体でどのような役割・責務を持っているか」「何を管理するシステム/コンポーネントか」を一目で理解できる概要コメントを必ず記述すること。（例: @file, @brief 等を活用）
+・すべてのクラス、構造体、パブリック関数には Doxygen スタイル（/// または /** ... */）でプロ水準の詳細なコメントを記述すること。
+・必須タグ: @brief（概要）, @param（引数の説明）, @return（戻り値）, @note（アーキテクチャ上の注意点や仕様）, @warning（スレッドセーフティやライフサイクルの警告など）
+・実装部（.cpp）のインラインコメントは、「何をしているか（What）」ではなく、「なぜそう設計・記述したのか（Why）」や「DOD/メモリレイアウト観点での最適化の意図」を論理的に記述すること。

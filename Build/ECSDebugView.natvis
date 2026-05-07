@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+	<Type Name="CCL::ECS::Archetype">
+		<DisplayString Condition="_data.size() == 0">Empty Archetype</DisplayString>
+		<DisplayString>Archetype (Size={_data.size()})</DisplayString>
+		<Expand>
+			<Item Name="[Type List]">_data</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="CCL::ECS::TypeData">
+		<DisplayString>{name,s} (ID={id}, Size={typeSize})</DisplayString>
+	</Type>
+
+	<Type Name="CCL::ECS::Core::Chunk">
+		<DisplayString>Chunk | Entities: {_entityCount}/{_capacity}</DisplayString>
+		<Expand>
+			<Item Name="[Archetype]">_archetype</Item>
+
+			<Item Name="[Entities]">_ownerEntities</Item>
+
+		</Expand>
+	</Type>
+
+	<Type Name="CCL::ECS::Core::World">
+		<DisplayString>World</DisplayString>
+		<Expand>
+			<Item Name="[Entity Count]">_entityGenerations.size()</Item>
+			<Item Name="[Chunks]">_chunkManager._chunks</Item>
+			<Item Name="[System Manager]">_systemManager</Item>
+
+			<Item Name="[Entity Cache]">_entityCache</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="CCL::ECS::SystemBase">
+		<DisplayString>System: {_name,s} (Time={_displayUpdateTime,g}ms)</DisplayString>
+		<Expand>
+			<Item Name="[Target Chunks]">_targetChunks</Item>
+			<Item Name="[Filter]">_filter</Item>
+			<Item Name="[Priority]">_priority</Item>
+		</Expand>
+	</Type>
+
+</AutoVisualizer>

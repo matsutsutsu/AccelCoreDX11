@@ -1,0 +1,9 @@
+{
+  "StringsBank": "Assets/Audio/Master.strings.bank",
+  "Banks": [
+    "Assets/Audio/Master.bank"
+  ],
+  "Events": [
+    "event:/can_sound"
+  ]
+}

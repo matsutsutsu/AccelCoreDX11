@@ -1,0 +1,20 @@
+{
+  "name": "PhysicsBall",
+  "components": {
+    "Transform": {
+      "position": [0.0, 0.0, 0.0]
+    },
+    "Model": {
+      "path": "Data/Model/Shape/Sphere.glb"
+    },
+    "SphereCollider": {
+      "radius": 0.5
+    },
+    "RigidBody": {
+      "bounciness": 0.8,
+      "friction": 0.98,
+      "useGravity": true,
+      "isStatic": false
+    }
+  }
+}

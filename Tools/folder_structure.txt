@@ -1,0 +1,299 @@
+=== Folder Structure Report === 
+Target Directory: D:\School_Projects\New_RuneForge 
+---------------------------------------- 
+ 
+[Level 0] Current Folder Contents 
+- [File] .clang-format 
+- [File] .cursorignore 
+- [File] .editorconfig 
+- [File] .gitignore 
+- [Dir ] Assets 
+- [Dir ] bin 
+- [Dir ] Build 
+- [Dir ] External 
+- [File] folder_structure.txt 
+- [File] Game.sln 
+- [File] Game.vcxproj 
+- [File] Game.vcxproj.filters 
+- [File] Game.vcxproj.user 
+- [Dir ] GIMPData 
+- [File] imgui.ini 
+- [File] make_structure_text_2.bat 
+- [Dir ] obj 
+- [Dir ] Shader 
+- [Dir ] Source 
+- [Dir ] Tools 
+ 
+[Level 1] Subfolders 
+笆ｼ [Dir ] .git 
+   - [File] COMMIT_EDITMSG 
+   - [File] config 
+   - [Dir ] cursor 
+   - [File] description 
+   - [File] FETCH_HEAD 
+   - [File] HEAD 
+   - [Dir ] hooks 
+   - [File] index 
+   - [Dir ] info 
+   - [Dir ] logs 
+   - [Dir ] objects 
+   - [File] ORIG_HEAD 
+   - [File] packed-refs 
+   - [Dir ] refs 
+ 
+笆ｼ [Dir ] .vs 
+   - [Dir ] Game 
+ 
+笆ｼ [Dir ] Assets 
+   - [Dir ] Audio 
+   - [Dir ] Fonts 
+   - [Dir ] GamePlay 
+   - [Dir ] Models 
+   - [Dir ] Shader 
+   - [File] structure.txt 
+   - [Dir ] Textures 
+   - [File] _dump_structure.bat 
+ 
+笆ｼ [Dir ] bin 
+   - [Dir ] x64 
+ 
+笆ｼ [Dir ] Build 
+   - [File] CommonInclude.props 
+   - [File] ECSDebugView.natvis 
+ 
+笆ｼ [Dir ] External 
+   - [Dir ] cereal 
+   - [Dir ] DirectXTex 
+   - [Dir ] DirectXTK-main 
+   - [Dir ] imgui-docking 
+   - [Dir ] ImGuiColorTextEdit 
+   - [Dir ] ImGuiFileDialog 
+   - [Dir ] ImGuizmo 
+   - [Dir ] implot-master 
+   - [Dir ] Lua 
+   - [Dir ] nlohmann 
+   - [Dir ] PhysX-107.3-physx-5.6.1 
+   - [Dir ] sol2 
+   - [Dir ] SphereCast 
+   - [Dir ] tinybvh-main 
+   - [Dir ] tinygltf 
+   - [Dir ] Tracy 
+ 
+笆ｼ [Dir ] GIMPData 
+   - [File] AtachimentImage.png 
+   - [File] AtachimentImage.xcf 
+   - [File] CharacterDesign.png 
+   - [File] GameGamenImage.png 
+   - [File] GameGamenImage.xcf 
+   - [File] GameViewImage.png 
+   - [File] ModelIdea.png 
+   - [File] ModelIdea.xcf 
+   - [File] Title.png 
+   - [File] TutorialImage.png 
+   - [File] TutorialTextImage.png 
+ 
+笆ｼ [Dir ] obj 
+   - [Dir ] x64 
+ 
+笆ｼ [Dir ] Shader 
+   - [Dir ] Common 
+   - [Dir ] Compute 
+   - [Dir ] Material 
+   - [Dir ] Pass 
+   - [Dir ] PostProcess 
+   - [Dir ] Renderer 
+   - [File] structure.txt 
+   - [Dir ] Vertex 
+   - [File] _dump_structure.bat 
+ 
+笆ｼ [Dir ] Source 
+   - [Dir ] ECS 
+   - [Dir ] Editor 
+   - [Dir ] Engine 
+   - [Dir ] Game 
+   - [File] structure.txt 
+   - [File] _dump_structure.bat 
+ 
+笆ｼ [Dir ] Tools 
+   - [Dir ] ModelEditor 
+   - [File] tracy-profiler.exe 
+   - [File] TracySave Arche before.tracy 
+   - [File] Transform 01million before.tracy 
+ 
+ 
+[Level 2] Sub-subfolders 
+笆ｼ [Dir ] .git\cursor 
+   - [Dir ] crepe 
+ 
+笆ｼ [Dir ] Assets\Audio 
+   - [Dir ] BGM 
+   - [File] Fire.mp3 
+   - [File] Fire2.mp3 
+   - [File] Hit.wav 
+   - [File] Portal.mp3 
+   - [Dir ] SE 
+   - [File] Sindou.mp3 
+   - [Dir ] wav 
+   - [File] whip.mp3 
+ 
+笆ｼ [Dir ] Assets\Fonts 
+   - [File] ArialUni.ttf 
+   - [File] font.fnt 
+   - [File] font.png 
+   - [File] RictyDiminished-Bold.ttf 
+   - [File] RictyDiminished-BoldOblique.ttf 
+   - [File] RictyDiminished-Oblique.ttf 
+   - [File] RictyDiminished-Regular.ttf 
+ 
+笆ｼ [Dir ] Assets\GamePlay 
+   - [Dir ] Prefabs 
+   - [Dir ] RoomTemplates 
+   - [Dir ] Scenes 
+   - [Dir ] Scripts 
+   - [Dir ] StageTemplates 
+   - [Dir ] Weapon 
+ 
+笆ｼ [Dir ] Assets\Models 
+   - [Dir ] Enemy 
+   - [Dir ] MapChip 
+   - [Dir ] Object 
+   - [Dir ] Player 
+   - [Dir ] Shape 
+   - [File] structure.txt 
+   - [Dir ] Test 
+   - [Dir ] Weapon 
+   - [File] _dump_structure.bat 
+ 
+笆ｼ [Dir ] Assets\Shader 
+   - [File] BasicPS.cso 
+   - [File] BasicVS.cso 
+   - [File] BloomDownSamplePS.cso 
+   - [File] BloomExtractionPS.cso 
+   - [File] BloomUpSamplePS.cso 
+   - [File] DissolvePS.cso 
+   - [File] FullScreenVS.cso 
+   - [File] initialize_particle_cs.cso 
+   - [File] integrate_particle_cs.cso 
+   - [File] LambertPS.cso 
+   - [File] LambertVS.cso 
+   - [File] OutlinePS.cso 
+   - [File] OutlineVS.cso 
+   - [File] particle_gs.cso 
+   - [File] particle_ps.cso 
+   - [File] particle_vs.cso 
+   - [File] PBR_PS.cso 
+   - [File] PBR_VS.cso 
+   - [File] PhongPS.cso 
+   - [File] PhongVS.cso 
+   - [File] PrimitiveRendererPS.cso 
+   - [File] PrimitiveRendererVS.cso 
+   - [File] ShadowMapVS.cso 
+   - [File] ShapeRendererPS.cso 
+   - [File] ShapeRendererVS.cso 
+   - [File] SpritePS.cso 
+   - [File] SpriteVS.cso 
+   - [File] ToneMapPS.cso 
+   - [File] ToonPS.cso 
+   - [File] ToonVS.cso 
+ 
+笆ｼ [Dir ] Assets\Textures 
+   - [Dir ] Shader 
+   - [Dir ] UI 
+   - [Dir ] VFX 
+ 
+笆ｼ [Dir ] bin\x64 
+   - [Dir ] Debug 
+   - [Dir ] Release 
+ 笆ｼ [Dir ] obj\x64 
+   - [Dir ] Debug 
+   - [Dir ] Release 
+ 
+笆ｼ [Dir ] Shader\Common 
+   - [File] Common.hlsli 
+   - [File] Instancing.hlsli 
+   - [File] Lighting.hlsli 
+   - [File] RegisterDef.hlsli 
+   - [File] Scene.hlsli 
+   - [File] Skinning.hlsli 
+ 
+笆ｼ [Dir ] Shader\Compute 
+   - [Dir ] GPUParticle 
+ 
+笆ｼ [Dir ] Shader\Material 
+   - [Dir ] Basic 
+   - [Dir ] Dissolve 
+   - [File] Instancing.hlsli 
+   - [Dir ] Lambert 
+   - [Dir ] PBR 
+   - [Dir ] Phong 
+   - [Dir ] Sprite 
+   - [Dir ] Toon 
+ 
+笆ｼ [Dir ] Shader\Pass 
+   - [Dir ] Outline 
+   - [Dir ] ShadowMap 
+ 
+笆ｼ [Dir ] Shader\PostProcess 
+   - [File] Bloom.hlsli 
+   - [File] BloomDownSamplePS.hlsl 
+   - [File] BloomExtractionPS.hlsl 
+   - [File] BloomUpSamplePS.hlsl 
+   - [File] FullScreenVS.hlsl 
+   - [File] ToneMapPS.hlsl 
+ 
+笆ｼ [Dir ] Shader\Renderer 
+   - [Dir ] Primitive 
+   - [Dir ] Shape 
+ 
+笆ｼ [Dir ] Shader\Vertex 
+   - [File] BasicVS.hlsl 
+   - [File] LambertVS.hlsl 
+   - [File] OutlineVS.hlsl 
+   - [File] PBR_VS.hlsl 
+   - [File] PhongVS.hlsl 
+   - [File] SpriteVS.hlsl 
+   - [File] ToonVS.hlsl 
+ 
+笆ｼ [Dir ] Source\ECS 
+   - [Dir ] Common 
+   - [Dir ] Core 
+   - [Dir ] System 
+ 
+笆ｼ [Dir ] Source\Editor 
+   - [Dir ] Core 
+   - [Dir ] Inspector 
+   - [Dir ] Utils 
+   - [Dir ] Windows 
+ 
+笆ｼ [Dir ] Source\Engine 
+   - [Dir ] Audio 
+   - [Dir ] Core 
+   - [Dir ] GamePlay 
+   - [Dir ] Graphics 
+   - [Dir ] Physics 
+   - [Dir ] Platform 
+   - [Dir ] Scripting 
+   - [Dir ] Serialization 
+   - [File] structure.txt 
+   - [Dir ] UI 
+   - [File] _dump_structure.bat 
+ 
+笆ｼ [Dir ] Source\Game 
+   - [Dir ] Core 
+   - [Dir ] Logics 
+   - [Dir ] Scenes 
+   - [Dir ] Script 
+   - [File] structure.txt 
+   - [Dir ] UI 
+   - [Dir ] Utils 
+   - [File] _dump_structure.bat 
+ 
+笆ｼ [Dir ] Tools\ModelEditor 
+   - [Dir ] Data 
+   - [File] imgui.ini 
+   - [File] ModelEditor.ini 
+   - [File] ModelEditor_2025.04.18.exe 
+   - [File] モデルエディタ簡易説明書.pdf 
+   - [File] 更新履歴.txt 
+ 
+ 

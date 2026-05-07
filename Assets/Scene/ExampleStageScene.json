@@ -1,0 +1,172 @@
+{
+    "entities": [
+        {
+            "components": {
+                "BloomConfig": {
+                    "enable": true,
+                    "intensity": 1.0,
+                    "radius": 1.0,
+                    "softKnee": 0.5,
+                    "threshold": 1.0
+                },
+                "DirectionalLight": {
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "groundColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.5333333611488342
+                    ],
+                    "intensity": 0.8999999761581421,
+                    "skyColor": [
+                        0.0,
+                        0.10309933125972748,
+                        0.35135138034820557,
+                        1.0
+                    ]
+                },
+                "Fog": {
+                    "color": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "enabled": true,
+                    "end": 500.0,
+                    "heightDensity": 0.5,
+                    "heightStart": 0.0,
+                    "noiseScale": 0.10000000149011612,
+                    "noiseSpeed": [
+                        0.10000000149011612,
+                        0.05000000074505806
+                    ],
+                    "noiseStrength": 0.0,
+                    "rimColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "rimPower": 3.0,
+                    "rimStrength": 0.0,
+                    "start": 40.0
+                },
+                "Name": {
+                    "name": "LightingSetup"
+                },
+                "ShadowMapConfig": {
+                    "cascadeSplits": [
+                        15.0,
+                        50.0,
+                        200.0
+                    ],
+                    "shadowBias": 0.001500000013038516,
+                    "shadowColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.5
+                    ]
+                },
+                "ToneMapConfig": {
+                    "exposure": 0.4000000059604645
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        5.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.699999988079071,
+                        0.0,
+                        -0.5,
+                        0.9200000166893005
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967297
+        },
+        {
+            "components": {
+                "CameraBodyFree": {
+                    "currentPitch": -28.19999885559082,
+                    "currentYaw": -0.20000000298023224,
+                    "lookSpeed": 0.20000000298023224,
+                    "moveSpeed": 8.0
+                },
+                "Name": {
+                    "name": "FreeCamera"
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.01026350911706686,
+                        6.919000625610352,
+                        -14.940268516540527
+                    ],
+                    "rotation": [
+                        0.24361462891101837,
+                        -0.0016927452525123954,
+                        0.0004251881327945739,
+                        0.9698705673217773
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "VirtualCamera": {
+                    "blendTime": 2.0,
+                    "farClip": 1000.0,
+                    "fov": 60.29999923706055,
+                    "nearClip": 0.10000000149011612,
+                    "priority": 100
+                }
+            },
+            "id": 4294967298
+        },
+        {
+            "components": {
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Stage/ExampleStage.glb"
+                },
+                "Name": {
+                    "name": "ExampleStage"
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967299
+        }
+    ]
+}

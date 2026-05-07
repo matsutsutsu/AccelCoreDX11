@@ -1,0 +1,36 @@
+{
+    "entities": [
+        {
+            "components": {
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Shape/Sphere.glb"
+                },
+                "Name": {
+                    "name": "NavMeshSphere"
+                },
+                "Transform": {
+                    "isStatic": true,
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        4.0,
+                        4.0,
+                        4.0
+                    ]
+                }
+            },
+            "id": 8589934596
+        }
+    ],
+    "name": "NavMeshSphere"
+}

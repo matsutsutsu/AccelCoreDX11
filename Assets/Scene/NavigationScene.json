@@ -1,0 +1,561 @@
+{
+    "entities": [
+        {
+            "components": {
+                "BloomConfig": {
+                    "enable": true,
+                    "intensity": 1.0,
+                    "radius": 1.0,
+                    "softKnee": 0.5,
+                    "threshold": 1.0
+                },
+                "DirectionalLight": {
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "groundColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.5333333611488342
+                    ],
+                    "intensity": 0.8999999761581421,
+                    "skyColor": [
+                        0.0,
+                        0.10309933125972748,
+                        0.35135138034820557,
+                        1.0
+                    ]
+                },
+                "Fog": {
+                    "color": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "enabled": true,
+                    "end": 500.0,
+                    "heightDensity": 0.5,
+                    "heightStart": 0.0,
+                    "noiseScale": 0.10000000149011612,
+                    "noiseSpeed": [
+                        0.10000000149011612,
+                        0.05000000074505806
+                    ],
+                    "noiseStrength": 0.0,
+                    "rimColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "rimPower": 3.0,
+                    "rimStrength": 0.0,
+                    "start": 40.0
+                },
+                "Name": {
+                    "name": "LightingSetup"
+                },
+                "ShadowMapConfig": {
+                    "cascadeSplits": [
+                        15.0,
+                        50.0,
+                        200.0
+                    ],
+                    "shadowBias": 0.001500000013038516,
+                    "shadowColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.5
+                    ]
+                },
+                "ToneMapConfig": {
+                    "exposure": 0.4000000059604645
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        5.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.699999988079071,
+                        0.0,
+                        -0.5,
+                        0.9200000166893005
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967301
+        },
+        {
+            "components": {
+                "CameraBodyFree": {
+                    "currentPitch": -42.599910736083984,
+                    "currentYaw": 0.7999929189682007,
+                    "lookSpeed": 0.20000000298023224,
+                    "moveSpeed": 16.588802337646484
+                },
+                "Name": {
+                    "name": "FreeCamera"
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        -4.695293426513672,
+                        20.200908660888672,
+                        -31.48035430908203
+                    ],
+                    "rotation": [
+                        0.36324164271354675,
+                        0.006504323333501816,
+                        -0.0025359236169606447,
+                        0.9316688179969788
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "VirtualCamera": {
+                    "blendTime": 2.0,
+                    "farClip": 1000.0,
+                    "fov": 60.29999923706055,
+                    "nearClip": 0.10000000149011612,
+                    "priority": 100
+                }
+            },
+            "id": 4294967302
+        },
+        {
+            "components": {
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Shape/Sphere.glb"
+                },
+                "Name": {
+                    "name": "NavMeshSphere"
+                },
+                "Transform": {
+                    "isStatic": true,
+                    "position": [
+                        5.800000190734863,
+                        0.0,
+                        9.800000190734863
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        4.0,
+                        4.0,
+                        4.0
+                    ]
+                }
+            },
+            "id": 4294967304
+        },
+        {
+            "components": {
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Shape/Sphere.glb"
+                },
+                "Name": {
+                    "name": "NavMeshSphere"
+                },
+                "Transform": {
+                    "isStatic": true,
+                    "position": [
+                        -7.5,
+                        0.0,
+                        7.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        4.0,
+                        4.0,
+                        4.0
+                    ]
+                }
+            },
+            "id": 4294967303
+        },
+        {
+            "components": {
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Shape/Sphere.glb"
+                },
+                "Name": {
+                    "name": "NavMeshSphere"
+                },
+                "Transform": {
+                    "isStatic": true,
+                    "position": [
+                        -1.5,
+                        0.0,
+                        -3.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        4.0,
+                        4.0,
+                        4.0
+                    ]
+                }
+            },
+            "id": 4294967305
+        },
+        {
+            "components": {
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Shape/Sphere.glb"
+                },
+                "Name": {
+                    "name": "NavMeshSphere"
+                },
+                "Transform": {
+                    "isStatic": true,
+                    "position": [
+                        6.900000095367432,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        4.0,
+                        4.0,
+                        4.0
+                    ]
+                }
+            },
+            "id": 4294967306
+        },
+        {
+            "components": {
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Shape/Sphere.glb"
+                },
+                "Name": {
+                    "name": "NavMeshSphere"
+                },
+                "Transform": {
+                    "isStatic": true,
+                    "position": [
+                        -8.399999618530273,
+                        0.0,
+                        -11.800000190734863
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        4.0,
+                        4.0,
+                        4.0
+                    ]
+                }
+            },
+            "id": 4294967307
+        },
+        {
+            "components": {
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Shape/Sphere.glb"
+                },
+                "Name": {
+                    "name": "NavMeshSphere"
+                },
+                "Transform": {
+                    "isStatic": true,
+                    "position": [
+                        3.0999999046325684,
+                        0.0,
+                        -11.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        4.0,
+                        4.0,
+                        4.0
+                    ]
+                }
+            },
+            "id": 4294967308
+        },
+        {
+            "components": {
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Shape/Sphere.glb"
+                },
+                "Name": {
+                    "name": "NavMeshSphere"
+                },
+                "Transform": {
+                    "isStatic": true,
+                    "position": [
+                        -2.0,
+                        0.0,
+                        14.5
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        4.0,
+                        4.0,
+                        4.0
+                    ]
+                }
+            },
+            "id": 4294967309
+        },
+        {
+            "components": {
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Shape/Sphere.glb"
+                },
+                "Name": {
+                    "name": "NavMeshSphere"
+                },
+                "Transform": {
+                    "isStatic": true,
+                    "position": [
+                        -4.300000190734863,
+                        0.0,
+                        -19.100000381469727
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        4.0,
+                        4.0,
+                        4.0
+                    ]
+                }
+            },
+            "id": 4294967310
+        },
+        {
+            "components": {
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Shape/Sphere.glb"
+                },
+                "Name": {
+                    "name": "NavMeshSphere"
+                },
+                "Transform": {
+                    "isStatic": true,
+                    "position": [
+                        -19.399999618530273,
+                        0.8999999761581421,
+                        -4.599999904632568
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        4.0,
+                        4.0,
+                        4.0
+                    ]
+                }
+            },
+            "id": 4294967311
+        },
+        {
+            "components": {
+                "AIMemory": {
+                    "ductUsageObserved": 0,
+                    "trickedBySoundCount": 0
+                },
+                "AIPerception": {
+                    "visionAngle": 45.0,
+                    "visionRange": 8.5
+                },
+                "AIState": {
+                    "chaseSpeed": 5.0,
+                    "investigateSpeed": 2.5,
+                    "patrolRadius": 15.0,
+                    "patrolSpeed": 5.0,
+                    "patrolWaitTime": 2.0
+                },
+                "Animator": {
+                    "isLoop": true,
+                    "playbackSpeed": 1.0
+                },
+                "CharacterMovementInput": null,
+                "JoltCapsuleCollider": {
+                    "halfHeight": 0.5,
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "localRotationEuler": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "JoltCharacterConfig": {
+                    "characterMass": 70.0,
+                    "jumpSpeed": 10.0,
+                    "maxSlopeAngle": 45.0,
+                    "maxStepHeight": 0.5,
+                    "walkSpeed": 6.0
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 1.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": false,
+                    "motionType": 1,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Enemy/Boss.glb"
+                },
+                "Name": {
+                    "name": "AnimationModel"
+                },
+                "NavAgent": {
+                    "targetPosition": [
+                        -12.649336814880371,
+                        0.28191253542900085,
+                        -29.405973434448242
+                    ]
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        -10.356856346130371,
+                        0.3081178069114685,
+                        -5.673544883728027
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        0.30000001192092896,
+                        0.30000001192092896,
+                        0.30000001192092896
+                    ]
+                }
+            },
+            "id": 4294967313
+        },
+        {
+            "components": {
+                "JoltMeshCollider": {
+                    "isEnabled": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 1.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": false,
+                    "motionType": 0,
+                    "objectLayer": 0,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Stage/ExampleStage.glb"
+                },
+                "Name": {
+                    "name": "JoltExampleStage1"
+                },
+                "Transform": {
+                    "isStatic": true,
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967312
+        }
+    ]
+}

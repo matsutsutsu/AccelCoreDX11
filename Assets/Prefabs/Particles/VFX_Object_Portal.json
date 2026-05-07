@@ -1,0 +1,239 @@
+{
+    "entities": [
+        {
+            "components": {
+                "Name": {
+                    "name": "Emitter"
+                },
+                "Transform": {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967299
+        },
+        {
+            "components": {
+                "GPUParticle": {
+                    "colorRampPath": "Assets/Textures/VFX/VFX_Ramp_Fire.png",
+                    "config": {
+                        "burst_count": 100,
+                        "color_mode": 0,
+                        "emission_angular_speed": [
+                            -1.0,
+                            1.0
+                        ],
+                        "emission_cone_angle": [
+                            0.0,
+                            3.141590118408203
+                        ],
+                        "emission_mode": 0,
+                        "emission_offset": [
+                            0.5,
+                            2.0
+                        ],
+                        "emission_position": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "emission_size": [
+                            0.6000000238418579,
+                            0.0
+                        ],
+                        "emission_speed": [
+                            0.5,
+                            1.0
+                        ],
+                        "emission_stretch_x": 0.0,
+                        "emission_stretch_z": 0.0,
+                        "fade_duration": [
+                            0.20000000298023224,
+                            0.20000000298023224
+                        ],
+                        "gravity": 0.0,
+                        "lifespan": [
+                            1.0,
+                            2.0
+                        ],
+                        "manual_color": [
+                            0.4710421562194824,
+                            0.0,
+                            1.0,
+                            1.0
+                        ],
+                        "max_particle_count": 3000,
+                        "noise_scale": 1.6399999856948853,
+                        "noise_strength": 14.899999618530273,
+                        "particle_offset_y": 0.0,
+                        "particle_scale": [
+                            1.0,
+                            1.0
+                        ],
+                        "render_mode": 0,
+                        "spawn_delay": [
+                            0.004999999888241291,
+                            0.009999999776482582
+                        ],
+                        "sprite_anim_mode": 0,
+                        "sprite_sheet_grid": [
+                            1,
+                            1
+                        ],
+                        "type": 0,
+                        "uv_scroll_speed": [
+                            0.0,
+                            0.0
+                        ],
+                        "velocity_stretch": 0.0
+                    },
+                    "maxParticles": 3000,
+                    "texturePath": "Assets/Textures/VFX/VFX_Shape_Star_04.png"
+                },
+                "Name": {
+                    "name": "Particle"
+                },
+                "Transform": {
+                    "parentID": 4294967299,
+                    "position": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967300
+        },
+        {
+            "components": {
+                "GPUParticle": {
+                    "colorRampPath": "Assets/Textures/VFX/VFX_Ramp_Fire.png",
+                    "config": {
+                        "burst_count": 100,
+                        "color_mode": 0,
+                        "emission_angular_speed": [
+                            -1.0,
+                            1.0
+                        ],
+                        "emission_cone_angle": [
+                            0.0,
+                            3.141590118408203
+                        ],
+                        "emission_mode": 0,
+                        "emission_offset": [
+                            0.5,
+                            0.5
+                        ],
+                        "emission_position": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "emission_size": [
+                            0.5,
+                            0.0
+                        ],
+                        "emission_speed": [
+                            0.5,
+                            0.5
+                        ],
+                        "emission_stretch_x": 0.0,
+                        "emission_stretch_z": 0.0,
+                        "fade_duration": [
+                            0.20000000298023224,
+                            0.20000000298023224
+                        ],
+                        "gravity": 0.0,
+                        "lifespan": [
+                            1.0,
+                            2.0
+                        ],
+                        "manual_color": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "max_particle_count": 500,
+                        "noise_scale": 1.0,
+                        "noise_strength": 4.5,
+                        "particle_offset_y": 0.0,
+                        "particle_scale": [
+                            1.0,
+                            1.0
+                        ],
+                        "render_mode": 1,
+                        "spawn_delay": [
+                            0.004999999888241291,
+                            0.009999999776482582
+                        ],
+                        "sprite_anim_mode": 0,
+                        "sprite_sheet_grid": [
+                            1,
+                            1
+                        ],
+                        "type": 0,
+                        "uv_scroll_speed": [
+                            0.0,
+                            0.0
+                        ],
+                        "velocity_stretch": 0.0
+                    },
+                    "maxParticles": 500,
+                    "texturePath": "Assets/Textures/VFX/particle_star_4.png"
+                },
+                "Name": {
+                    "name": "Particle"
+                },
+                "Transform": {
+                    "parentID": 4294967299,
+                    "position": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967302
+        }
+    ],
+    "name": "Emitter"
+}

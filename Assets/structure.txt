@@ -1,0 +1,424 @@
+[Project Structure] 
+ 
+Folder PATH listing for volume Data
+Volume serial number is BC57-0174
+D:.
+Да   structure.txt
+Да   _dump_structure.bat
+Да   
+ДеДЯДЯДЯAudio
+Да   Да   Fire.mp3
+Да   Да   Fire2.mp3
+Да   Да   Hit.wav
+Да   Да   Portal.mp3
+Да   Да   Sindou.mp3
+Да   Да   whip.mp3
+Да   Да   
+Да   ДеДЯДЯДЯBGM
+Да   Да       BossBGM.mp4
+Да   Да       GameBGM.mp3
+Да   Да       ShopBGM.mp3
+Да   Да       
+Да   ДеДЯДЯДЯSE
+Да   ДдДЯДЯДЯwav
+Да           BossBGM.wav
+Да           BossSlash2.wav
+Да           BossTackle.wav
+Да           BossVoice.wav
+Да           CameraShake.wav
+Да           Fire.wav
+Да           Fire2.wav
+Да           GameBGM.wav
+Да           Portal.wav
+Да           ShopBGM.wav
+Да           Sindou.wav
+Да           
+ДеДЯДЯДЯFonts
+Да       ArialUni.ttf
+Да       font.fnt
+Да       font.png
+Да       
+ДеДЯДЯДЯGame
+Да   ДеДЯДЯДЯPrefabs
+Да   Да   ДеДЯДЯДЯCamera
+Да   Да   Да       DeathCamera.json
+Да   Да   Да       FollowCamera.json
+Да   Да   Да       FreeCamera.json
+Да   Да   Да       TitleCamera.json
+Да   Да   Да       
+Да   Да   ДеДЯДЯДЯEnemy
+Да   Да   Да       Boss.json
+Да   Да   Да       EnemyBoid.json
+Да   Да   Да       EnemyEvader.json
+Да   Да   Да       EnemyFire.json
+Да   Да   Да       EnemyJumper.json
+Да   Да   Да       EnemyPawn.json
+Да   Да   Да       EnemyTank.json
+Да   Да   Да       
+Да   Да   ДеДЯДЯДЯGamePlay
+Да   Да   Да       Boid.json
+Да   Да   Да       EnemyChaser.json
+Да   Да   Да       Player.json
+Да   Да   Да       
+Да   Да   ДеДЯДЯДЯLight
+Да   Да   Да       BossLighting.json
+Да   Да   Да       GameLighting - ГRГsБ[.json
+Да   Да   Да       GameLighting.json
+Да   Да   Да       LightingSetup.json
+Да   Да   Да       PlayerLight.json
+Да   Да   Да       PointLight.json
+Да   Да   Да       PortalLight.json
+Да   Да   Да       SpotLight.json
+Да   Да   Да       
+Да   Да   ДеДЯДЯДЯPrimitive
+Да   Да   Да       PrimBox.json
+Да   Да   Да       PrimCapusule.json
+Да   Да   Да       PrimCone.json
+Да   Да   Да       PrimCylinder.json
+Да   Да   Да       PrimSphere.json
+Да   Да   Да       
+Да   Да   ДеДЯДЯДЯTest
+Да   Да   Да       GPUParticle.json
+Да   Да   Да       PhysicsBall.json
+Да   Да   Да       RenderModel.json
+Да   Да   Да       TestSphere.json
+Да   Да   Да       
+Да   Да   ДдДЯДЯДЯWorld
+Да   Да       ДеДЯДЯДЯMap
+Да   Да       Да       Map_Floor.json
+Да   Да       Да       Map_Wall.json
+Да   Да       Да       Portal.json
+Да   Да       Да       
+Да   Да       ДдДЯДЯДЯStatic
+Да   Да               Stage.json
+Да   Да               StaticFloor.json
+Да   Да               
+Да   ДеДЯДЯДЯScenes
+Да   Да       ParticleScene.json
+Да   Да       TestScene.json
+Да   Да       
+Да   ДеДЯДЯДЯScripts
+Да   Да       BossAI.lua
+Да   Да       PortalLogic.lua
+Да   Да       Test.lua
+Да   Да       
+Да   ДдДЯДЯДЯWorld
+Да       ДеДЯДЯДЯStage
+Да       Да       ShopStage.json
+Да       Да       Stage5_BossStage.json
+Да       Да       
+Да       ДдДЯДЯДЯTemplates
+Да               Room_Cross_15.json
+Да               Room_Eye_15.json
+Да               Room_FiveDice_20.json
+Да               Room_FourPillar_20.json
+Да               Room_Pillar_15.json
+Да               Room_SixDice_20.json
+Да               Room_Square_20.json
+Да               Stage1_NewRoom.json
+Да               
+ДеДЯДЯДЯModels
+Да   ДеДЯДЯДЯEnemy
+Да   Да   Да   Boss.cereal
+Да   Да   Да   Boss.glb
+Да   Да   Да   Enemy_Boid.glb
+Да   Да   Да   Enemy_Evader.glb
+Да   Да   Да   Enemy_Fire.glb
+Да   Да   Да   Enemy_Jumper.glb
+Да   Да   Да   Enemy_Pawn.cereal
+Да   Да   Да   Enemy_Pawn.glb
+Да   Да   Да   Enemy_Tank.glb
+Да   Да   Да   
+Да   Да   ДеДЯДЯДЯBoss_motion
+Да   Да   Да       Boss_death.fbx
+Да   Да   Да       Boss_move.fbx
+Да   Да   Да       Boss_samon.fbx
+Да   Да   Да       Boss_slash.fbx
+Да   Да   Да       Boss_tackle.fbx
+Да   Да   Да       
+Да   Да   ДдДЯДЯДЯTextures
+Да   Да           boss_Base.png
+Да   Да           Enemy_A_T_Base.png
+Да   Да           Enemy_B_T_Base.png
+Да   Да           Enemy_C_T_Base.png
+Да   Да           Enemy_D_T_Base.png
+Да   Да           Enemy_E_T_Base.png
+Да   Да           
+Да   ДеДЯДЯДЯMapChip
+Да   Да   Да   7.glb
+Да   Да   Да   Floor.glb
+Да   Да   Да   Hashira.glb
+Да   Да   Да   Kabe1.glb
+Да   Да   Да   torch.glb
+Да   Да   Да   Wall.cereal
+Да   Да   Да   Wall.glb
+Да   Да   Да   Yuka.glb
+Да   Да   Да   
+Да   Да   ДеДЯДЯДЯ0
+Да   Да   Да   Да   tutorial.glb
+Да   Да   Да   Да   
+Да   Да   Да   ДдДЯДЯДЯTextures
+Да   Да   Да           standardSurface1_Base.png
+Да   Да   Да           standardSurface1_Emissive.png
+Да   Да   Да           standardSurface1_MetallicRoughness.png
+Да   Да   Да           standardSurface1_Normal.png
+Да   Да   Да           standardSurface1_Occlusion.png
+Да   Да   Да           
+Да   Да   ДеДЯДЯДЯ1
+Да   Да   Да   Да   1.glb
+Да   Да   Да   Да   
+Да   Да   Да   ДдДЯДЯДЯTextures
+Да   Да   Да           standardSurface1_Base.png
+Да   Да   Да           standardSurface1_Emissive.png
+Да   Да   Да           standardSurface1_MetallicRoughness.png
+Да   Да   Да           standardSurface1_Normal.png
+Да   Да   Да           standardSurface1_Occlusion.png
+Да   Да   Да           
+Да   Да   ДеДЯДЯДЯ2
+Да   Да   Да   Да   2.glb
+Да   Да   Да   Да   
+Да   Да   Да   ДдДЯДЯДЯTextures
+Да   Да   Да           standardSurface1_Base.png
+Да   Да   Да           standardSurface1_Emissive.png
+Да   Да   Да           standardSurface1_MetallicRoughness.png
+Да   Да   Да           standardSurface1_Normal.png
+Да   Да   Да           standardSurface1_Occlusion.png
+Да   Да   Да           
+Да   Да   ДеДЯДЯДЯ3
+Да   Да   Да   Да   3.glb
+Да   Да   Да   Да   
+Да   Да   Да   ДдДЯДЯДЯTextures
+Да   Да   Да           standardSurface1_Base.png
+Да   Да   Да           standardSurface1_Emissive.png
+Да   Да   Да           standardSurface1_MetallicRoughness.png
+Да   Да   Да           standardSurface1_Normal.png
+Да   Да   Да           standardSurface1_Occlusion.png
+Да   Да   Да           
+Да   Да   ДеДЯДЯДЯ4
+Да   Да   Да   Да   4.glb
+Да   Да   Да   Да   
+Да   Да   Да   ДдДЯДЯДЯTextures
+Да   Да   Да           standardSurface1_Base.png
+Да   Да   Да           standardSurface1_Emissive.png
+Да   Да   Да           standardSurface1_MetallicRoughness.png
+Да   Да   Да           standardSurface1_Normal.png
+Да   Да   Да           standardSurface1_Occlusion.png
+Да   Да   Да           
+Да   Да   ДеДЯДЯДЯ5
+Да   Да   Да   Да   5.glb
+Да   Да   Да   Да   
+Да   Да   Да   ДдДЯДЯДЯTextures
+Да   Да   Да           standardSurface1_Base.png
+Да   Да   Да           standardSurface1_Emissive.png
+Да   Да   Да           standardSurface1_MetallicRoughness.png
+Да   Да   Да           standardSurface1_Normal.png
+Да   Да   Да           standardSurface1_Occlusion.png
+Да   Да   Да           
+Да   Да   ДеДЯДЯДЯ6
+Да   Да   Да   Да   6.glb
+Да   Да   Да   Да   
+Да   Да   Да   ДдДЯДЯДЯTextures
+Да   Да   Да           standardSurface1_Base.png
+Да   Да   Да           standardSurface1_Emissive.png
+Да   Да   Да           standardSurface1_MetallicRoughness.png
+Да   Да   Да           standardSurface1_Normal.png
+Да   Да   Да           standardSurface1_Occlusion.png
+Да   Да   Да           
+Да   Да   ДеДЯДЯДЯNewModel
+Да   Да   Да   Да   Yuka.cereal
+Да   Да   Да   Да   Yuka.glb
+Да   Да   Да   Да   
+Да   Да   Да   ДдДЯДЯДЯTextures
+Да   Да   Да           standardSurface1_Base.png
+Да   Да   Да           standardSurface1_Emissive.png
+Да   Да   Да           standardSurface1_MetallicRoughness.png
+Да   Да   Да           standardSurface1_Normal.png
+Да   Да   Да           standardSurface1_Occlusion.png
+Да   Да   Да           
+Да   Да   ДеДЯДЯДЯTextures
+Да   Да   Да       standardSurface1_Base.png
+Да   Да   Да       standardSurface1_Emissive.png
+Да   Да   Да       standardSurface1_MetallicRoughness.png
+Да   Да   Да       standardSurface1_Normal.png
+Да   Да   Да       standardSurface1_Occlusion.png
+Да   Да   Да       
+Да   Да   ДдДЯДЯДЯTutorial
+Да   Да       Да   tutorial_click.glb
+Да   Да       Да   
+Да   Да       ДеДЯДЯДЯMove
+Да   Да       Да   Да   tutorial_move.glb
+Да   Да       Да   Да   
+Да   Да       Да   ДдДЯДЯДЯTextures
+Да   Да       Да           standardSurface1_Base.png
+Да   Да       Да           standardSurface1_Emissive.png
+Да   Да       Да           standardSurface1_MetallicRoughness.png
+Да   Да       Да           standardSurface1_Normal.png
+Да   Да       Да           standardSurface1_Occlusion.png
+Да   Да       Да           
+Да   Да       ДдДЯДЯДЯTextures
+Да   Да               standardSurface1_Base.png
+Да   Да               standardSurface1_Emissive.png
+Да   Да               standardSurface1_MetallicRoughness.png
+Да   Да               standardSurface1_Normal.png
+Да   Да               standardSurface1_Occlusion.png
+Да   Да               
+Да   ДеДЯДЯДЯObject
+Да   Да   Да   Coin.glb
+Да   Да   Да   
+Да   Да   ДдДЯДЯДЯTextures
+Да   Да           standardSurface1_Base.png
+Да   Да           
+Да   ДеДЯДЯДЯPlayer
+Да   Да   Да   Player.cereal
+Да   Да   Да   Player.glb
+Да   Да   Да   Player_Tpose.fbx
+Да   Да   Да   Player_Tpose.glb
+Да   Да   Да   Player_Tpose_2.glb
+Да   Да   Да   
+Да   Да   ДеДЯДЯДЯmotion
+Да   Да   Да       Player_Attak.fbx
+Да   Да   Да       Player_Attak_2.fbx
+Да   Да   Да       Player_Death.fbx
+Да   Да   Да       Player_Death_2.fbx
+Да   Да   Да       Player_Idle.fbx
+Да   Да   Да       Player_Idle_2.fbx
+Да   Да   Да       Player_Run.fbx
+Да   Да   Да       Player_Run_2.fbx
+Да   Да   Да       
+Да   Да   ДдДЯДЯДЯTextures
+Да   Да           PC_T_Base.png
+Да   Да           Tsue_T_Base.png
+Да   Да           
+Да   ДеДЯДЯДЯShape
+Да   Да       Sphere.glb
+Да   Да       
+Да   ДдДЯДЯДЯWeapon
+Да           Pistol.glb
+Да           Staff.glb
+Да           
+ДеДЯДЯДЯShader
+Да       BasicPS.cso
+Да       BasicVS.cso
+Да       BloomDownSamplePS.cso
+Да       BloomExtractionPS.cso
+Да       BloomUpSamplePS.cso
+Да       FullScreenVS.cso
+Да       initialize_particle_cs.cso
+Да       integrate_particle_cs.cso
+Да       LambertPS.cso
+Да       LambertVS.cso
+Да       OutlinePS.cso
+Да       OutlineVS.cso
+Да       particle_gs.cso
+Да       particle_ps.cso
+Да       particle_vs.cso
+Да       PhongPS.cso
+Да       PhongVS.cso
+Да       PrimitiveRendererPS.cso
+Да       PrimitiveRendererVS.cso
+Да       ShadowMapVS.cso
+Да       ShapeRendererPS.cso
+Да       ShapeRendererVS.cso
+Да       SpritePS.cso
+Да       SpriteVS.cso
+Да       ToneMapPS.cso
+Да       ToonPS.cso
+Да       ToonVS.cso
+Да       
+ДеДЯДЯДЯTextures
+Да   ДеДЯДЯДЯShader
+Да   Да       DistortedLayeredNoise.jpg
+Да   Да       FibrousWispyNoise.jpg
+Да   Да       Noise.png
+Да   Да       OrganicCellualNoise.jpg
+Да   Да       SwirlingFluidNoise.jpg
+Да   Да       
+Да   ДдДЯДЯДЯUI
+Да       ДеДЯДЯДЯCommon
+Да       Да       Stage1.png
+Да       Да       Stage2.png
+Да       Да       Stage3.png
+Да       Да       Stage4.png
+Да       Да       Stage5.png
+Да       Да       
+Да       ДеДЯДЯДЯHUD
+Да       Да       AttackGauge.png
+Да       Да       Coin.png
+Да       Да       Frame.png
+Да       Да       GameCursor.png
+Да       Да       HPGauge.png
+Да       Да       
+Да       ДеДЯДЯДЯItems
+Да       Да       chaos.png
+Да       Да       deceleration.png
+Да       Да       division.png
+Да       Да       explosion.png
+Да       Да       penetration.png
+Да       Да       reflection.png
+Да       Да       speed.png
+Да       Да       
+Да       ДеДЯДЯДЯMenus
+Да       Да       slot.png
+Да       Да       slotedit.png
+Да       Да       
+Да       ДдДЯДЯДЯTitle
+Да               GameEnd.png
+Да               GameStart.png
+Да               Logo.png
+Да               
+ДдДЯДЯДЯVFX
+    ДеДЯДЯДЯParticles
+    Да       BossAttakParticle.json
+    Да       BulletParticle.json
+    Да       CoinParticle.json
+    Да       DamageParticle.json
+    Да       ExplosionParticle.json
+    Да       FireEffect.json
+    Да       HitParticle.json
+    Да       Lodparticle.json
+    Да       PortalParticle.json
+    Да       SceneParticle.json
+    Да       Scenyou.json
+    Да       StartParticle.json
+    Да       test.json
+    Да       
+    ДдДЯДЯДЯTextures
+            box_1.png
+            color temper chart.png
+            color temper test.png
+            ColorRamp_1.png
+            ColorRamp_2.png
+            cross.png
+            discharge.png
+            dummy.png
+            Flash_H.png
+            glade_C12.png
+            hit_1.png
+            hit_3.png
+            hit_4.png
+            hit_5.png
+            particle_clock_gear.png
+            particle_fire.jpeg
+            particle_hanabira.png
+            particle_momiji.png
+            particle_momiji_s.png
+            particle_sakura.png
+            particle_smoke.png
+            particle_snow.png
+            particle_square.png
+            particle_star_4.png
+            particle_star_6.png
+            particle_sun.png
+            particle_trail_amiami.png
+            particle_wind.png
+            rainbow_H.png
+            ring5.png
+            sand_1.png
+            Smoke.png
+            smoke_1.png
+            smork_2.png
+            smork_3.png
+            uv_checker.png
+            yellow.png
+            yellow_red.png
+            

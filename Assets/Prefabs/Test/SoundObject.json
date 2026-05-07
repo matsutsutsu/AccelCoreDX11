@@ -1,0 +1,59 @@
+{
+    "entities": [
+        {
+            "components": {
+                "DistractionItem": {
+                    "bounceVelocityThreshold": 9.5,
+                    "fmodEventHash": -1816678050,
+                    "volumeRadius": 15.0
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 1.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": false,
+                    "motionType": 2,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "JoltSphereCollider": {
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "Name": {
+                    "name": "SoundObject"
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        -0.08136098086833954,
+                        0.48366257548332214,
+                        -0.03427325561642647
+                    ],
+                    "rotation": [
+                        -0.02706133760511875,
+                        0.0002677676093298942,
+                        0.06703103333711624,
+                        0.9973838329315186
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 8589934596
+        }
+    ],
+    "name": "SoundObject"
+}

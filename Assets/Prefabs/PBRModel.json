@@ -1,0 +1,40 @@
+{
+    "entities": [
+        {
+            "components": {
+                "Animator": {
+                    "isLoop": true,
+                    "playbackSpeed": 1.0
+                },
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Test/DamagedHelmet/glTF/DamagedHelmet.gltf"
+                },
+                "Name": {
+                    "name": "PBRModel"
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        1.899999976158142,
+                        0.0
+                    ],
+                    "rotation": [
+                        2.0712360537800123e-07,
+                        -0.8290375471115112,
+                        0.5591928362846375,
+                        3.070734067023295e-07
+                    ],
+                    "scale": [
+                        3.0,
+                        3.0,
+                        3.0
+                    ]
+                }
+            },
+            "id": 4294967300
+        }
+    ],
+    "name": "PBRModel"
+}

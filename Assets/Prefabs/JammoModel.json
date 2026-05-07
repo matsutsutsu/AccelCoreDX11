@@ -1,0 +1,40 @@
+{
+    "entities": [
+        {
+            "components": {
+                "Animator": {
+                    "isLoop": true,
+                    "playbackSpeed": 1.0
+                },
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Test/Jammo.glb"
+                },
+                "Name": {
+                    "name": "AnimationModel"
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.9999619126319885,
+                        0.0,
+                        0.008726587519049644
+                    ],
+                    "scale": [
+                        0.05000000074505806,
+                        0.05000000074505806,
+                        0.05000000074505806
+                    ]
+                }
+            },
+            "id": 4294967300
+        }
+    ],
+    "name": "AnimationModel"
+}

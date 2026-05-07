@@ -1,0 +1,884 @@
+{
+    "entities": [
+        {
+            "components": {
+                "BloomConfig": {
+                    "enable": true,
+                    "intensity": 1.0,
+                    "radius": 1.0,
+                    "softKnee": 0.5,
+                    "threshold": 1.0
+                },
+                "DirectionalLight": {
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "groundColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.5333333611488342
+                    ],
+                    "intensity": 0.8999999761581421,
+                    "skyColor": [
+                        0.0,
+                        0.10309933125972748,
+                        0.35135138034820557,
+                        1.0
+                    ]
+                },
+                "Fog": {
+                    "color": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "enabled": true,
+                    "end": 500.0,
+                    "heightDensity": 0.5,
+                    "heightStart": 0.0,
+                    "noiseScale": 0.10000000149011612,
+                    "noiseSpeed": [
+                        0.10000000149011612,
+                        0.05000000074505806
+                    ],
+                    "noiseStrength": 0.0,
+                    "rimColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "rimPower": 3.0,
+                    "rimStrength": 0.0,
+                    "start": 40.0
+                },
+                "Name": {
+                    "name": "LightingSetup"
+                },
+                "ShadowMapConfig": {
+                    "cascadeSplits": [
+                        15.0,
+                        50.0,
+                        200.0
+                    ],
+                    "shadowBias": 0.001500000013038516,
+                    "shadowColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.5
+                    ]
+                },
+                "ToneMapConfig": {
+                    "exposure": 0.4000000059604645
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        5.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.699999988079071,
+                        0.0,
+                        -0.5,
+                        0.9200000166893005
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967297
+        },
+        {
+            "components": {
+                "CameraBodyFree": {
+                    "currentPitch": -14.799982070922852,
+                    "currentYaw": 20.999988555908203,
+                    "lookSpeed": 0.20000000298023224,
+                    "moveSpeed": 8.0
+                },
+                "Name": {
+                    "name": "FreeCamera"
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        -7.86535120010376,
+                        6.753442764282227,
+                        -31.08197784423828
+                    ],
+                    "rotation": [
+                        0.1266387552022934,
+                        0.18071763217449188,
+                        -0.02347109094262123,
+                        0.9750655889511108
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "VirtualCamera": {
+                    "blendTime": 2.0,
+                    "farClip": 1000.0,
+                    "fov": 60.29999923706055,
+                    "nearClip": 0.10000000149011612,
+                    "priority": 100
+                }
+            },
+            "id": 4294967298
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 0,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 10.0,
+                    "ownerBossId": 4294967300,
+                    "totalDrones": 12
+                },
+                "Name": {
+                    "name": "KariDrone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        -9.917950630187988,
+                        1.5092161893844604,
+                        1.278341293334961
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.9696017503738403,
+                        0.0,
+                        0.24468788504600525
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967301
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 1,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 10.0,
+                    "ownerBossId": 4294967300,
+                    "totalDrones": 12
+                },
+                "Name": {
+                    "name": "KariDrone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        -9.228350639343262,
+                        1.6544208526611328,
+                        -3.851961851119995
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.9998738765716553,
+                        0.0,
+                        -0.01588299870491028
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967302
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 2,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 10.0,
+                    "ownerBossId": 4294967300,
+                    "totalDrones": 12
+                },
+                "Name": {
+                    "name": "KariDrone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        -6.066072463989258,
+                        2.11734938621521,
+                        -7.950016498565674
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.9613580107688904,
+                        0.0,
+                        0.275301069021225
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967303
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 3,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 10.0,
+                    "ownerBossId": 4294967300,
+                    "totalDrones": 12
+                },
+                "Name": {
+                    "name": "KariDrone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        -1.2782970666885376,
+                        2.4723868370056152,
+                        -9.917956352233887
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.856890857219696,
+                        0.0,
+                        -0.515497624874115
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967304
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 4,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 10.0,
+                    "ownerBossId": 4294967300,
+                    "totalDrones": 12
+                },
+                "Name": {
+                    "name": "KariDrone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        3.8518621921539307,
+                        2.393115282058716,
+                        -9.228392601013184
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.6940839886665344,
+                        0.0,
+                        0.7198938727378845
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967305
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 5,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 10.0,
+                    "ownerBossId": 4294967300,
+                    "totalDrones": 12
+                },
+                "Name": {
+                    "name": "KariDrone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        7.950043201446533,
+                        1.9524134397506714,
+                        -6.066037654876709
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.48444271087646484,
+                        0.0,
+                        0.8748229146003723
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967306
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 6,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 10.0,
+                    "ownerBossId": 4294967300,
+                    "totalDrones": 12
+                },
+                "Name": {
+                    "name": "KariDrone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        9.917943000793457,
+                        1.5554635524749756,
+                        -1.2784043550491333
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.24240955710411072,
+                        0.0,
+                        -0.9701738357543945
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967307
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 7,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 10.0,
+                    "ownerBossId": 4294967300,
+                    "totalDrones": 12
+                },
+                "Name": {
+                    "name": "KariDrone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        9.228375434875488,
+                        1.5672177076339722,
+                        3.851903200149536
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.015737593173980713,
+                        0.0,
+                        -0.9998761415481567
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967308
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 8,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 10.0,
+                    "ownerBossId": 4294967300,
+                    "totalDrones": 12
+                },
+                "Name": {
+                    "name": "KariDrone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        6.0660014152526855,
+                        1.9768706560134888,
+                        7.950069904327393
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.27282193303108215,
+                        0.0,
+                        -0.9620644450187683
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967309
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 9,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 10.0,
+                    "ownerBossId": 4294967300,
+                    "totalDrones": 12
+                },
+                "Name": {
+                    "name": "KariDrone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        1.2783600091934204,
+                        2.407787322998047,
+                        9.917948722839355
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.5117553472518921,
+                        0.0,
+                        0.8591311573982239
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967310
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 10,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 10.0,
+                    "ownerBossId": 4294967300,
+                    "totalDrones": 12
+                },
+                "Name": {
+                    "name": "KariDrone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        -3.8519442081451416,
+                        2.4637858867645264,
+                        9.22835922241211
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.7164625525474548,
+                        0.0,
+                        0.6976253390312195
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967311
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 11,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 10.0,
+                    "ownerBossId": 4294967300,
+                    "totalDrones": 12
+                },
+                "Name": {
+                    "name": "KariDrone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        -7.9500041007995605,
+                        2.0933830738067627,
+                        6.066087245941162
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.8727618455886841,
+                        0.0,
+                        0.488146036863327
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967312
+        },
+        {
+            "components": {
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Stage/ExampleStage.glb"
+                },
+                "Name": {
+                    "name": "ExampleStage"
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967299
+        },
+        {
+            "components": {
+                "AnimParameters": null,
+                "AnimStateMachine": {
+                    "graphPath": "Assets/Animations/Nodes/TestEnemyNode.json"
+                },
+                "Animator": {
+                    "isLoop": true,
+                    "playbackSpeed": 1.0
+                },
+                "BehaviorTreeComponent": {
+                    "assetId": 4294967279,
+                    "distanceToTarget": 9.183364868164063,
+                    "healthPercentage": 100.0,
+                    "runningNodeId": 5
+                },
+                "BossCommandComponent": null,
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Enemy/Boss.glb"
+                },
+                "Name": {
+                    "name": "BossEnemy"
+                },
+                "TestEnemyActionComponent": {
+                    "chargeSpeed": 15.0,
+                    "currentState": 0,
+                    "turnSpeed": 10.0,
+                    "walkSpeed": 5.0
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        -6.7504939597228805e-34,
+                        0.9999290108680725,
+                        -1.8377818270709803e-33,
+                        0.011920379474759102
+                    ],
+                    "scale": [
+                        0.30000001192092896,
+                        0.30000001192092896,
+                        0.30000001192092896
+                    ]
+                }
+            },
+            "id": 4294967300
+        },
+        {
+            "components": {
+                "Name": {
+                    "name": "target"
+                },
+                "PlayerComponent": {
+                    "moveSpeed": 30.0,
+                    "turnSpeed": 10.0
+                },
+                "Primitive": {
+                    "color": [
+                        0.0,
+                        0.733590841293335,
+                        1.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        2.200000047683716,
+                        -18.399999618530273
+                    ],
+                    "rotation": [
+                        -0.002018566010519862,
+                        0.0045137167908251286,
+                        -0.007496260106563568,
+                        0.9999596476554871
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967313
+        }
+    ]
+}

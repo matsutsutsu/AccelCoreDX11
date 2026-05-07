@@ -1,0 +1,49 @@
+{
+    "entities": [
+        {
+            "components": {
+                "Name": {
+                    "name": "KariDrone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        6.699999809265137,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 8589934596
+        }
+    ],
+    "name": "KariDrone"
+}

@@ -1,0 +1,304 @@
+{
+    "entities": [
+        {
+            "components": {
+                "BloomConfig": {
+                    "enable": true,
+                    "intensity": 1.0,
+                    "radius": 1.0,
+                    "softKnee": 0.5,
+                    "threshold": 1.0
+                },
+                "DirectionalLight": {
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "groundColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.5333333611488342
+                    ],
+                    "intensity": 0.8999999761581421,
+                    "skyColor": [
+                        0.0,
+                        0.10309933125972748,
+                        0.35135138034820557,
+                        1.0
+                    ]
+                },
+                "Fog": {
+                    "color": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "enabled": true,
+                    "end": 500.0,
+                    "heightDensity": 0.5,
+                    "heightStart": 0.0,
+                    "noiseScale": 0.10000000149011612,
+                    "noiseSpeed": [
+                        0.10000000149011612,
+                        0.05000000074505806
+                    ],
+                    "noiseStrength": 0.0,
+                    "rimColor": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "rimPower": 3.0,
+                    "rimStrength": 0.0,
+                    "start": 40.0
+                },
+                "Name": {
+                    "name": "LightingSetup"
+                },
+                "ShadowMapConfig": {
+                    "orthoSize": 100.0,
+                    "shadowBias": 0.001500000013038516,
+                    "shadowColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.5
+                    ]
+                },
+                "ToneMapConfig": {
+                    "exposure": 0.4000000059604645
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        5.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.699999988079071,
+                        0.0,
+                        -0.5,
+                        0.9200000166893005
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967301
+        },
+        {
+            "components": {
+                "CameraBodyFree": {
+                    "currentPitch": -23.399999618530273,
+                    "currentYaw": -2.5999984741210938,
+                    "lookSpeed": 0.20000000298023224,
+                    "moveSpeed": 8.0
+                },
+                "Name": {
+                    "name": "FreeCamera"
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        1.9548105001449585,
+                        6.108980655670166,
+                        -21.013816833496094
+                    ],
+                    "rotation": [
+                        0.20273511111736298,
+                        -0.022215941920876503,
+                        0.00460069952532649,
+                        0.9789708256721497
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "VirtualCamera": {
+                    "blendTime": 2.0,
+                    "farClip": 1000.0,
+                    "fov": 60.29999923706055,
+                    "nearClip": 0.10000000149011612,
+                    "priority": 100
+                }
+            },
+            "id": 4294967302
+        },
+        {
+            "components": {
+                "CameraBodyFree": {
+                    "currentPitch": -23.399999618530273,
+                    "currentYaw": -2.5999984741210938,
+                    "lookSpeed": 0.20000000298023224,
+                    "moveSpeed": 8.0
+                },
+                "Name": {
+                    "name": "FreeCamera"
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        1.9548105001449585,
+                        6.108980655670166,
+                        -21.013816833496094
+                    ],
+                    "rotation": [
+                        0.20273511111736298,
+                        -0.022215941920876503,
+                        0.00460069952532649,
+                        0.9789708256721497
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "VirtualCamera": {
+                    "blendTime": 2.0,
+                    "farClip": 1000.0,
+                    "fov": 60.29999923706055,
+                    "nearClip": 0.10000000149011612,
+                    "priority": 100
+                }
+            },
+            "id": 4294967303
+        },
+        {
+            "components": {
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Stage/ExampleStage.glb"
+                },
+                "Name": {
+                    "name": "ExampleStage"
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967304
+        },
+        {
+            "components": {
+                "Animator": {
+                    "isLoop": true,
+                    "playbackSpeed": 1.0
+                },
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Enemy/Boss.glb"
+                },
+                "Name": {
+                    "name": "AnimationModel"
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        -4.900000095367432,
+                        -0.4000000059604645,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.9999619126319885,
+                        0.0,
+                        0.008726587519049644
+                    ],
+                    "scale": [
+                        0.30000001192092896,
+                        0.30000001192092896,
+                        0.30000001192092896
+                    ]
+                }
+            },
+            "id": 4294967305
+        },
+        {
+            "components": {
+                "JoltBoxCollider": {
+                    "halfExtent": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "localRotationEuler": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                "Name": {
+                    "name": "New Entity "
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        0.4000000059604645,
+                        0.10000000149011612,
+                        1.0
+                    ],
+                    "type": 0
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        3.799999952316284,
+                        1.2999999523162842,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.2923716902732849,
+                        0.0,
+                        0.9563047289848328
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967306
+        }
+    ]
+}

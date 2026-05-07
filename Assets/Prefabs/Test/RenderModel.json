@@ -1,0 +1,12 @@
+{
+  "name": "RenderModel",
+  "components": {
+    "Transform": {
+      "position": [0.0, 3.0, 5.0]
+    },
+    "Model": {
+      "path": "Data/Model/Shape/Sphere.glb"
+    },
+    "Material": {}
+  }
+}

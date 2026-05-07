@@ -1,0 +1,276 @@
+[Project Structure] 
+ 
+Folder PATH listing for volume Data
+Volume serial number is BC57-0174
+D:.
+„    structure.txt
+„    _dump_structure.bat
+„    
+„¥„Ÿ„Ÿ„ŸAudio
+„        Audio.cpp
+„        Audio.h
+„        AudioResource.cpp
+„        AudioResource.h
+„        AudioSource.cpp
+„        AudioSource.h
+„        
+„¥„Ÿ„Ÿ„ŸCore
+„    „    Framework.cpp
+„    „    Framework.h
+„    „    Main.cpp
+„    „    
+„    „¥„Ÿ„Ÿ„ŸCommon
+„    „        Misc.h
+„    „        
+„    „¥„Ÿ„Ÿ„ŸMath
+„    „        StringHash.h
+„    „        TransformUtils.cpp
+„    „        TransformUtils.h
+„    „        
+„    „¤„Ÿ„Ÿ„ŸTime
+„            HighResolutionTimer.h
+„            
+„¥„Ÿ„Ÿ„ŸGamePlay
+„    „¥„Ÿ„Ÿ„ŸAnimation
+„    „        AnimationSystem.h
+„    „        AnimatorComponent.h
+„    „        
+„    „¥„Ÿ„Ÿ„ŸCamera
+„    „        CameraBrainSystem.cpp
+„    „        CameraBrainSystem.h
+„    „        VirtualCameraComponents.h
+„    „        VisualCameraSystem.h
+„    „        
+„    „¥„Ÿ„Ÿ„ŸCore
+„    „    „    DestroyTag.h
+„    „    „    NameComponent.h
+„    „    „    
+„    „    „¤„Ÿ„Ÿ„ŸScene
+„    „            Scene.h
+„    „            SceneFactory.cpp
+„    „            SceneFactory.h
+„    „            SceneManager.cpp
+„    „            SceneManager.h
+„    „            
+„    „¥„Ÿ„Ÿ„ŸGraphics
+„    „    „¥„Ÿ„Ÿ„ŸCore
+„    „    „        MaterialComponent.h
+„    „    „        ModelComponent.h
+„    „    „        ModelRenderSystem.cpp
+„    „    „        ModelRenderSystem.h
+„    „    „        PrimitiveComponent.h
+„    „    „        PrimitiveRenderSystem.h
+„    „    „        StaticMeshComponent.h
+„    „    „        
+„    „    „¥„Ÿ„Ÿ„ŸLighting
+„    „    „        FogComponent.h
+„    „    „        FogSystem.h
+„    „    „        LightComponent.h
+„    „    „        LightSystem.h
+„    „    „        ShadowMapConfigComponent.h
+„    „    „        ShadowMapRenderSystem.cpp
+„    „    „        ShadowMapRenderSystem.h
+„    „    „        
+„    „    „¥„Ÿ„Ÿ„ŸParticle
+„    „    „        GPUParticleComponent.h
+„    „    „        GPUParticleRenderSystem.cpp
+„    „    „        GPUParticleRenderSystem.h
+„    „    „        GPUParticleTypes.h
+„    „    „        GPUParticleUpdateSystem.cpp
+„    „    „        GPUParticleUpdateSystem.h
+„    „    „        
+„    „    „¤„Ÿ„Ÿ„ŸPostProcess
+„    „            BloomConfigComponent.h
+„    „            PostProcessSystem.cpp
+„    „            PostProcessSystem.h
+„    „            ToneMapConfigComponent.h
+„    „            
+„    „¥„Ÿ„Ÿ„ŸPhysics
+„    „    „¥„Ÿ„Ÿ„ŸCollision
+„    „    „        BoxColliderComponent.h
+„    „    „        CapsuleColliderComponent.h
+„    „    „        CollisionConfigComponent.h
+„    „    „        CollisionLayers.h
+„    „    „        CollisionSystem.cpp
+„    „    „        CollisionSystem.h
+„    „    „        GroundCheckSystem.cpp
+„    „    „        GroundCheckSystem.h
+„    „    „        SphereColliderComponent.h
+„    „    „        WallCollisionSystem.cpp
+„    „    „        WallCollisionSystem.h
+„    „    „        
+„    „    „¤„Ÿ„Ÿ„ŸRigidBody
+„    „            GridUpdateSystem.cpp
+„    „            GridUpdateSystem.h
+„    „            PhysicsIntegrationSystem.cpp
+„    „            PhysicsIntegrationSystem.h
+„    „            RigidBodyComponent.h
+„    „            
+„    „¥„Ÿ„Ÿ„ŸTransform
+„    „        HierarchyCleanupSystem.cpp
+„    „        HierarchyCleanupSystem.h
+„    „        PendingParentComponent.h
+„    „        TransformComponent.h
+„    „        TransformUpdateSystem.cpp
+„    „        TransformUpdateSystem.h
+„    „        
+„    „¤„Ÿ„Ÿ„ŸUtils
+„            TimerComponent.h
+„            TimerSystem.h
+„            
+„¥„Ÿ„Ÿ„ŸGraphics
+„    „¥„Ÿ„Ÿ„ŸCore
+„    „        Camera.cpp
+„    „        Camera.h
+„    „        GpuResourceUtils.cpp
+„    „        GpuResourceUtils.h
+„    „        Graphics.cpp
+„    „        Graphics.h
+„    „        Light.cpp
+„    „        Light.h
+„    „        RenderContext.h
+„    „        RenderState.cpp
+„    „        RenderState.h
+„    „        RenderTarget.h
+„    „        
+„    „¥„Ÿ„Ÿ„ŸRenderer
+„    „        ImGuiRenderer.cpp
+„    „        ImGuiRenderer.h
+„    „        InstanceBuffer.h
+„    „        ModelRenderer.cpp
+„    „        ModelRenderer.h
+„    „        PrimitiveRenderer.cpp
+„    „        PrimitiveRenderer.h
+„    „        ShapeRenderer.cpp
+„    „        ShapeRenderer.h
+„    „        Sprite.cpp
+„    „        Sprite.h
+„    „        
+„    „¥„Ÿ„Ÿ„ŸResource
+„    „        GLTFImporter.cpp
+„    „        GLTFImporter.h
+„    „        GraphicsTypes.h
+„    „        MaterialData.h
+„    „        Model.cpp
+„    „        Model.h
+„    „        ModelResource.cpp
+„    „        ModelResource.h
+„    „        PrimitiveMesh.cpp
+„    „        PrimitiveMesh.h
+„    „        ResourceManager.cpp
+„    „        ResourceManager.h
+„    „        
+„    „¤„Ÿ„Ÿ„ŸShader
+„        „    ShaderReflection.cpp
+„        „    ShaderReflection.h
+„        „    ShaderResources.h
+„        „    
+„        „¥„Ÿ„Ÿ„ŸMaterial
+„        „    „    BasicShader.cpp
+„        „    „    BasicShader.h
+„        „    „    DissolveShader.cpp
+„        „    „    DissolveShader.h
+„        „    „    LambertShader.cpp
+„        „    „    LambertShader.h
+„        „    „    OutlineShader.cpp
+„        „    „    OutlineShader.h
+„        „    „    PhongShader.cpp
+„        „    „    PhongShader.h
+„        „    „    ShadowMapShader.cpp
+„        „    „    ShadowMapShader.h
+„        „    „    ToonShader.cpp
+„        „    „    ToonShader.h
+„        „    „    
+„        „    „¤„Ÿ„Ÿ„ŸCore
+„        „            Shader.h
+„        „            ShaderId.h
+„        „            
+„        „¥„Ÿ„Ÿ„ŸPass
+„        „        PrimitivePS.h
+„        „        PrimitiveVS.h
+„        „        ShadowMap.cpp
+„        „        ShadowMap.h
+„        „        
+„        „¤„Ÿ„Ÿ„ŸPostProcess
+„                BloomPass.cpp
+„                BloomPass.h
+„                PostProcessManager.cpp
+„                PostProcessManager.h
+„                
+„¥„Ÿ„Ÿ„ŸPhysics
+„        BvhConfig.h
+„        Collision.cpp
+„        Collision.h
+„        CollisionHelper.cpp
+„        CollisionHelper.h
+„        Grid.h
+„        PhysXManager.cpp
+„        PhysXManager.h
+„        RaycastUtil.h
+„        TinyBvhImpl.cpp
+„        
+„¥„Ÿ„Ÿ„ŸPlatform
+„    „    Dialog.cpp
+„    „    Dialog.h
+„    „    
+„    „¤„Ÿ„Ÿ„ŸInput
+„            GamePad.cpp
+„            GamePad.h
+„            Input.cpp
+„            Input.h
+„            Keyboard.cpp
+„            Keyboard.h
+„            Mouse.cpp
+„            Mouse.h
+„            
+„¥„Ÿ„Ÿ„ŸScripting
+„    „    LuaScriptComponent.h
+„    „    LuaScriptSystem.cpp
+„    „    LuaScriptSystem.h
+„    „    
+„    „¤„Ÿ„Ÿ„ŸBind
+„            LuaBind_Components.cpp
+„            LuaBind_Components.h
+„            LuaBind_Entity.cpp
+„            LuaBind_Entity.h
+„            LuaBind_Scene.cpp
+„            LuaBind_Scene.h
+„            
+„¥„Ÿ„Ÿ„ŸSerialization
+„    „    ComponentRegistry.h
+„    „    ComponentSerializers.cpp
+„    „    ComponentSerializers.h
+„    „    PrefabSerializer.cpp
+„    „    PrefabSerializer.h
+„    „    RegisterComponentSerializer.cpp
+„    „    RegisterComponentSerializer.h
+„    „    SceneSerializer.cpp
+„    „    SceneSerializer.h
+„    „    SerializationContext.h
+„    „    
+„    „¤„Ÿ„Ÿ„ŸFactory
+„            Prefab.cpp
+„            Prefab.h
+„            SceneInitializer.cpp
+„            SceneInitializer.h
+„            
+„¤„Ÿ„Ÿ„ŸUI
+    „    UIContext.h
+    „    UIElement.cpp
+    „    UIElement.h
+    „    UIManager.cpp
+    „    UIManager.h
+    „    
+    „¥„Ÿ„Ÿ„ŸImGui
+    „        ImGuiThemes.cpp
+    „        ImGuiThemes.h
+    „        
+    „¥„Ÿ„Ÿ„ŸText
+    „        BitmapFont.h
+    „        TextManager.h
+    „        
+    „¤„Ÿ„Ÿ„ŸWidgets
+            SimpleButton.h
+            UIProgressBar.h
+            UIText.h
+            

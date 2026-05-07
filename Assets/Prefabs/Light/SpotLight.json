@@ -1,0 +1,39 @@
+{
+    "entities": [
+        {
+            "components": {
+                "SpotLight": {
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "innerCos": 25.0,
+                    "intensity": 7.0,
+                    "outerCos": 55.0,
+                    "range": 20.0
+                },
+                "Transform": {
+                    "position": [
+                        5.0,
+                        2.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967298
+        }
+    ],
+    "name": "Entity"
+}

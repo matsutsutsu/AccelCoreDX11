@@ -1,0 +1,32 @@
+{
+    "entities": [
+        {
+            "components": {        
+                "Material": null,
+                "Model": {
+                    "path": "Assets/Models/Test/Jammo.glb"
+                },
+                "Transform": {
+                    "position": [
+                        31.913780212402344,
+                        0.0,
+                        44.98855972290039
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        0.04,
+                        0.04,
+                        0.04
+                    ]
+                }
+            },
+            "id": 21474836537
+        }
+    ],
+    "name": "Entity"
+}

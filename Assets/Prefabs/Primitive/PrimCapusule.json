@@ -1,0 +1,22 @@
+{
+  "name": "Primitive Capsule",
+  "components": {
+    "Transform": {
+      "position": [0.0, 2.0, 2.0],
+      "scale": [1.0, 1.0, 1.0]
+    },
+    "Primitive": {
+      "type": 2,
+      "radius": 0.5,
+      "height": 1.0,
+      "color": [1.0, 1.0, 0.0, 1.0]
+    },
+    "RigidBody": {
+      "mass": 1.0,
+      "useGravity": false,
+      "bounciness": 0.5,
+      "friction": 0.5,
+      "isStatic": true
+    }
+  }
+}

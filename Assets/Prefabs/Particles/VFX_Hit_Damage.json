@@ -1,0 +1,136 @@
+{
+    "entities": [
+        {
+            "components": {
+                "Name": {
+                    "name": "Emitter"
+                },
+                "Transform": {
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 8589934597
+        },
+        {
+            "components": {
+                "GPUParticle": {
+                    "colorRampPath": "Assets/Textures/VFX/VFX_Ramp_Fire.png",
+                    "config": {
+                        "burst_count": 5,
+                        "burst_trigger": 0.0,
+                        "color_mode": 0,
+                        "emission_angular_speed": [
+                            0.0,
+                            0.0
+                        ],
+                        "emission_cone_angle": [
+                            0.0,
+                            1.7999999523162842
+                        ],
+                        "emission_mode": 1,
+                        "emission_offset": [
+                            0.0,
+                            0.0
+                        ],
+                        "emission_position": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "emission_size": [
+                            0.0,
+                            3.0
+                        ],
+                        "emission_speed": [
+                            0.0,
+                            0.0
+                        ],
+                        "emission_stretch_x": 0.0,
+                        "emission_stretch_z": 0.0,
+                        "fade_duration": [
+                            0.10000000149011612,
+                            0.10000000149011612
+                        ],
+                        "gravity": 0.0,
+                        "lifespan": [
+                            0.15000000596046448,
+                            0.15000000596046448
+                        ],
+                        "manual_color": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "max_particle_count": 300,
+                        "noise_scale": 1.0,
+                        "noise_strength": 1.0,
+                        "particle_offset_y": 0.0,
+                        "particle_scale": [
+                            1.0,
+                            1.0
+                        ],
+                        "render_mode": 1,
+                        "spawn_delay": [
+                            0.004999999888241291,
+                            0.009999999776482582
+                        ],
+                        "sprite_anim_mode": 0,
+                        "sprite_sheet_grid": [
+                            1,
+                            1
+                        ],
+                        "type": 1,
+                        "uv_scroll_speed": [
+                            0.0,
+                            0.0
+                        ],
+                        "velocity_stretch": 0.0
+                    },
+                    "maxParticles": 300,
+                    "texturePath": "Assets/Textures/VFX/VFX_Hit_Impact_03.png"
+                },
+                "Name": {
+                    "name": "HitParticle"
+                },
+                "Transform": {
+                    "parentID": 8589934597,
+                    "position": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967302
+        }
+    ],
+    "name": "Emitter"
+}

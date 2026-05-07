@@ -1,0 +1,20 @@
+{
+    "AnimSequence": {
+        "sequenceName": "",
+        "targetModelPath": "",
+        "targetAnimName": "Tackle",
+        "duration": 5.000000476837158,
+        "events": [
+            {
+                "time": 0.0,
+                "eventName": "HitBox_Start",
+                "stringParam": ""
+            },
+            {
+                "time": 0.5,
+                "eventName": "HitBox_End",
+                "stringParam": ""
+            }
+        ]
+    }
+}

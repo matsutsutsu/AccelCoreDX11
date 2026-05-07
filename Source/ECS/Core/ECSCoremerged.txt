@@ -1,0 +1,2988 @@
+--- ソースまとめE��姁E--- 
+ 
+=============================== 
+ファイル: CCL_Chunk.h 
+=============================== 
+#pragma once
+#include <vector>
+#include <cstdint>
+#include <cstddef>
+#include <unordered_map>
+#include <functional>
+#include "ECS/Common/CCL_Common.h"
+
+
+// Chunk（チャンク） は、特定のアーキタイプ（コンポーネントの組み合わせ）
+// に属するエンティティのデータを、メモリ上にまとめて格納する「データの箱」
+// 実際ではこのChunkが複数生成されてその個別のChunkのクラス
+#pragma region Chunk概要説明
+
+//  1. Chunk の役割（概要）
+//  通常のオブジェクト指向（AoS : Array of Structures）では、
+//  1つの敵オブジェクトの中に座標、速度、HPなどがバラバラに保持されます。
+//  しかし、この ECS 設計の Chunk では SoA(Structure of Arrays) を採用しています。
+//  
+//  同一構造の集積 : 同じコンポーネント構成（例：Position と Velocity を持つ）
+//  を持つエンティティだけを 1 つの Chunk に集めます。
+//  
+//  メモリ効率とキャッシュ : コンポーネントの種類ごとに
+//  連続したメモリ領域を確保するため、CPU キャッシュ効率が極めて高く、
+//  高速なループ処理が可能です。
+//  
+// 
+//  2. 主要な変数（データの持ち方）
+//  Chunk が内部でどのようなデータを管理しているかを見てみましょう。
+//  
+//  _archetype(Archetype) : この Chunk が「何のコンポーネントを格納しているか」
+//  という定義情報です。
+//  
+//  _components(std::vector<std::vector<uint8_t>>) : Chunk の中身（実データ）です。
+//  
+//  外側の vector は「コンポーネントの種類」の数だけあります。
+//  
+//  内側の vector は「全エンティティのそのコンポーネントの生データ」が
+//  ギッシリ詰まった連続メモリです。
+//  
+//  _ownerEntities(std::vector<EntityID>) : 
+//  この Chunk に入っている各スロットが、どの EntityID のものかを記録する配列です。
+//  
+//  _entityToIndex(std::unordered_map<EntityID, size_t>) : 
+// 「EntityID」から「そのデータが Chunk 内の何番目にあるか」を高速に逆引きするための辞書です。
+//  
+//  _destroyedEntities(std::vector<size_t>) : 
+//  削除予約されたエンティティのインデックスを一時的に貯めておくリストです。
+//  
+//  3. 主要な関数（何ができるのか）
+//  Chunk を操作するための主要な機能です。
+//  
+//  データの追加と取得
+//  Create : 指定されたアーキタイプに基づいて、メモリ領域を初期確保します。
+//  
+//  InsertEntity : 新しいエンティティ用の場所を確保し、
+//  その書き込み先ポインタ（生メモリ）を返します。
+//  足りなければ自動でメモリを拡張します。
+//  
+//  GetComponentPtr : 「何番目のエンティティの、どのコンポーネント」が
+//  欲しいかを指定すると、その正確なメモリ番地を計算して返します。
+//  
+//  データの削除（2段階）
+//  MarkDestroyEntity : すぐにデータを消さず、「この番号は後で消す」
+//  という印をつけるだけです。
+//  
+//  CompactHoles : 「印」がついた箇所を詰め、メモリを隙間なく並べ替えます
+// （これが ECS の高速性を維持する秘訣です）。
+//  
+//  後片付け
+//  Finalize : Chunk 内の全エンティティに対し、
+//  それぞれの型に合ったデストラクタを正しく呼び出して、メモリを完全に解放します。
+//  
+//  まとめると
+//  Chunk は 「同じ型セットを持つエンティティたちを、
+//  コンポーネントごとにバラバラの連続した列（SoA）に整理して並べておく、賢い倉庫」 です。
+
+#pragma endregion
+
+namespace CCL::ECS::Core
+{
+    using namespace CCL::ECS;
+
+    class Chunk
+    {
+    public:
+        Chunk() = default;
+        ~Chunk();
+
+        // コピー禁止
+        Chunk(const Chunk&) = delete;
+        Chunk& operator=(const Chunk&) = delete;
+
+        // ムーブ禁止
+        Chunk(Chunk&&) = delete;
+        Chunk& operator=(Chunk&&) = delete;
+
+		// 指定されたアーキタイプに基づいてChunkを初期化
+		//   第１引数 : このChunkが保持するコンポーネントの種類とサイズ情報
+		//   第２引数 : 最初に確保するエンティティ数のキャパシティ
+        void Create(const Archetype& archetype, size_t initialEntityCapacity = 16);
+        void CreateNull(size_t initialEntityCapacity = 16);
+		// Chunk内の全エンティティとデータを破棄する
+        void Finalize();
+
+		// 新しいエンティティを挿入し、そのコンポーネントデータの先頭ポインタを返す
+        void* InsertEntity(EntityID entity);
+        // Remove entity by index (call destructors only)
+        void RemoveEntity(size_t entityIndex);
+		// 引数のEntityをすぐにデータを消さず、「この番号は後で消す」という印をつける
+        void MarkDestroyEntity(size_t entityIndex);
+
+        size_t GetEntityCount() const { return _entityCount; }
+        size_t GetChunkSize() const { return _entityStride; }
+        const Archetype& GetArchetype() const { return _archetype; }
+        EntityID GetEntityByIndex(size_t i) const { return _ownerEntities[i]; }
+
+		// 削除の「印」がついた箇所を詰め、メモリを隙間なく並べ替える
+		// ECSの高速性を維持する秘訣
+        // 引数にコールバックを追加
+        void CompactHoles(const std::function<void(EntityID, Chunk *, size_t)> &onMoveCallback);
+
+
+        // チャンクの最大収容数を返す
+        size_t GetCapacity() const { return _capacity; }
+
+        // デバッグ用：アーキタイプの簡易ハッシュ
+        size_t GetArchetypeHash() const {
+            size_t hash = 0;
+            for (const auto& t : _archetype) {
+                hash ^= std::hash<uint32_t>{}(t.id) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+            }
+            return hash;
+        }
+
+        // 戻り値を size_t (挿入されたインデックス) に変更
+        size_t AddEntity(EntityID entity);
+
+
+        bool IsEntityDestroyed(size_t index) const
+        {
+            return std::find(_destroyedEntities.begin(), _destroyedEntities.end(), index) !=
+                   _destroyedEntities.end();
+        }
+
+        //@brief Chunkに格納されている全EntityIDの配列の先頭ポインタを取得します。
+        //System側で「自分自身のEntityID」を知る必要がある場合（ScriptSystem等）に使用します。
+        //@return const EntityID* ID配列の先頭ポインタ
+        const EntityID* GetEntityIDs() const {
+            if (_ownerEntities.empty()) return nullptr;
+            return _ownerEntities.data();
+        }
+
+        // 削除リストが空でないか（削除予定のエンティティがあるか）を返す
+        bool HasDestroyedEntities() const { return !_destroyedEntities.empty(); }
+
+    private:
+		// このChunkが「なんのコンポーネント」を持っているかの定義情報
+        Archetype _archetype;
+        size_t _capacity = 0;      // 追加：最大容量を保持
+
+		// このChunkに所属するエンティティIDのリスト
+        std::vector<EntityID> _ownerEntities;
+        size_t _entityStride = 0;            
+        size_t _entityCount = 0;
+
+		// 削除予定のエンティティインデックスリスト
+        std::vector<size_t> _destroyedEntities; 
+
+		// Chunkの中身（実データ）
+		//  ・外側のvector: コンポーネントの種類ごと
+		//  ・内側のvector: そのコンポーネントの全エンティティ分の生データ
+        //std::vector<std::vector<uint8_t>> _components; // SoA配列
+
+        // 核心的修正：ネストしたvectorを廃止し、1Dメモリとオフセット管理に移行
+        std::vector<uint8_t> _memoryBlock;
+        std::vector<size_t>  _componentOffsets;
+
+
+    public:
+        size_t GetComponentIndex(TypeID id) const
+        {
+            for (size_t i = 0; i < _archetype.size(); ++i)
+                if (_archetype[i].id == id)
+                    return i;
+            return InvalidIndex;
+        }
+
+        // 渡されたidとentityIndexからSoA配列内の正確なメモリアドレスを計算する
+		// 返り値を返すときChunk自身はintなのかstringなのかは知らないので
+        // 型が不明な住所のvoid*として返す
+        void* GetComponentPtrByType(TypeID id, size_t entityIndex)
+        {
+            // 1. Componentのインデックスを取得 (GetComponentIndex)
+            size_t compIdx = GetComponentIndex(id);
+
+            // 2. このChunkが指定されたComponent型を持っていない場合は終了
+            if (compIdx == InvalidIndex) return nullptr;
+
+            // 3. ComponentPtrを計算して返す
+            return GetComponentPtr(compIdx, entityIndex);
+        }
+
+        const Archetype& GetTypeDatas() const // メソッド名はそのままに、戻り値を Archetype& に修正
+        {
+            return _archetype;
+        }
+
+		// 指定されたTypeIDのコンポーネントを持っているか？
+        bool HasComponent(TypeID id) const {
+            return GetComponentIndex(id) != InvalidIndex;
+        }
+
+        // ---------------------------------------------------------------------
+        // テンプレート版アクセサ (ユーザーコード用)
+        // ---------------------------------------------------------------------
+
+        // 指定された型Tのコンポーネントを持っているか判定
+        template <class T> bool HasComponent() const
+        {
+            // TypeInfo<T>::ID() で型IDを取得して判定
+            return GetComponentIndex(TypeInfo<T>::ID()) != InvalidIndex;
+        }
+
+        // 指定された型Tのコンポーネントデータ配列の先頭ポインタを取得
+        // 戻り値: T* (持っていない場合は nullptr)
+        template <class T> T *GetComponentArray()
+        {
+            // 1. 型IDに対応するコンポーネント配列のインデックス（何番目の白線か）を取得
+            size_t index = GetComponentIndex(TypeInfo<T>::ID());
+
+            // 2. 存在しなければ nullptr を返す
+            if (index == InvalidIndex) return nullptr;
+
+            // 3. 体育館の入り口から、目的の白線の位置まで進んだ場所を T* にキャストして返す
+            return reinterpret_cast<T *>(_memoryBlock.data() + _componentOffsets[index]);
+        }
+
+        // const版 GetComponentArray (読み取り専用)
+        template <class T> const T *GetComponentArray() const
+        {
+            size_t index = GetComponentIndex(TypeInfo<T>::ID());
+
+            if (index == InvalidIndex) return nullptr;
+
+            return reinterpret_cast<const T *>(_memoryBlock.data() + _componentOffsets[index]);
+        }
+
+
+    private:
+        // 「何番目のエンティティの、どのコンポーネント」が欲しいかを指定すると、
+        // 　その正確なメモリ番地を計算して返します
+		// 第１引数 : コンポーネントのインデックス（_archetype 内の位置）
+		// 第２引数 : エンティティのインデックス（Chunk内の位置）
+        void* GetComponentPtr(size_t compIdx, size_t entityIndex)
+        {
+            // 1. 指定されたコンポーネントの配列を取り出す
+            size_t baseOffset = _componentOffsets[compIdx];
+            // 2. その型の1個あたりのサイズを取得
+            size_t sz = _archetype[compIdx].typeSize;
+            // 3. 配列の先頭アドレス + (何番目か * サイズ) で場所を特定
+            // 体育館の入り口(_memoryBlock) + エリアの開始位置(baseOffset) + 人数分進む
+            return _memoryBlock.data() + baseOffset + (entityIndex * sz);
+     
+        }
+
+    };
+
+
+
+}
+ 
+=============================== 
+ファイル: CCL_ChunkManager.h 
+=============================== 
+#pragma once
+#include <vector>
+#include <memory>
+#include "../Common/CCL_Common.h"
+#include "CCL_Chunk.h"
+#include "CCL_PendingOps.h"
+#include <functional>
+#include <unordered_map> 
+#include <shared_mutex>
+
+namespace CCL::ECS::Core
+{
+    using namespace CCL::ECS;
+
+    //1. ChunkManager の役割（概要）
+    //   ECSにおいて、エンティティはコンポーネントが追加・削除されるたびに、
+    // 　その構成（アーキタイプ）が変わります。 ChunkManager の最大の仕事は、
+    // 「エンティティをその時々の構成に最適な Chunk（倉庫）へ振り分け、移動させること」
+	//  です。
+    class ChunkManager
+    {
+    public:
+        ChunkManager() = default;
+        ~ChunkManager() = default;
+
+        // 指定されたArchetypeに対応する新しいChunkを作成して_chunkに追加する
+        void CreateChunk(const Archetype& archetype);
+        // 管理下の全チャンクに対してFinalizeを呼び出し全てのEntityとデータを破棄する
+        void FinalizeAll();
+
+        // 新しいエンティティを生成し、指定されたArchetypeに対応するチャンクに挿入
+        void AddEntity(EntityID entity, const Archetype& archetype);
+        // 指定されたエンティティを破棄リストに入れる
+        void DestroyEntity(EntityID entity);
+
+        // ECS処理中に発生した変更リスト(PendingOps）を受け取り
+        //（Entityの追加、削除、コンポーネント変更）を一括処理する
+        std::vector<EntityID> ApplyPendingOperations(PendingOps& pendingOps);
+
+        // Archetype遷移の中核ロジック
+        // ソースチャンクからEntityのデータをコピー→デストラクタを呼び、
+        // 新しいチャンクにコピー構築して移動を完了する
+#pragma region MoveEntityBetweenChunks概要
+        // これが ECSの中で最も重要かつ複雑な処理 です。 例えば、
+        // あるエンティティに Velocity（速度）コンポーネントが追加された場合、
+        // 以下の手順で「引越し」をさせます。
+
+        //１，今の倉庫（位置のみ）からデータを取り出す。
+
+        //２，新しい倉庫（位置＋速度）に席を確保する。
+
+        //３，共通するデータ（位置）だけを新しい倉庫にコピーする。
+
+        //４，新しく追加されたデータ（速度）を書き込む。
+
+        //５，古い倉庫の席を空ける（削除する）。
+#pragma endregion
+        bool MoveEntityBetweenChunks(
+            Chunk& srcChunk, size_t srcIndex,
+            Chunk& dstChunk, EntityID entity,
+            const std::vector<PendingOp*>& addOps,
+            const std::vector<TypeID>& removeTypeIDs
+        );
+
+        // 指定されたArchetypeと完全に一致するチャンクが既に存在しているか検索
+        size_t SearchEqualChunk(const Archetype& a) const;
+
+        std::vector<std::unique_ptr<Chunk>>& GetChunks() { return _chunks; }
+
+        // const版（読み取り専用の時用）
+        const std::vector<std::unique_ptr<Chunk>>& GetChunks() const { return _chunks; }
+
+        // 指定されたEntityIDがどのチャンクに存在し、チャンク内のどのインデックスにあるか検索
+        size_t SearchEntityIn(EntityID entity, size_t* entityIndexOut = nullptr) const;
+
+        // Worldから「キャッシュ更新関数」を受け取る
+        using EntityMoveCallback = std::function<void(EntityID, Chunk *, size_t)>;
+        void SetEntityMoveCallback(EntityMoveCallback cb) { _onEntityMove = cb; }
+
+        // 構造変更用のmutexを取得（SystemManagerから使用される）
+        std::shared_mutex       &GetStructureMutex() { return _structureMutex; }
+        const std::shared_mutex &GetStructureMutex() const { return _structureMutex; }
+    
+
+
+    private:
+        // 指定したアーキタイプで、かつ空きがあるチャンクを返す（なければ作る）
+        Chunk& GetOrCreateAvailableChunk(const Archetype& archetype);
+
+		// 新しいエンティティを指定されたチャンクに挿入し、コンポーネントデータを初期化する
+        void InsertNewEntity(
+			Chunk& dstChunk,    // 挿入先チャンク
+			EntityID entity,    // 挿入するエンティティID
+			const std::vector<PendingOp*>& addOps   // 今回の移動で新しく追加されるコンポーネントの初期データ
+        );
+
+         // Entityの位置情報をキャッシュするための構造体
+        struct EntityLocation {
+            size_t chunkIndex;  // どのChunkにいるか
+            size_t entityIndex; // Chunk内のどのインデックスか
+
+            EntityLocation() : chunkIndex(InvalidIndex), entityIndex(InvalidIndex) {}
+            EntityLocation(size_t ci, size_t ei) : chunkIndex(ci), entityIndex(ei) {}
+        };
+
+        // Entityの位置を更新する内部ヘルパー
+        void UpdateEntityLocation(EntityID entity, size_t chunkIdx, size_t entityIdx);
+
+        // Entityの位置情報を削除する内部ヘルパー
+        void RemoveEntityLocation(EntityID entity);
+
+        // ChunkポインタからChunk配列内のインデックスを取得
+        size_t GetChunkIndex(const Chunk *chunk) const;
+
+      
+    private:
+		// このChunkManagerが管理する全チャンクのリスト
+		// ・外側のvector: チャンクごと
+		// ・内側のunique_ptr: チャンク本体
+        // 「位置情報だけを持つ倉庫」「位置と速度を持つ倉庫」など
+        // アーキタイプごとに作成された倉庫を全て保持している
+        std::vector<std::unique_ptr<Chunk>> _chunks;
+
+
+        // チャンク1つあたりの固定メモリサイズ（例: 16KB = 16384 バイト）
+        // ※ 16KBはL1/L2キャッシュに収まりやすく、バランスの良い標準サイズです
+        // なぜ16000ではなく16384かというと、16384は2の14乗であり、コンピュータのメモリ管理において効率的なサイズだから
+        static constexpr size_t CHUNK_SIZE_BYTES = 16384;
+
+        // アーキタイプ（構成）から、このチャンクに何人入れるか（定員）を計算する
+        size_t CalculateChunkCapacity(const Archetype &archetype) const;
+
+
+        EntityMoveCallback _onEntityMove = nullptr;
+
+        // EntityID → (ChunkIndex, EntityIndex) の高速検索マップ     
+        std::vector<EntityLocation> _entityLocationMap;
+
+        // 構造変更用の共有ミューテックス
+        // - 読み取り（System実行）: shared_lock（複数スレッド並列OK）
+        // - 書き込み（ApplyPendingOperations）: unique_lock（排他的）
+        mutable std::shared_mutex _structureMutex;
+
+    };
+}
+ 
+=============================== 
+ファイル: CCL_ECSContext.h 
+=============================== 
+#pragma once
+#include "ECS/Core/CCL_World.h"
+#include "ECS/System/CCL_SystemManager.h"
+#include <memory>
+
+namespace CCL::ECS {
+
+    // 1つの独立したECS環境（データとロジックのセット）を管理するクラス
+    class ECSContext {
+      public:
+        ECSContext()
+        {
+            _world         = std::make_unique<Core::World>();
+            _systemManager = std::make_unique<SystemManager>();
+
+            // SystemManagerに「お前が処理すべきデータはこれだ」と教える
+            _systemManager->SetWorld(_world.get());
+        }
+
+        ~ECSContext() = default;
+
+        // ---------------------------------------------------------
+        // チームメンバー（利用者）が呼び出す安全な更新フロー
+        // ---------------------------------------------------------
+
+        // 物理・ロジックの更新（FixedUpdate等で呼ぶ）
+        void UpdateLogic(float dt)
+        {
+            //  FixedUpdate全体を計測
+            ZoneScopedN("World::FixedUpdate");
+
+
+            // 1. 溜まっていた構造変更（Entity生成/削除）を適用し、データを確定させる
+            _world->ScrutinyAndApply();
+
+            // 2. 構造変更があったフレームのみターゲットを再解決する
+            if (_world->IsStructureDirty())
+            {
+                _systemManager->ResolveTargetChunks(&_world->GetChunkManager());
+                _world->ResetStructureDirty(); // フラグを下ろす
+            }
+
+            // 3. ロジックを回す
+            _systemManager->UpdateLogic(dt);
+        }
+
+        // 描画系の更新（RenderUpdate等で呼ぶ）
+        void UpdateRender(float dt) 
+        {
+            // RenderUpdate全体を計測         
+            ZoneScopedN("World::RenderUpdate");
+
+        
+
+            _systemManager->UpdateRender(dt); 
+        }
+
+        // ポーズ画面用など、ロジックは止めて構造変更と描画だけを行う特殊更新
+        void UpdatePaused(float dt)
+        {
+            _world->ScrutinyAndApply();
+            _systemManager->ResolveTargetChunks(&_world->GetChunkManager());
+            _systemManager->UpdateRender(dt);
+        }
+
+
+        // ---------------------------------------------------------
+        // アクセッサ
+        // ---------------------------------------------------------
+        Core::World   *GetWorld() const { return _world.get(); }
+        SystemManager *GetSystemManager() const { return _systemManager.get(); }
+
+      private:
+        std::unique_ptr<Core::World>   _world;
+        std::unique_ptr<SystemManager> _systemManager;
+    };
+
+} // namespace CCL::ECS 
+=============================== 
+ファイル: CCL_EventBus.h 
+=============================== 
+#pragma once
+#include <algorithm>
+#include <cstdint>
+#include <functional>
+#include <memory>
+#include <unordered_map>
+#include <vector>
+
+namespace CCL::ECS::Core {
+
+    // =======================================================
+    // 1. 型IDジェネレータ (重い typeid を排除する魔法)
+    // =======================================================
+    class EventTypeIDGenerator {
+        static inline uint32_t counter = 0;
+
+      public:
+        template <typename T> static uint32_t GetID()
+        {
+            // 型 T ごとに、この static 変数が「たった一つだけ」作られる
+            static uint32_t id = counter++;
+            return id;
+        }
+    };
+
+    // 購読解除用のチケット
+    using EventSubscriptionID = uint64_t;
+
+    // =======================================================
+    // 2. イベントの箱 (型の消失 / 型消去)
+    // =======================================================
+    class IEventWrapper {
+      public:
+        virtual ~IEventWrapper() = default;
+    };
+
+    template <typename EventType> class EventWrapper : public IEventWrapper {
+      public:
+        using CallbackType = std::function<void(const EventType &)>;
+
+        // 誰の関数かを特定するために、チケットIDと一緒に保存する
+        struct Subscriber {
+            EventSubscriptionID id;
+            CallbackType        callback;
+        };
+
+        std::vector<Subscriber> subscribers;
+        EventSubscriptionID     nextId = 1;
+
+        // 関数を登録し、キャンセル用のチケットを返す
+        EventSubscriptionID Add(CallbackType cb)
+        {
+            EventSubscriptionID id = nextId++;
+            subscribers.push_back({id, cb});
+            return id;
+        }
+
+        // チケットを使って特定の関数だけを削除する
+        void Remove(EventSubscriptionID id)
+        {
+            auto it = std::remove_if(subscribers.begin(),
+                subscribers.end(),
+                [id](const Subscriber &s) { return s.id == id; });
+            if (it != subscribers.end()) {
+                subscribers.erase(it, subscribers.end());
+            }
+        }
+
+        // 全員に手紙を配る (イベント発火)
+        void Trigger(const EventType &eventData)
+        {
+            for (auto &s : subscribers) {
+                s.callback(eventData);
+            }
+        }
+    };
+
+    // =======================================================
+    // 3. 郵便局本体 (EventBus)
+    // =======================================================
+    class EventBus {
+      private:
+        // 「型のID」と「そのイベント専用の箱」のペアを管理する名簿
+        std::unordered_map<uint32_t, std::unique_ptr<IEventWrapper>> _subscribers;
+
+      public:
+        // 購読する (手紙が欲しいと登録する)
+        template <typename EventType>
+        EventSubscriptionID Subscribe(std::function<void(const EventType &)> callback)
+        {
+            uint32_t typeId = EventTypeIDGenerator::GetID<EventType>();
+
+            if (_subscribers.find(typeId) == _subscribers.end()) {
+                _subscribers[typeId] = std::make_unique<EventWrapper<EventType>>();
+            }
+
+            auto wrapper = static_cast<EventWrapper<EventType> *>(_subscribers[typeId].get());
+            return wrapper->Add(callback);
+        }
+
+        // 購読を解除する (もう手紙は要らないと伝える)
+        template <typename EventType> void Unsubscribe(EventSubscriptionID subId)
+        {
+            uint32_t typeId = EventTypeIDGenerator::GetID<EventType>();
+
+            if (_subscribers.find(typeId) != _subscribers.end()) {
+                auto wrapper = static_cast<EventWrapper<EventType> *>(_subscribers[typeId].get());
+                wrapper->Remove(subId);
+            }
+        }
+
+        // 手紙を投函する (全員に配る)
+        template <typename EventType> void Publish(const EventType &eventData)
+        {
+            uint32_t typeId = EventTypeIDGenerator::GetID<EventType>();
+
+            if (_subscribers.find(typeId) != _subscribers.end()) {
+                auto wrapper = static_cast<EventWrapper<EventType> *>(_subscribers[typeId].get());
+                wrapper->Trigger(eventData);
+            }
+        }
+
+        // 世界がリセットされる時に名簿を空にする
+        void Clear() { _subscribers.clear(); }
+    };
+
+} // namespace CCL::ECS::Core 
+=============================== 
+ファイル: CCL_FrameAllocator.h 
+=============================== 
+#pragma once
+#include <algorithm>
+#include <cstddef>
+#include <cstdint>
+#include <vector>
+
+
+#include "tracy/Tracy.hpp"
+
+
+namespace CCL::ECS::Core {
+
+    // フレーム毎にリセットする超高速アロケータ
+    class FrameAllocator {
+      public:
+        FrameAllocator(size_t pageSize = 1024 * 1024) : _pageSize(pageSize)
+        {
+            // 最初から1ページ確保しておく
+            _pages.reserve(8);
+            // 初期値を -1 にしておくことで、最初の AllocateNewPage で 0 になるように調整
+            _pageIndex = -1;
+            AllocateNewPage(pageSize);
+        }
+
+        ~FrameAllocator()
+        {
+            // ★重要: 終了時にデストラクタを呼ぶ
+            RunDestructors();
+
+            for (auto *p : _pages) {
+                // ★追加: OSにメモリを返す瞬間をTracyに通知
+                TracyFree(p);
+
+
+                ::operator delete(p);
+            }
+        }
+
+        // メモリ確保（ポインタをずらすだけ）
+        void *Alloc(size_t size)
+        {
+            // 8バイトアライメント
+            // これは **「きりの良い数字（8の倍数）に切り上げる」 **という計算です。
+            // CPUはデータを読むとき、8バイト区切り（64bit）で並んでいると一番速く読めます。
+            // 例えば「1バイト欲しい」と言われても、「8バイト」確保して渡します。隙間を開けて整列させるためです。
+            size = (size + 7) & ~7;
+
+            //「今のページ（落書き帳）の余白」が足りるかチェックします。g           
+            //足りなければ AllocateNewPageで新しいページ（次の紙）を用意します。
+            if (_offset + size > _pageSize) {
+                AllocateNewPage(size);
+            }
+
+            //ここが爆速の理由です
+            //「ここを使っていいよ」という場所（ポインタ）は、「ページの先頭 +
+            //現在位置」 だけで決まります。OSへの問い合わせは一切ありません。
+            void *ptr = _currentPage + _offset;
+
+            //「ここまで使ったから、次はここからね」と、
+            // 現在位置をずらすだけ。これで確保完了です。
+            _offset += size;
+
+            return ptr;
+        }
+
+        //Alloc は単なる「メモリの場所」を返すだけですが、New
+        //はそこで「クラスの初期化（コンストラクタ）」までやってくれます。
+        template <class T, typename... Args> T *New(Args &&...args)
+        {
+            // 1. 場所を確保
+            //new (mem) T(...)
+            //これを「Placement New（配置ニュー）」と呼びます。
+            //普通の new T は「土地を買って家を建てる」ことですが、
+            //Placement Newは *
+            //*「既に持っている土地（mem）を指定して、そこに家を建てる」 *
+            //*ことです。Allocでもらった場所に直接データを書き込みます。
+            void *mem = Alloc(sizeof(T));
+
+            // 2. placement new (配置new)
+            T *ptr = new (mem) T(std::forward<Args>(args)...);
+
+            // 3. デストラクタ登録
+            //if constexpr (!std::is_trivially_destructible_v<T>)
+            //これは「T型は、ちゃんと後片付けが必要な難しいクラスか？」を判定しています。
+            //int や float なら単純な数字なので後片付け不要（何もしない）。
+            //std::vector や
+            //std::string を持っているクラスなら、中身を delete しないとメモリリークします。
+            //そういう「難しいクラス」の場合だけ、「リセットするときにこのデストラクタを呼んでね」と
+            //_destructors リストにメモしておきます。
+            if constexpr (!std::is_trivially_destructible_v<T>) {
+                _destructors.push_back([ptr]() { ptr->~T(); });
+            }
+
+              return ptr;
+        }
+
+        // フレームの終わりに呼ぶ（デストラクタは呼ばず、ポインタを戻すだけ）
+        void Reset()
+        {
+            // ★重要: リセット時にデストラクタを呼ぶ
+            //さっき登録した「後片付けリスト」を実行します。std::vector
+            //などを持っているオブジェクトの中身を綺麗にします。
+            RunDestructors();
+
+            
+            // このフレームで「実際に消費したバイト数」をグラフにプロット
+            size_t totalUsed = (_pageIndex * _pageSize) + _offset;
+            // "FrameAllocator Usage" という名前の折れ線グラフがTracy上に作成されます
+            TracyPlot("FrameAllocator Usage", static_cast<int64_t>(totalUsed));
+
+
+            //ここが最強のポイントです。
+            //確保したメモリ（ページ）を delete（OSへ返却）しません。
+            //ただ **「書き込み位置を0ページ目の、0行目に戻す」 **だけです。
+            //これで、次のフレームではまた同じメモリ領域を最初から上書きして使えます。これが再利用です。
+            _pageIndex = 0;
+            _offset    = 0;
+            if (!_pages.empty()) _currentPage = _pages[0];
+        }
+
+      private:
+        // デストラクタを一括実行する関数
+        void RunDestructors()
+        {
+            // 生成と逆順に破棄するのが安全
+            for (auto it = _destructors.rbegin(); it != _destructors.rend(); ++it) {
+                (*it)();
+            }
+            _destructors.clear();
+        }
+
+        //ページが足りなくなったときに呼ばれます。
+        void AllocateNewPage(size_t requiredSize)
+        {
+            size_t sizeToAlloc = (std::max)(_pageSize, requiredSize);
+
+            _pageIndex++;
+            // ページが足りなければ新規確保、あれば再利用
+            if (_pageIndex < _pages.size()) {
+                 //すでに前のフレームで作った2ページ目、3ページ目があるなら、それを再利用！
+                _currentPage = _pages[_pageIndex];
+            }
+            else {
+                // 本当に足りない時だけ、OSからメモリをもらう (::operator new)
+                uint8_t *ptr = static_cast<uint8_t *>(::operator new(sizeToAlloc));
+                _pages.push_back(ptr);
+                _currentPage = ptr;
+
+                // OSから新たに「ページ」という物理メモリを確保した瞬間を通知
+                TracyAlloc(ptr, sizeToAlloc);
+
+
+            }
+            _offset = 0;  // 新しいページなので、書き込み位置は0から
+        }
+
+        std::vector<uint8_t *> _pages;       // 落書き帳のページ（メモリの塊）のリスト
+        uint8_t               *_currentPage; // 今書いているページ
+        size_t                 _offset;      // 今書いているページの「何行目」にいるか
+        size_t                 _pageIndex;   // 今何ページ目を使っているか
+        size_t                 _pageSize;    // 1ページの大きさ（バイト数）
+
+        std::vector<std::function<void()>> _destructors; // 後片付けリスト
+    };
+} // namespace CCL::ECS::Core 
+=============================== 
+ファイル: CCL_JobSystem.h 
+=============================== 
+#pragma once
+#include <atomic>
+#include <condition_variable>
+#include <functional>
+#include <mutex>
+#include <queue>
+#include <thread>
+#include <vector>
+
+// ===================================================================================
+// ファイル名: CCL_JobSystem.h
+// クラス名: JobSystem
+//
+// 【概要】
+//   マルチスレッド処理を行うための「スレッドプール」管理クラスです。
+//   CPUのコア数分だけ事前にスレッド（作業員）を作成し、
+//   投げられたタスク（ジョブ）を並列で消化させます。
+//
+// 【イメージ：レストランの厨房】
+//   - JobSystem     : 厨房そのもの
+//   - Worker        : 雇われたシェフたち（スレッド）
+//   - JobQueue      : 注文票が貼られるボード（仕事リスト）
+//   - Mutex         : ボードの前の「立ち入り禁止テープ」（排他制御の鍵）
+//   - ConditionVar  : シェフを起こす「呼び出しベル」
+//   - JobCounter    : 料理が全部出たか確認する「伝票の残り枚数」
+// ===================================================================================
+
+
+namespace CCL::ECS::Core {
+
+    // Job = 「引数なし・戻り値なし」の関数（ラムダ式など）
+    // 例：「野菜を切る」「皿を洗う」「Chunk0番を更新する」といった具体的な作業内容
+    using Job = std::function<void()>;
+
+    // -----------------------------------------------------------------------
+    // JobCounter: 仕事の完了待ちをするためのカウンター
+    // -----------------------------------------------------------------------
+    // 普通の int だと、複数のシェフが同時に書き込むと数字が壊れてしまいますが、
+    // std::atomic は「どんなに忙しくても、必ず1ずつ正確に増減すること」を保証する魔法の型です。
+    struct JobCounter {
+        std::atomic<int> count{0};
+    };
+
+    class JobSystem {
+      public:
+        // コンストラクタ：厨房を開き、シェフを雇う
+        JobSystem();
+
+        // デストラクタ：店じまいし、シェフを帰宅させる
+        ~JobSystem();
+
+        // コピー禁止（厨房は世界に一つだけ。シングルトンや管理クラスで持つため）
+        JobSystem(const JobSystem &)            = delete;
+        JobSystem &operator=(const JobSystem &) = delete;
+
+        /**
+         * @brief 仕事をキューに追加する（店長が注文を入れる）
+         * @param job 実行したい処理（ラムダ式など）
+         * @param counter 完了を追跡するためのカウンター（nullptrなら追跡しない）
+         */
+        void Execute(Job job, JobCounter *counter = nullptr);
+
+        /**
+         * @brief 指定したカウンターが0になるまで、メインスレッドを待機させる
+         * （料理が全部出るまで、店長は足止めを食らう）
+         * @param counter 監視対象のカウンター
+         */
+        void WaitForCounter(JobCounter *counter);
+
+      private:
+        // シェフ（ワーカースレッド）が実行する業務マニュアル
+        // 生まれた瞬間から死ぬまで、このループの中で働き続けます。
+        void WorkerLoop();
+
+      private:
+        // 内部で扱うジョブ構造体
+        struct InternalJob {
+            Job         task;    // やるべき仕事
+            JobCounter *counter; // 終わったら減らすカウンター
+        };
+
+        std::vector<std::thread> _workers;  // 働くシェフたち
+        std::queue<InternalJob>  _jobQueue; // 仕事の注文票ボード
+
+        std::mutex _queueMutex; // ボードを守る「鍵」（排他制御）
+                                // これがないと複数のシェフが同時にチケットを取ろうとして破れます。
+
+        std::condition_variable _condition; // 寝ているシェフを起こす「ベル」
+
+        bool _shutdown = false; // 「閉店」フラグ
+    };
+
+} // namespace CCL::ECS::Core 
+=============================== 
+ファイル: CCL_PendingOps.h 
+=============================== 
+#pragma once
+// CCL_PendingOps.h
+// Component Add/Remove の遅延処理リスト
+
+#include "../Common/CCL_Common.h"
+#include <vector>
+#include <memory>
+#include <functional>
+
+namespace CCL::ECS::Core
+{
+    enum class PendingOpKind
+    {
+        Spawn,
+        Destroy,
+        AddComponent,
+        RemoveComponent,
+        PatchComponent, // コンポーネントの一部修正予約
+
+        None
+    };
+
+    // 構造的変更要求をカプセル化
+    struct PendingOp
+    {
+        PendingOpKind kind = PendingOpKind::None;     // 実行する操作の種類
+        EntityID entity = 0;        // 操作対象のエンティティID
+
+        TypeID type = 0;            // 操作対象のコンポーネントのTypeID  
+        size_t typeSize = 0;        // 操作対象のコンポーネントのサイズ
+
+        // data=nullptr の場合もある
+        void* data = nullptr;   // AddComponentの場合追加されるコンポーネント初期データが格納されているヒープメモリへのポインタ
+        Destructor destructor;  // dataに格納されたコンポーネントデータを破棄するためのオブジェクト
+
+        // ★追加: 生成用ファクトリ関数 (Emplace用)
+        // AddComponentで渡されたラムダ式をここに保存し、ChunkManagerまで運びます
+        std::function<void(void *)> factory = nullptr;
+
+        // ★追加: 修正用の関数（Patch処理）
+        // 既に存在するコンポーネントのポインタを受け取り、内部を書き換えるラムダ式
+        std::function<void(void *)> patcher = nullptr;
+
+        // ★【追加】コピー・移動・代入用の関数ポインタ
+        // これらを ChunkManager まで伝達しないと、memcpy が発動してクラッシュします
+        TypeData::ConstructFunc constructor = nullptr; // コピー構築 (Placement New)
+        TypeData::AssignFunc    assigner    = nullptr; // 代入 (Operator=)
+        TypeData::MoveFunc      mover       = nullptr; // 移動 (Move)
+
+        // デバッグ用の型名（XMTLで読み取り用）
+        const char *name = nullptr;
+    };
+
+    // ECSの実行フェーズ（Systemの更新中など）で発生したエンティティへの
+    // 構造的変更要求（コンポーネント追加・削除）を一時的に記録し、
+    // フレームの終了時など安全なタイミングで一括処理することを可能にする
+    class PendingOps
+    {
+    public:
+        PendingOps() = default;
+        ~PendingOps() { Clear(); }
+
+        // 新しいPendingOpをリスト_opsに追加します
+        void Add(const PendingOp& op)
+        {
+            _ops.push_back(op);
+        }
+
+        std::vector<PendingOp>& Ops() { return _ops; }
+
+        // リストをクリアする際に、AddComponentの操作で一時的に確保された
+        // ヒープメモリ（op.data）を安全に解放します
+        void Clear()
+        {
+            for (auto& op : _ops)
+            {
+                if (op.data == nullptr) continue;
+
+                switch (op.kind)
+                {
+                case PendingOpKind::Spawn:
+                {
+                    // data は Archetype*
+                    Archetype* archPtr = reinterpret_cast<Archetype*>(op.data);
+                    break;
+                }
+                case PendingOpKind::AddComponent:
+                {
+                    op.destructor.Destruct(op.data);
+                    break;
+                }
+                default:
+                    break;
+                }
+
+                op.data = nullptr;
+            }
+            _ops.clear();
+        }
+
+        bool Empty() const { return _ops.empty(); }
+
+    private:
+        std::vector<PendingOp> _ops;
+    };
+}
+ 
+=============================== 
+ファイル: CCL_World.h 
+=============================== 
+#pragma once
+#include "../Common/CCL_Common.h"
+#include "CCL_ChunkManager.h"
+#include "CCL_PendingOps.h"
+#include "CCL_FrameAllocator.h"
+#include "CCL_EventBus.h"
+#include <any>          //これを勉強
+#include <atomic>
+#include <cassert>      //これも勉強
+#include <mutex>
+#include <typeindex>
+#include <unordered_map>
+#include <utility>
+#include <functional> // std::functionのために明示的にインクルード
+#include <memory>
+
+#include "Engine/GamePlay/Core/DestroyTag.h"
+
+
+namespace CCL::ECS::Core {
+    using namespace CCL::ECS;
+
+    // 前方宣言 (ComponentHandleで使うため)
+    class World;
+
+    // ========================================================================
+    // EntityRef (エンティティ操作用の超軽量ラッパー)
+    // ========================================================================
+    struct EntityRef {
+      World *world;
+      EntityID id;
+
+
+      // ここでは宣言だけにして、中身はファイルの末尾（World定義の後）に書きます
+      template <typename T> EntityRef &Set(T &&component);
+
+      // すでに持っているコンポーネントの中身をラムダ式で書き換える
+      template <typename T, typename Func> EntityRef &Patch(Func &&func);
+
+      operator EntityID() const { return id; }
+      EntityID ID() const { return id; }
+    };
+
+    // ========================================================================
+    // リソース管理用の高速IDジェネレータと型安全ラッパー
+    // ========================================================================
+    class ResourceIDGenerator {
+        static inline uint32_t counter = 0;
+
+      public:
+		// 型Tごとに、たった一つだけIDが割り当てられる魔法の関数
+        template <typename T> static uint32_t GetID()
+        {
+            static uint32_t id = counter++;
+            return id;
+        }
+    };
+
+	// リソースの型消去用の基底クラス
+	// ResourceBaseを継承したResourceWrapperが、任意の型Tのデータを保持できるようにして
+	// それらをResourceBase*として配列の中に入れて扱うことで、型安全かつ柔軟なリソース管理を実現します。
+    struct ResourceBase {
+        virtual ~ResourceBase() = default;
+    };
+
+	// 型安全なリソースラッパー。ResourceBaseを継承し、任意の型Tのデータを保持できます。
+    template <typename T> struct ResourceWrapper : public ResourceBase {
+        T data;
+        template <typename... Args>
+        ResourceWrapper(Args &&...args) : data(std::forward<Args>(args)...)
+        {
+        }
+    };
+
+
+
+    // ========================================================================
+    // ComponentHandle
+    // 生ポインタ(T*)の代わりに保持する安全なチケット。
+    // アクセスするたびにWorldに問い合わせて最新のアドレスを取得する。
+    // ========================================================================
+    template <typename T> class ComponentHandle {
+      public:
+        // 無効なハンドル
+        ComponentHandle() : _world(nullptr), _id(InvalidEntityID) {}
+
+        // 有効なハンドル (Worldから生成される)
+        ComponentHandle(World *world, EntityID id) : _world(world), _id(id) {}
+
+        // ハンドルが有効かチェック (エンティティが存在し、コンポーネントを持っているか)
+        bool IsValid() const;
+
+        // 明示的にポインタを取得
+        T *Get() const;
+
+        // 矢印演算子 (ポインタのように使える魔法)
+        T *operator->() const
+        {
+            T *ptr = Get();
+            assert(ptr && "Accessing invalid or destroyed component! (Handle expired)");
+            return ptr;
+        }
+
+        // if (handle) { ... } と書けるようにする
+        explicit operator bool() const { return IsValid(); }
+
+        // 比較演算子
+        bool operator==(const ComponentHandle<T> &other) const
+        {
+            return _world == other._world && _id == other._id;
+        }
+
+      private:
+        World   *_world;
+        EntityID _id;
+    };
+
+
+    // エンティティが「どこ」にいるかを示す住所録
+    // EntityID をキーにして、この構造体を取得することで、
+    // 「どのChunkの」「何番目」にデータがあるかが即座にわかります。
+    struct EntityLocation {
+        Chunk *chunk = nullptr; // どのチャンクか
+        size_t index = 0;       // チャンク内の何番目か
+    };
+
+    class World {
+      public:
+        // Worldは唯一無二の存在であるべき。コピーは厳禁。
+        World();
+        ~World();
+        World(const World &)            = delete;
+        World &operator=(const World &) = delete;
+
+        // 世界を初期化（全エンティティ削除）
+        void Clear();
+
+        // --------------------------------------------------------
+        // Frame API (更新フロー)
+        // --------------------------------------------------------
+
+        // 遅延処理の適用（構造変更の確定）
+        // PendingOpsに溜まった変更予約を実際にメモリに適用し、Chunkを整理します。
+        void ScrutinyAndApply();
+
+        // --------------------------------------------------------
+        // Component Operations (Template API)
+        // --------------------------------------------------------
+
+        // ★【重要】コンポーネント追加（推奨API）
+        // 型Tを指定して呼び出すだけで、コンストラクタとデストラクタを自動登録します。
+        // これを使わないと、shared_ptrなどが正しく解放されずメモリリークの原因になります。
+        template <class T> void AddComponent(EntityID entity)
+        {
+            // 1. コンストラクタの準備（ラムダ式）
+            //    指定されたメモリ領域(ptr)に対して、配置new(placement new)を行い
+            //    T型のオブジェクトを初期化します。
+            auto ctor = [](void *ptr) { new (ptr) T(); };
+
+            // 2. デストラクタ情報の作成（これが今回のキモです）
+            //    T型のデストラクタを呼び出すための関数ポインタを持つオブジェクトを作ります。
+            //    これをPendingOpに渡すことで、キャンセル時や削除時に正しく破棄できます。
+            
+            // ★ここが修正点
+            // Destructorだけでなく、TypeDataの全機能を作る
+            TypeData td;
+            td.Create<T>(); // これで constructor, assigner, mover, destructor 全部入る
+
+            // 3. 内部関数へリクエストを投げる
+            RequestAddComponent(entity,
+                TypeInfo<T>::ID(),
+                sizeof(T),
+                ctor,
+                td.destructor,
+                td.constructor, // Copy Construct
+                td.assigner,    // Copy Assign
+                td.mover,       // Move
+                td.name
+            );
+        }
+
+       
+        // ========================================================================
+        // ★万能版 AddComponent (統合済み)
+        // 引数が0個でも、1個(インスタンス)でも、複数(コンストラクタ引数)でも
+        // 全てこれを経由して安全に処理します。
+        // ========================================================================
+        template <class T, typename... Args> 
+        void AddComponent(EntityID entity, Args &&...args)
+        {
+            // 1. ヒープではなく、超高速なフレームアロケータからメモリを借りる
+            void *tempMem = _frameAllocator.Alloc(sizeof(T));
+
+            // 2. 借りたメモリ上に placement new で直接構築する
+            new (tempMem) T(std::forward<Args>(args)...);
+
+            TypeData td;
+            td.Create<T>();
+
+            // 3. PendingOp には「一時メモリのポインタ」をそのまま渡す
+            PendingOp op;
+            op.kind        = PendingOpKind::AddComponent;
+            op.entity      = entity;
+            op.type        = TypeInfo<T>::ID();
+            op.typeSize    = sizeof(T);
+            op.data        = tempMem; // 生ポインタを渡す！
+            op.destructor  = td.destructor;
+            op.constructor = td.constructor;
+            op.assigner    = td.assigner;
+            op.mover       = td.mover;
+            op.name = td.name;    // 名前をカプセルに詰める
+            op.factory     = nullptr; // 遅い std::function は二度と使わない
+
+            _pendingOps.Add(op);
+        }
+
+        // コンポーネント削除（テンプレート版）
+        template <class T> void RequestRemoveComponent(EntityID entity)
+        {
+            RequestRemoveComponent(entity, TypeInfo<T>::ID());
+        }
+
+        // --------------------------------------------------------
+        // Entity Operations
+        // --------------------------------------------------------
+
+        // Entityを生成する予約をします。IDは即座に発行されますが、
+        // 実際のChunkへの追加は ScrutinyAndApply で行われます。
+        EntityID RequestSpawnEntity(const Archetype &archetype);
+
+
+        // ========================================================================
+        // ★ アーキタイプから生成し、軽量ラッパーを返す純粋なSpawn関数
+        // ========================================================================
+        EntityRef Spawn(const Archetype &archetype);
+
+      
+        // ゲーム側で使う親子関係対応している破棄処理
+        // DestroyTagをつけるだけで破棄処理自体はHierarchyCleanUpSystemで行う
+        // もし親が死んでも子供を残したい場合はDestroyの直前にTransformUpdateSystemの
+        // DetachChildを呼ぶ
+        void Destroy(EntityID id)
+        {
+            if (!IsEntityValid(id)) return;
+
+            // 既にタグが付いていなければ付ける
+            if (!HasComponent<Tag::DestroyTag>(id)) {
+                AddComponent<Tag::DestroyTag>(id);
+            }
+        }
+
+        // システム側で使う強力なDestroy処理　親子関係無視
+        void RequestDestroyEntity(EntityID id);
+
+        // 型IDを直接指定してコンポーネント削除をリクエストする（動的削除用）
+        void RequestRemoveComponent(EntityID entity, TypeID tid);
+
+        // --------------------------------------------------------
+        // Accessors & Systems
+        // --------------------------------------------------------
+        ChunkManager &GetChunkManager() { return _chunkManager; }
+        PendingOps   &GetPendingOps() { return _pendingOps; }
+
+        // --------------------------------------------------------
+        // 世代管理・妥当性チェック
+        // --------------------------------------------------------
+
+        // 指定されたEntityIDが有効か（削除済みでないか、世代が古いIDでないか）をチェック
+        // インライン展開されるため高速です。
+        inline bool IsEntityValid(EntityID entity) const;
+
+        inline bool ValidateEntityGeneration(EntityID entity) const
+        {
+            return IsEntityValid(entity);
+        }
+
+        // --------------------------------------------------------
+        // Resource Management  (Singleton Component)　(O(1) Access)
+        // --------------------------------------------------------
+        // システム間で共有する Grid や DeltaTime などの管理に使用
+        // 特定のEntityに属さない、世界に1つだけのデータを持たせる機能です。
+
+        template <typename T, typename... Args> void AddResource(Args &&...args)
+        {
+            size_t id = ResourceIDGenerator::GetID<T>();
+            if (id >= _resourcesArray.size()) {
+                _resourcesArray.resize(id + 1);
+            }
+            _resourcesArray[id] = std::make_unique<ResourceWrapper<T>>(std::forward<Args>(args)...);
+        }
+
+        template <typename T> T &GetResource()
+        {
+			// ResourceをIDにしたものを取得して配列のインデックスにすることで
+			// O(1)でリソースにアクセスできるようにします。
+            size_t id = ResourceIDGenerator::GetID<T>();
+            assert(id < _resourcesArray.size() && _resourcesArray[id] != nullptr &&
+                   "Requested resource not found!");
+            return static_cast<ResourceWrapper<T> *>(_resourcesArray[id].get())->data;
+        }
+
+        template <typename T> bool HasResource() const
+        {
+            size_t id = ResourceIDGenerator::GetID<T>();
+            return id < _resourcesArray.size() && _resourcesArray[id] != nullptr;
+        }
+
+        // --------------------------------------------------------
+        // Component Access
+        // --------------------------------------------------------
+
+        // 型安全かつ高速にコンポーネントを取得する関数
+        // 1. キャッシュチェック → 2. なければ検索 → 3. ポインタキャストして返す
+        template <typename T> inline T *GetComponent(EntityID entity);
+
+        // 指定したコンポーネントを持っているか判定する関数
+        template <typename T> bool HasComponent(EntityID entity)
+        {
+            // GetComponentは持っていなければnullptrを返す仕様なのでこれを利用
+            return GetComponent<T>(entity) != nullptr;
+        }
+
+        // 指定したコンポーネントを持っているか判定する関数 (TypeID版)
+        // エディタやシリアライザなど、動的に型を扱う場合に便利です。
+        bool HasComponent(EntityID entity, TypeID tid);
+
+        // ========================================================================
+        // ハンドル取得関数
+        // 生ポインタではなく、このハンドルを受け取って保持
+        // ========================================================================
+        template <typename T> ComponentHandle<T> GetHandle(EntityID entity)
+        {
+            // エンティティが存在し、コンポーネントを持っている場合のみ有効なハンドルを返す
+            if (HasComponent<T>(entity)) {
+                return ComponentHandle<T>(this, entity);
+            }
+            return ComponentHandle<T>(); // 無効なハンドル
+        }
+
+        // 低レベルアクセス（型IDで取得）
+        void *GetComponentOfEntity(EntityID entity, TypeID tid);
+
+       
+
+        // --------------------------------------------------------
+        // Editor / Inspection API
+        // --------------------------------------------------------
+
+        // エンティティが現在持っているコンポーネント構成（Archetype）を取得します。
+        // これにより、外部（エディタ等）がChunkの内部構造を知らなくても
+        // 「このエンティティは何のコンポーネントを持っているか」を知ることができます。
+        const Archetype &GetEntityArchetype(EntityID entity) const;
+
+        // --------------------------------------------------------
+        // View / Query
+        // --------------------------------------------------------
+
+        // 指定したコンポーネントを持つエンティティ一覧を取得する
+        // 例: auto enemies = world->View<Position, Enemy>();
+        template <class... Components> inline std::vector<EntityID> View();
+
+       
+
+        // 内部実装用: 非テンプレート版 AddComponent
+        // ここで実際のPendingOpを作成します       
+        void RequestAddComponent(EntityID      entity,
+            TypeID                             tid,
+            size_t                             size,
+            const std::function<void(void *)> &ctor,
+            const Destructor                  &dtor,
+            TypeData::ConstructFunc            copyCtor,
+            TypeData::AssignFunc               assigner,
+            TypeData::MoveFunc                 mover, 
+            const char *name);
+
+        // --------------------------------------------------------
+        // Component Patching (Prefab生成後の部分修正用)
+        // --------------------------------------------------------
+
+        // 既存のコンポーネントの一部だけを書き換える予約を行います。
+        // Prefab生成直後など、GetComponentがまだできないタイミングで有効です。
+        // 使用例:
+        // world.PatchComponent<TransformComponent>(entity, [pos](auto& trans){
+        //     trans.position = pos; // positionだけ変更。scale等はPrefabのまま維持
+        // });
+        template <class T> void PatchComponent(EntityID entity, std::function<void(T &)> action)
+        {
+            if (!IsEntityValid(entity)) return;
+
+            PendingOp op;
+            op.kind   = PendingOpKind::PatchComponent;
+            op.entity = entity;
+            op.type   = TypeInfo<T>::ID();
+
+            // 型安全なラムダ式を、汎用的な void* 型のラムダ式にラップして保存
+            op.patcher = [action](void *ptr) { action(*reinterpret_cast<T *>(ptr)); };
+
+            _pendingOps.Add(op);
+        }
+
+
+        // イベントバスへのアクセス窓口
+        EventBus &GetEventBus() { return _eventBus; }
+
+        // ★採用: ECSContext最適化のためのダーティフラグ
+        bool IsStructureDirty() const { return _isStructureDirty; }
+        void ResetStructureDirty() { _isStructureDirty = false; }
+
+      private:
+
+        // デバッグ用取得（キャッシュミス時などのフォールバック）
+        template <class T> inline T *GetComponentDebug(EntityID entity);
+
+        // 実際にエンティティが削除されたタイミングで呼ばれる関数
+        // IDをフリーリストに戻し、世代を進めます
+        void RecycleEntityID(EntityID id);
+
+        // フレームアロケータの実体
+        FrameAllocator _frameAllocator;
+
+
+
+      private:
+        ChunkManager             _chunkManager;
+        PendingOps               _pendingOps;
+
+        // World専属の郵便局
+        EventBus _eventBus;
+      
+
+        // --- 世代管理用のデータ構造 ---
+        std::vector<uint32_t> _entityGenerations;   // インデックスごとの現在の世代
+        std::vector<uint32_t> _freeIndices;         // 再利用可能なインデックス
+        uint32_t              _nextUnusedIndex = 1; // まだ一度も使っていないインデックス
+
+
+        bool _isStructureDirty = true; // ★追加: 構造変更があったかフラグ
+
+
+        std::vector<std::unique_ptr<ResourceBase>> _resourcesArray;
+
+    };
+
+    // ===========================================================
+    // Inline Implementations (ヘッダー実装)
+    // ===========================================================
+
+    // ComponentHandleの実装
+    // Worldクラスの定義が終わった後でないと GetComponent を呼べないためここに記述
+    template <typename T> inline T *ComponentHandle<T>::Get() const
+    {
+        if (!_world) return nullptr;
+        // World::GetComponent 内で IsEntityValid チェックが行われるので安全
+        return _world->GetComponent<T>(_id);
+    }
+
+    template <typename T> inline bool ComponentHandle<T>::IsValid() const
+    {
+        return Get() != nullptr;
+    }
+
+
+    inline bool World::IsEntityValid(EntityID entity) const
+    {
+        uint32_t index = EntityHandle::GetIndex(entity);
+        uint32_t gen   = EntityHandle::GetGeneration(entity);
+
+        // インデックスが範囲外の場合
+        if (index >= _entityGenerations.size()) return false;
+
+        // 世代が一致しない場合（古いIDまたは未来のID）
+        // 例: プレイヤーが持っているIDの世代が「1」なのに、
+        //     World側の世代が「2」になっていたら、そのEntityは既に削除・再利用されている
+        if (_entityGenerations[index] != gen) return false;
+
+        return true;
+    }
+
+    template <class T> inline T *World::GetComponentDebug(EntityID entity)
+    {
+        // 世代チェック
+        if (!IsEntityValid(entity)) return nullptr;
+
+        size_t entityIdxInChunk = 0;
+        size_t chunkIdx         = _chunkManager.SearchEntityIn(entity, &entityIdxInChunk);
+
+        if (chunkIdx == InvalidIndex) return nullptr;
+
+        auto &chunk = _chunkManager.GetChunks()[chunkIdx];
+
+        // 削除マークのチェックも追加
+        if (chunk->IsEntityDestroyed(entityIdxInChunk)) return nullptr;
+
+        return static_cast<T *>(chunk->GetComponentPtrByType(TypeInfo<T>::ID(), entityIdxInChunk));
+    }
+
+    template <class T> inline T *World::GetComponent(EntityID entity)
+    {
+        // 世代チェック（不正なIDなら即終了）
+        if (!IsEntityValid(entity)) return nullptr;
+
+        return static_cast<T*>(GetComponentOfEntity(entity, TypeInfo<T>::ID()));
+
+    }
+
+    template <class... Components> inline std::vector<EntityID> World::View()
+    {
+        std::vector<EntityID> entities;
+
+        // 1. 欲しいコンポーネント構成（フィルタ）を作る
+        Archetype filter = ArchetypeHelper::Generate<Components...>();
+
+        // 2. ChunkManagerから全チャンクを取得
+        auto &chunks = _chunkManager.GetChunks();
+
+        // 3. 全チャンクを走査
+        for (const auto &upChunk : chunks) {
+            if (!upChunk) continue;
+            Chunk *chunk = upChunk.get();
+
+            // 4. そのチャンクがフィルタ条件を満たしているか確認
+            // LhasR (Left has Right) : Chunkのアーキタイプ >= フィルタ
+            if (ArchetypeHelper::LhasR(chunk->GetArchetype(), filter)) {
+                // 5. 条件に合うチャンクなら、中にいる全エンティティをリストに追加
+                size_t          count = chunk->GetEntityCount();
+                const EntityID *ids   = chunk->GetEntityIDs(); // Chunk内のID配列の先頭
+
+                // vectorに一括コピー（高速）
+                entities.insert(entities.end(), ids, ids + count);
+            }
+        }
+        return entities;
+    }
+
+    // ★ EntityRef::Set の実装
+    template <typename T> inline EntityRef &EntityRef::Set(T &&component) {
+      // Worldの完全な定義がわかっているので AddComponent が呼べる
+      world->AddComponent<std::decay_t<T>>(id, std::forward<T>(component));
+      return *this;
+    }
+
+    template <typename T, typename Func>
+    inline EntityRef &EntityRef::Patch(Func &&func) 
+    {
+      world->PatchComponent<T>(id, std::forward<Func>(func));
+      return *this;
+    }
+
+    // ★ World::Spawn の実装
+    inline EntityRef World::Spawn(const Archetype &archetype) {
+      EntityID id = RequestSpawnEntity(archetype);
+      return EntityRef{this, id};
+    }
+   
+
+} // namespace CCL::ECS::Core 
+=============================== 
+ファイル: CCL_Chunk.cpp 
+=============================== 
+#include "CCL_Chunk.h"
+#include <algorithm>
+#include <cstring>
+#include <cassert>
+
+
+namespace CCL::ECS::Core
+{
+    using namespace CCL::ECS;
+
+    // ヘルパー：指定したアライメント境界へサイズを切り上げる
+    inline size_t AlignUp(size_t size, size_t alignment)
+    {
+        return (size + alignment - 1) & ~(alignment - 1);
+    }
+
+    Chunk::~Chunk()
+    {
+        Finalize();
+    }
+
+    void Chunk::Create(const Archetype& archetype, size_t initialEntityCapacity)
+    {
+
+        _archetype = archetype;
+		_capacity = initialEntityCapacity;
+        _entityStride = 0;
+        for (const TypeData& t : _archetype) _entityStride += t.typeSize;
+
+        _ownerEntities.assign(initialEntityCapacity, InvalidEntityID);
+
+        // 単一メモリブロックの一括確保ロジック
+        size_t compCount = _archetype.size();
+        _componentOffsets.resize(compCount); // 白線を引く準備
+
+        size_t       currentOffset = 0; // 現在の白線の位置（0バイト目からスタート）
+        const size_t ALIGNMENT     = 16; // SIMD命令等を見据えた16バイトアライメント
+
+        for (size_t i = 0; i < compCount; ++i)
+        {
+            // 1. CPUが計算しやすいように、白線の位置を「16の倍数」にキリよく調整する
+            currentOffset = AlignUp(currentOffset, ALIGNMENT);
+
+            // 2. 「このコンポーネントのエリアはここから始まる」とメモ帳に記録
+            _componentOffsets[i] = currentOffset;
+
+            // 3. 次の白線を引くために、このコンポーネントが占領するサイズ分だけ位置を進める
+            // （例：Position(12byte)が100人分なら、1200バイト先へ）
+            currentOffset += _archetype[i].typeSize * _capacity;
+        }
+
+        // 4. 計算し尽くした「総面積(currentOffset)」で、1回だけ巨大な体育館を借りる！
+        // 計算し尽くした「必要な総バイト数」で、1回だけメモリをドカンと確保する
+        _memoryBlock.resize(currentOffset);
+
+        _entityCount = 0;
+        _destroyedEntities.clear();
+    }
+
+    void Chunk::CreateNull(size_t initialEntityCapacity)
+    {
+        _archetype = Archetype();
+        _capacity = initialEntityCapacity;
+        _entityStride = 0;
+        _ownerEntities.assign(initialEntityCapacity, InvalidEntityID);
+
+
+        _componentOffsets.clear();
+        _memoryBlock.clear();
+
+        _entityCount = 0;
+        _destroyedEntities.clear();
+    }
+
+    void Chunk::Finalize()
+    {
+        // 既にFinalize済み（または初期化前）なら何もしない（二重解放・クラッシュ防止）
+        if (_componentOffsets.empty()) return;
+
+        // 1. 体育館の中にいる全員のデストラクタ（お掃除関数）を呼ぶ
+        for (size_t ci = 0; ci < _archetype.size(); ++ci) {
+
+            size_t sz         = _archetype[ci].typeSize;
+            size_t baseOffset = _componentOffsets[ci]; // 白線の位置
+
+            for (size_t i = 0; i < _entityCount; ++i) {
+                if (!IsEntityDestroyed(i)) {
+                    // 体育館の正確な場所を特定して、お掃除を実行
+                    void *ptr = _memoryBlock.data() + baseOffset + (i * sz);
+                    _archetype[ci].destructor.Destruct(ptr);
+                }
+            }
+        }
+
+        // 2. 最後に体育館をドカンと一括で返却する
+        _memoryBlock.clear();
+        _componentOffsets.clear(); // 白線の情報を消去（旧 _components.clear() の代わり）
+        _ownerEntities.clear();    // 座席表をクリア
+        _destroyedEntities.clear();
+        _entityCount = 0;
+
+    }
+
+
+    void* Chunk::InsertEntity(EntityID entity)
+    {
+        // 1. AddEntity内で「満員でないか」だけをチェックし、座席番号をもらう
+        size_t writeIndex = AddEntity(entity);
+
+        // 2. 各コンポーネントのエリアに行き、そこを「ゼロ」で水拭き（初期化）する
+        for (size_t ci = 0; ci < _archetype.size(); ++ci) {
+            void *dst = GetComponentPtr(ci, writeIndex); // 体育館の正確な場所
+            std::memset(dst, 0, _archetype[ci].typeSize);
+        }
+        return GetComponentPtr(0, writeIndex);
+    }
+
+
+
+    void Chunk::RemoveEntity(size_t entityIndex)
+    {
+        // 不正なインデックスなら何もしない
+        if (entityIndex >= _entityCount) return;
+
+        // このエンティティが持つ全てのコンポーネントの「お掃除関数」を実行
+        for (size_t ci = 0; ci < _archetype.size(); ++ci) {
+            // 新設計：専用関数を使って、体育館の床の正確なポインタを一発で取得
+            void *ptr = GetComponentPtr(ci, entityIndex);
+
+            // お掃除実行（中身のメモリ解放など）
+            _archetype[ci].destructor.Destruct(ptr);
+        }
+
+        // 持ち主の座席を「無効」としてマーク。
+        // ※実際にメモリの穴を詰める(Compact)のは、あとで一括でやります。
+        _ownerEntities[entityIndex] = InvalidEntityID;
+    }
+
+    void Chunk::MarkDestroyEntity(size_t entityIndex)
+    {
+
+        if (entityIndex >= _entityCount) return;
+
+        EntityID id = _ownerEntities[entityIndex];
+
+        // mark owner slot invalid; actual data will be compacted later
+        _ownerEntities[entityIndex] = InvalidEntityID;
+        _destroyedEntities.push_back(entityIndex);
+    }
+
+
+
+    // CCL_Chunk.cpp の CompactHoles 修正版
+    void Chunk::CompactHoles(const std::function<void(EntityID, Chunk *, size_t)> &onMoveCallback)
+    {
+        // 削除されたエンティティが一つもなければ、穴埋めする必要なし
+        if (_destroyedEntities.empty()) return;
+
+        size_t read  = 0; // 読み込み用の指（走査用）
+        size_t write = 0; // 書き込み用の指（詰め先用）
+
+        while (read < _entityCount) 
+        {
+            EntityID currentID = _ownerEntities[read];
+
+            // この座席が「空席（すでに死んでいる）」かどうかの判定
+            bool isDead = (currentID == InvalidEntityID);
+
+            if (isDead) {
+                // すでに RemoveEntity でデストラクタは呼ばれている。
+                // したがって、ここは「書き込み位置(write)」を進めずに、
+                // 「読み込み位置(read)」だけを1つ進める（穴をスキップする）だけでよい。
+
+                ++read;
+                continue;
+            }
+
+            // 生きているエンティティで、かつ前に「穴」があった（read と write がズレた）場合のみ前に詰める
+            if (read != write) {
+                // 名簿の書き換え
+                _ownerEntities[write] = currentID;
+               
+
+                // 各コンポーネントのデータを、後ろの席(read)から前の席(write)へ移動
+                for (size_t ci = 0; ci < _archetype.size(); ++ci) {
+                    size_t baseOffset = _componentOffsets[ci];
+                    void  *dst =
+                        _memoryBlock.data() + baseOffset + (write * _archetype[ci].typeSize);
+                    void *src = _memoryBlock.data() + baseOffset + (read * _archetype[ci].typeSize);
+
+                    if (_archetype[ci].mover) {
+                        // ムーブコンストラクタ等の専用移動関数があればそれを使う
+                        _archetype[ci].mover(dst, src);
+                    }
+                    else {
+                        // なければメモリごと物理コピー
+                        std::memmove(dst, src, _archetype[ci].typeSize);
+                    }
+
+                    // 移動元の「抜け殻」の後始末
+                    // srcのデータはdstに移動（ムーブ）したため、srcには空っぽのデータが残っています。
+                    // （std::stringのムーブ後や、shared_ptrのムーブ後など）
+                    // これを安全に消滅させるために、ここで一度だけデストラクタを呼びます。
+                    _archetype[ci].destructor.Destruct(src);
+                }
+
+                // 移動が発生した事実を、ChunkManagerに報告して全体マップを更新してもらう
+                if (onMoveCallback) {
+                    onMoveCallback(currentID, this, write);
+                }
+            }
+
+            // 次の座席へ
+            ++read;
+            ++write;
+        }
+
+        // 最後に、生き残った人数（write）に定員カウンターを更新
+        _entityCount = write;
+        // ゴミ箱を空にする
+        _destroyedEntities.clear();
+    }
+
+
+    size_t Chunk::AddEntity(EntityID entity) {
+
+        // 満員でないかチェック
+        if (_entityCount >= _capacity)
+        {
+            assert(false && "Chunk is full!");
+            return InvalidIndex; // クラッシュを防ぐ
+        }
+
+        // 新しい人の番号（現在の入場者数）
+        size_t index = _entityCount;
+
+        // 誰が入っているか名簿に記録
+        _ownerEntities[index] = entity;
+
+        // ★旧コードではここにあった _components へのアクセスや
+        // メモリのresize処理は、事前一括確保済みのため完全に不要です。
+        // エンティティの数を1つ増やすだけで完了します。
+
+        // 入場者カウンターを+1するだけ！ メモリの確保は一切発生しない。
+        _entityCount++;
+        return index; // ① インデックスを返す
+    }
+
+}
+ 
+=============================== 
+ファイル: CCL_ChunkManager.cpp 
+=============================== 
+#include "CCL_ChunkManager.h"
+#include <algorithm>
+#include <cstring>
+#include <unordered_map>
+#include <unordered_set>
+#include <cassert>
+
+namespace CCL::ECS::Core
+{
+    using namespace CCL::ECS;
+
+    inline size_t GetPureIndex(EntityID id)
+    {
+        return static_cast<size_t>(id & 0xFFFFFFFF); // 世代情報をカット
+    }
+
+    void ChunkManager::CreateChunk(const Archetype& archetype)
+    {
+        for (auto& c : _chunks)
+        {
+            if (c->GetArchetype() == archetype)
+                return;
+        }
+        _chunks.emplace_back(std::make_unique<Chunk>());
+
+        // 固定の _defaultCapacity ではなく、計算した定員を渡す
+        size_t capacity = CalculateChunkCapacity(archetype);
+        _chunks.back()->Create(archetype, capacity);
+    }
+
+    void ChunkManager::FinalizeAll()
+    {
+        // ★排他ロックを取得
+        std::unique_lock<std::shared_mutex> lock(_structureMutex);
+    
+
+        for (auto& c : _chunks)
+            c->Finalize();
+        _chunks.clear();
+
+        // ★改善: マップもクリア
+        _entityLocationMap.clear();
+    }
+
+    void ChunkManager::AddEntity(EntityID entity, const Archetype& archetype)
+    {
+        // ★排他ロックを取得
+        std::unique_lock<std::shared_mutex> lock(_structureMutex);
+    
+
+        // 1. 「型が同じ」かつ「まだ空きがある」チャンクを探す
+        auto it = std::find_if(_chunks.begin(), _chunks.end(),
+            [&](const std::unique_ptr<Chunk>& c) {
+                return c->GetArchetype() == archetype &&
+                    c->GetEntityCount() < c->GetCapacity(); // 空き容量チェックを追加
+            });
+
+        // 2. 適切なチャンクがなければ新しく作る
+        if (it == _chunks.end())
+        {
+            _chunks.emplace_back(std::make_unique<Chunk>());
+
+            // 固定の _defaultCapacity ではなく、計算した定員を渡す
+            size_t capacity = CalculateChunkCapacity(archetype);
+            _chunks.back()->Create(archetype, capacity);
+
+            it = std::prev(_chunks.end());
+        }
+
+        // 3. 挿入
+        (*it)->InsertEntity(entity);
+
+          // 位置を登録
+        size_t chunkIdx  = std::distance(_chunks.begin(), it);
+        size_t entityIdx = (*it)->GetEntityCount() - 1; // 最後に追加された位置
+        UpdateEntityLocation(entity, chunkIdx, entityIdx);
+    }
+
+    void ChunkManager::DestroyEntity(EntityID entity)
+    {
+        // ★排他ロックを取得
+        std::unique_lock<std::shared_mutex> lock(_structureMutex);
+    
+
+        size_t entityIndex;
+        size_t chunkIndex = SearchEntityIn(entity, &entityIndex);
+        if (chunkIndex != InvalidIndex)
+        {
+            _chunks[chunkIndex]->MarkDestroyEntity(entityIndex);
+
+            RemoveEntityLocation(entity);
+        }
+    }
+
+    size_t ChunkManager::SearchEntityIn(EntityID entity, size_t *outEntityIndex) const
+    {
+        size_t index = GetPureIndex(entity);
+
+        // 配列の範囲外なら存在しない
+        if (index >= _entityLocationMap.size()) return InvalidIndex;
+
+        // O(1) キャッシュヒット確定のアクセス
+        const auto &loc = _entityLocationMap[index];
+
+        // 無効化されている（墓石である）場合は存在しない
+        if (loc.chunkIndex == InvalidIndex) return InvalidIndex;
+
+        if (outEntityIndex) *outEntityIndex = loc.entityIndex;
+        return loc.chunkIndex;
+    }
+
+    // 指定したアーキタイプで、かつ空きがあるチャンクを返す（なければ作る）
+    Chunk& ChunkManager::GetOrCreateAvailableChunk(const Archetype& archetype)
+    {
+        auto it = std::find_if(_chunks.begin(), _chunks.end(),
+            [&](const std::unique_ptr<Chunk>& c) {
+                return c->GetArchetype() == archetype &&
+                    c->GetEntityCount() < c->GetCapacity(); // 空きチェック
+            });
+
+        if (it == _chunks.end())
+        {
+            _chunks.emplace_back(std::make_unique<Chunk>());
+            size_t capacity = CalculateChunkCapacity(archetype);
+            _chunks.back()->Create(archetype, capacity);
+            return *_chunks.back();
+        }
+        return **it;
+    }
+
+    // 新しいエンティティを指定されたチャンクに挿入し、コンポーネントデータを初期化する
+    void ChunkManager::InsertNewEntity(
+        Chunk& dstChunk,
+        EntityID entityID,
+        const std::vector<PendingOp*>& addOps)
+    {
+        // 1. 席を確保し、正しいインデックスを直接受け取る
+        size_t newIndex = dstChunk.AddEntity(entityID);
+
+         // 位置を登録
+        size_t chunkIdx = GetChunkIndex(&dstChunk);
+        UpdateEntityLocation(entityID, chunkIdx, newIndex);
+
+        // 2. チャンクの全構成要素（列）に対して初期化を行う
+        for (const TypeData& td : dstChunk.GetTypeDatas())
+        {
+            void* dstPtr = dstChunk.GetComponentPtrByType(td.id, newIndex);
+            if (!dstPtr) continue;
+
+            bool filled = false;
+
+            // 3. PendingOp に該当する初期データがあるか探す
+            // 最後にしたAddComponentの値で上書きする仕様なので
+            // 逆順ループで最後のものを見つけて適用した後に抜ける
+            for (int i = (int)addOps.size() - 1; i >= 0; --i) // 逆順ループ
+            {
+                auto* op = addOps[i];
+                if (op->type == td.id)
+                {
+                    // ファクトリ関数がある場合は、それを使って直接構築する (Emplace)
+                    // これによりコピー禁止のGPUParticleComponentも、Chunk上で直接Move構築される
+                    if (op->factory) {
+                        op->factory(dstPtr);
+                    }
+                    // constructor を使用（未初期化メモリに構築）
+                    if (op->data && td.constructor)
+                    {
+                        td.constructor(dstPtr, op->data);
+                    }
+                    else if (op->data)
+                    {
+                        std::memcpy(dstPtr, op->data, td.typeSize);
+                    }
+                    filled = true;
+                    break;
+                }
+            }
+
+            // 4. データが提供されなかった場合、デフォルトコンストラクトまたはゼロクリア
+            if (!filled)
+            {
+                // デフォルトコンストラクタがあればそれを使う！
+                if (td.defaultConstructor)
+                {
+                    // これで MaterialComponent() が呼ばれ、data = make_shared される
+                    td.defaultConstructor(dstPtr);
+                }
+                else
+                {
+                    // なければ今まで通りゼロクリア（intやfloat用）
+                    std::memset(dstPtr, 0, td.typeSize);
+                }
+            
+            }
+        }
+
+        // ★追加: 生成されたことを通知
+        if (_onEntityMove) {
+            _onEntityMove(entityID, &dstChunk, newIndex);
+        }
+    }
+
+    size_t ChunkManager::SearchEqualChunk(const Archetype& a) const
+    {
+        for (size_t i = 0; i < _chunks.size(); ++i)
+        {
+            if (_chunks[i]->GetArchetype() == a)
+                return i;
+        }
+        return InvalidIndex;
+    }
+
+    
+    void ChunkManager::UpdateEntityLocation(EntityID entity, size_t chunkIdx, size_t entityIdx)
+    {
+        size_t index = GetPureIndex(entity);
+
+        if (index >= _entityLocationMap.size()) {
+            // 純粋なインデックスの数だけ配列を広げる（数万件でも数MBなので一瞬です）
+            _entityLocationMap.resize(index + 1);
+        }
+
+        _entityLocationMap[index] = EntityLocation(chunkIdx, entityIdx);
+    }
+
+    void ChunkManager::RemoveEntityLocation(EntityID entity)
+    {
+        size_t index = GetPureIndex(entity); // 世代を無視した純粋な番号
+
+       if (index < _entityLocationMap.size()) {
+            // erase は絶対に使わず、無効な位置情報で上書きする
+            _entityLocationMap[index] = EntityLocation(InvalidIndex, InvalidIndex);
+        }
+    }
+
+    size_t ChunkManager::GetChunkIndex(const Chunk *chunk) const
+    {
+        for (size_t i = 0; i < _chunks.size(); ++i) {
+            if (_chunks[i].get() == chunk) {
+                return i;
+            }
+        }
+        return InvalidIndex;
+    }
+
+    // ---------------------------------------------------------
+    // 容量の動的計算ロジック
+    // ---------------------------------------------------------
+    size_t ChunkManager::CalculateChunkCapacity(const Archetype &archetype) const
+    {
+        size_t stride = 0;
+
+        // このアーキタイプに属するエンティティ1体あたりの合計バイト数を計算
+        for (const auto &t : archetype) {
+            stride += t.typeSize;
+        }
+
+        // 例外処理1: サイズが0の場合（タグコンポーネントしか持たない特殊なエンティティ）
+        // ゼロ除算を防ぐため、適当な大きな数を返す
+        if (stride == 0) return 1024;
+
+        // 例外処理2: 1体のサイズが巨大すぎて16KBに収まらない場合
+        // 最低でも1体は入るように保証する
+        size_t capacity = CHUNK_SIZE_BYTES / stride;
+        return capacity > 0 ? capacity : 1;
+    }
+
+    // Archetype遷移の中核ロジック
+    // ソースチャンクからEntityのデータをコピー→デストラクタを呼び、
+    // 新しいチャンクにコピー構築して移動を完了する
+    bool ChunkManager::MoveEntityBetweenChunks(
+        Chunk& srcChunk, // 引っ越し元の倉庫（現在のデータが入っているChunk）
+        size_t srcIndex, // srcChunk内でそのエンティティが何番目にあるか
+        Chunk& dstChunk, // 引っ越し先の倉庫（新しいデータを入れるChunk）
+        EntityID entity, // 引っ越しするエンティティ自身のID
+        const std::vector<PendingOp*>& addOps,     // 今回の移動で新しく追加されるコンポーネントの初期データ
+        const std::vector<TypeID>& removeTypeIDs   // 今回の移動で削除されるコンポーネントのTypeIDリスト
+    ) {
+        // MoveEntityBetweenChunks の内部（あるいは呼び出し直前）で
+        if (srcChunk.IsEntityDestroyed(srcIndex)) {
+            // 既に死んでいるエンティティを移動させることは論理的に不可能
+            return false;
+        }
+
+        // 1 宛先チャンクにエンティティを挿入し、
+        // 　そのインデックス（何番目の席か）を取得
+        // これからこのエンティティが入るよと伝えてメモリ領域を確保する
+        dstChunk.InsertEntity(entity);
+        // 新しく追加されたエンティティは「必ず配列の一番最後」に配置されるため、計算で一瞬で求まる
+        size_t dstIndex = dstChunk.GetEntityCount() - 1;
+
+        // 致命的なバグの修正: 新しい住所をマスターマップに登録する 
+        size_t dstChunkIdx = GetChunkIndex(&dstChunk);
+        UpdateEntityLocation(entity, dstChunkIdx, dstIndex);
+
+        // 「何番目の列に何のデータがあるか」の対応表を作る
+#pragma region 解説
+        // ここが ECS における非常に重要なポイントです。 
+        // アーキタイプ（コンポーネントの組み合わせ）が変わると、
+        // データの並び順（列の番号）が変わってしまう可能性があります。
+
+        //srcMap(元の倉庫の地図) : 
+        // 「TypeID：Position は 0 番目の列、Velocity は 1 番目の列にある」
+        // という情報を保持します。
+
+        //dstMap(新しい倉庫の地図) : 
+        // 「TypeID：Position は 0 番目の列、Velocity は 1 番目、HP は 2 番目にある」
+        // という情報を保持します。
+
+        //なぜ std::unordered_map を作るのか？
+        //引越し作業では、「元の倉庫の Position を、新しい倉庫の Position に移す」
+        // という作業を繰り返します。 しかし、Position が元の倉庫では 
+        // 0 番目の列にあり、新しい倉庫では 2 番目の列にあるかもしれません。
+        // この「地図（Map）」を事前に作っておくことで、
+        // 「元の A は何番？ 新しい A は何番？」という検索を高速に行えるようにしています
+#pragma endregion
+        const Archetype& srcArch = srcChunk.GetArchetype();
+        const Archetype& dstArch = dstChunk.GetArchetype();
+
+        // アーキタイプから「どのTypeIDが何番目にあるか」を高速に引くためのマップを作成
+        auto BuildIndexMap = [](const Archetype& a) {
+            std::unordered_map<TypeID, size_t> m;
+            for (size_t i = 0; i < a.size(); ++i) m[a[i].id] = i;
+            return m;
+            };
+        auto srcMap = BuildIndexMap(srcArch);
+        auto dstMap = BuildIndexMap(dstArch);
+
+
+        // 2) 宛先チャンク（dst）の全コンポーネントを1つずつ埋めていく
+        // 移動する先のチャンクのエンティティデータを1つずつセットしていく
+        for (size_t di = 0; di < dstArch.size(); ++di)
+        {
+            // アーキタイプにあるコンポーネント一つずつから情報を取得
+            const TypeData& tdDst = dstArch[di]; // 新しい倉庫でのコンポーネント情報
+            // 宛先の書き込み先ポインタ（住所）を取得
+            void* dstPtr = dstChunk.GetComponentPtrByType(tdDst.id, dstIndex);
+
+            // --- パターンA: 元の家から持っていく荷物 ---
+            // 新しい家の地図（dstMap）にある型が
+            // 古い家の地図（srcMap）にも存在する場合
+            auto itSrc = srcMap.find(tdDst.id);
+            if (itSrc != srcMap.end())
+            {
+                // 古い家にも同じ型があるなら、その住所を取得してコピー
+                void* srcPtr = srcChunk.GetComponentPtrByType(tdDst.id, srcIndex);
+
+                // ★修正: ムーブ可能な場合はムーブコンストラクタ(mover)を使う
+                if (tdDst.mover) {
+                    tdDst.mover(dstPtr, srcPtr);
+                }
+                // ムーブがない場合はコピー(constructor)を試みる
+                else if (tdDst.constructor) {
+                    tdDst.constructor(dstPtr, srcPtr);
+                }
+                else {
+                    std::memcpy(dstPtr, srcPtr, tdDst.typeSize);
+                }
+            }
+            // --- パターンB: 新しく買った（追加された）荷物 ---
+            else
+            {
+                bool filled = false;
+                // addOps（追加予約リスト）の中に、この型の初期データがないか探す
+                for (PendingOp *op : addOps) {
+                    if (op->type == tdDst.id) {
+                        // ★追加: ファクトリ優先
+                        if (op->factory) {
+                            op->factory(dstPtr);
+                            filled = true;
+                            break;
+                        }
+                        // 従来通り
+                        else if (op->data) {
+                            if (tdDst.constructor)
+                                tdDst.constructor(dstPtr, op->data);
+                            else
+                                std::memcpy(dstPtr, op->data, tdDst.typeSize);
+                            filled = true;
+                            break;
+                        }
+                    }
+                }
+                // --- パターンC: 何も指定がなければ「0」で初期化 ---
+                if (!filled)
+                {
+                    std::memset(dstPtr, 0, tdDst.typeSize);
+                }
+            }
+        }
+
+
+        // 元のチャンクに残っているデータは、移動・削除に関わらず全て破棄する
+        for (size_t si = 0; si < srcArch.size(); ++si)
+        {
+            // 前のチャンクのアーキタイプ情報を取得
+            const TypeData& tdSrc = srcArch[si];
+            
+            // 古い家からそのデータの場所を特定
+            void* srcPtr = srcChunk.GetComponentPtrByType(tdSrc.id, srcIndex);
+
+            // 全員破棄！ (移動済みのものはコピー先で生きているので、ここで消してOK)
+            // その型専用の「掃除機（デストラクタ）」で適切に破棄
+            tdSrc.destructor.Destruct(srcPtr);
+            
+            //ChunkManager: 「型は知らないけど、とにかくこの住所のデータを消さなきゃ」
+            //Destructor : 「任せろ、私はこの住所がかつて何型だったかを知っている。正しく掃除しておこう」
+            
+        }
+
+        // ★追加: 引っ越し完了を通知
+        if (_onEntityMove) {
+            _onEntityMove(entity, &dstChunk, dstIndex);
+        }
+
+        // 引っ越し元(srcChunk)のエンティティを
+        // 「後で削除する」という印をつける
+        // 上で既に全てのデータをdstChunkにコピーし終わっているので、
+        // あとはsrcChunkから消すだけ
+        srcChunk.MarkDestroyEntity(srcIndex);
+
+        return true;
+    }
+
+
+    std::vector<EntityID> ChunkManager::ApplyPendingOperations(PendingOps& pendingOps)
+    {
+        // 排他ロックを取得（この間、Systemは待機）
+        std::unique_lock<std::shared_mutex> lock(_structureMutex);
+
+        // ECSの構造に変化がない場合は何もしない _pendingOps（変更予定リスト）
+        std::vector<EntityID> destroyedEntities; // 今回削除されたIDを記録
+        if (pendingOps.Ops().empty()) return destroyedEntities;
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  Entity単位に再編成
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#pragma region 構図
+        // PendingOps を Entity ごとに束ねる
+        // Entityごとに対する操作一覧
+        // _pendingOps(フラット)
+        // --------------------------------
+        // [Entity10 AddTransform]
+        // [Entity20 RemovePhysics]
+        // [Entity10 AddModel]
+        // [Entity30 Spawn]
+        // --------------------------------
+        //
+        // opsByEntity（再構成後）
+        // --------------------------------
+        // Entity10 →[AddTransform, AddModel]
+        // Entity20 →[RemovePhysics]
+        // Entity30 →[Spawn]
+        // --------------------------------
+
+        // １Entityの最終状態を一気に計算できるようになる
+#pragma endregion
+        std::unordered_map<EntityID, std::vector<PendingOp*>> opsByEntity;
+        for (auto& op : pendingOps.Ops()) {
+            // 変更した要素をEntityごとにまとめる
+            opsByEntity[op.entity].push_back(&op);
+        }
+
+
+        // 削除済みエンティティを追跡するセット（二重処理防止）
+        std::unordered_set<EntityID> alreadyDestroyed;
+
+
+        for (auto& [entityID, ops] : opsByEntity)
+        {
+            // ---------------------------------------------------------
+            // ステップ1: 破棄(Destroy)の優先チェック
+            // ---------------------------------------------------------
+            bool hasDestroyMarker = false;
+            for (auto* op : ops) {
+                if (op->kind == PendingOpKind::Destroy) {
+                    hasDestroyMarker = true;
+                    break;
+                }
+            }
+
+            if (hasDestroyMarker) {
+                // 既に削除済みなら二重処理をスキップ
+                if (alreadyDestroyed.find(entityID) != alreadyDestroyed.end()) {
+                    continue;
+                }
+
+                // 既存のエンティティがいれば、デストラクタを呼んでマークする
+                size_t entityIndex = 0;
+                // SerchEntityIn でチャンクとインデックスを取得
+                size_t chunkIdx = SearchEntityIn(entityID, &entityIndex);
+
+                if (chunkIdx != InvalidIndex) {
+                    // 実際のチャンクポインタを取得
+                    Chunk* cptr = _chunks[chunkIdx].get();
+
+                    // 既に削除マークが付いている場合もスキップ
+                    if (cptr->IsEntityDestroyed(entityIndex)) {
+                        alreadyDestroyed.insert(entityID);
+                        continue;
+                    }
+
+                    // コンポーネントの破棄（デストラクタ呼び出し）
+                    // ArcheTypeはTypeDataのリストなのでforループで回せる（特殊な処理により）
+                    // 各コンポーネント型ごとにfor文を回す
+                    for (const TypeData& td : cptr->GetArchetype()) {
+                        // GetComponentPtrByType : 「td.id型のentityIndex番目のデータの住所」を取得
+                        // ① td.id を使って、Chunk内の「対応する配列の先頭アドレス」を見つける
+                        // ② entityIndex を使って、その配列の「何番目（特定のEntity）」かを計算する
+                        void* ptr = cptr->GetComponentPtrByType(td.id, entityIndex);
+
+                        // ③ 特定された「一個のコンポーネント」に対してデストラクタを呼ぶ
+                        // ptrが指すメモリの位置をその型に合わせたtd.destructorで破棄
+                        td.destructor.Destruct(ptr);
+
+
+                    }
+                    // 削除マーク
+                    cptr->MarkDestroyEntity(entityIndex);
+
+                    // 唯一追加すべき修正行：住所録（Map）からの完全抹消 
+                    RemoveEntityLocation(entityID);
+
+                    // 削除されたIDをリストに追加
+                    alreadyDestroyed.insert(entityID);
+                    destroyedEntities.push_back(entityID);
+                }
+                // 破棄対象なら、そのエンティティに対する他の操作(Add/Remove)はすべて無視して次へ
+                continue;
+            }
+
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // 既存状態の確認と「生存チェック」
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            size_t srcIndex = 0;
+            size_t chunkIdx = SearchEntityIn(entityID, &srcIndex);
+            Chunk* srcChunk = (chunkIdx != InvalidIndex) ? _chunks[chunkIdx].get() : nullptr;
+
+            // 削除済みエンティティへの操作をスキップ
+            if (alreadyDestroyed.find(entityID) != alreadyDestroyed.end()) {
+                continue;
+            }
+
+            // 既に削除マークがついている場合もスキップ
+            if (srcChunk && srcChunk->IsEntityDestroyed(srcIndex)) {
+                continue;
+            }
+
+            // --- ベースとなるアーキタイプの決定 ---
+            Archetype nextArch; // 次のアーキタイプ候補
+            bool isNewSpawn = false;
+
+            // srcChunkを基準にするかSpawnで新規作成するか
+            // opsの中に Spawn があるか探す
+            for (auto* op : ops) {
+                if (op->kind == PendingOpKind::Spawn) {
+                    // ① void*から本来の型を復元
+                    // PendingOpは汎用構造体、型情報を持たないため明示的に戻す
+                    // Spawn時はこのEntityは最初からこのArchetypeですと確定させる
+                    nextArch = *(reinterpret_cast<Archetype*>(op->data)); // Archetypeデータを復元
+                    isNewSpawn = true;
+                    break;
+                }
+            }
+
+            // Spawnでなければ、現在のチャンクの構成を引き継ぐ
+            if (!isNewSpawn) {
+                if (!srcChunk) continue; // 存在しないしSpawnでもないなら無視
+                // 既存エンティティ：現在のチャンクのアーキタイプを基準にする
+                nextArch = srcChunk->GetArchetype();
+            }
+
+            // 最後に必要なコンポーネントのリストを確定させる
+            // --- 差分（Add/Remove）の計算 ---
+            std::vector<PendingOp*> addOps; // 実際に新しく追加するデータ
+            std::vector<TypeID> removeIDs;
+
+            for (auto* op : ops) {
+                if (op->kind == PendingOpKind::AddComponent) {
+                    // アーキタイプに追加する必要があるかどうかの判定とは別に、
+                    // 「初期値データ」として addOps には必ず入れる
+                    addOps.push_back(op);
+
+                    bool has = false;
+                    for (auto& td : nextArch) if (td.id == op->type) has = true;
+                    if (!has) {
+                        // アーキタイプに追加する際、関数ポインタを含めた完全なTypeDataを作成する
+                        TypeData newType;
+                        newType.id = op->type;
+                        newType.typeSize = op->typeSize;
+
+                        newType.destructor = op->destructor;
+                        newType.constructor = op->constructor;
+                        newType.assigner = op->assigner;
+                        newType.mover = op->mover;
+
+                        newType.name = op->name; // 名前を新しいアーキタイプに引き継ぐ
+
+                        nextArch.Add(newType);
+                    }
+                }
+                else if (op->kind == PendingOpKind::RemoveComponent) {
+                    removeIDs.push_back(op->type);
+                    nextArch.Sub(op->type);
+                }
+            }
+
+            // --- 最終的な確定処理 ---
+            // 最後に計算したnextArchに基づいてチャンク移動を行う
+            if (isNewSpawn) {   // Spawnの場合
+                // 新規生成：最終的な nextArch を持つチャンクに直接入れる
+                Chunk& dstChunk = GetOrCreateAvailableChunk(nextArch);
+                // ※ここでデータを流し込むための「InsertAndFill」のような関数が必要
+                InsertNewEntity(dstChunk, entityID, addOps);
+            }
+            // 既存エンティティでアーキタイプが変わる場合
+            else if (!(nextArch == srcChunk->GetArchetype())) {
+                // アーキタイプ変更：別チャンクへ引っ越し
+                Chunk& dstChunk = GetOrCreateAvailableChunk(nextArch);
+
+                // MoveEntityBetweenChunks前に再度削除チェック
+                if (!srcChunk->IsEntityDestroyed(srcIndex)) {
+                    MoveEntityBetweenChunks(*srcChunk, srcIndex, dstChunk, entityID, addOps, removeIDs);
+                }
+            }
+            else {
+                // アーキタイプが変わらない（既にコンポーネントを持っている）場合、
+                // PendingOps に積まれた新しいデータで中身を上書きする。
+                for (auto* op : ops)
+                {
+                    if (op->kind == PendingOpKind::AddComponent)
+                    {
+                        void* dstPtr = srcChunk->GetComponentPtrByType(op->type, srcIndex);
+                        // ポインタが有効で、かつ「ファクトリ」または「データ」がある場合
+                        if (dstPtr && (op->factory || op->data)) {
+                            const Archetype &arch = srcChunk->GetArchetype();
+                            for (const auto &td : arch) {
+                                if (td.id == op->type) {
+                                    //  パターン1: ファクトリ関数がある場合 (Move-Only型など)
+                                    // 上書き代入ができないため、「破棄 -> 新規構築」の手順を踏む
+                                    if (op->factory) {
+                                        // 既存のオブジェクトを安全に破棄
+                                        td.destructor.Destruct(dstPtr);
+
+                                        // 新しいオブジェクトを直接構築 (Placement New)
+                                        op->factory(dstPtr);
+                                    }
+                                    //  パターン2: データポインタがある場合 (従来のコピー可能な型)
+                                    else if (op->data) {
+                                        // assigner を使用（既に構築済みなので代入演算子が使える）
+                                        if (td.assigner) {
+                                            td.assigner(dstPtr, op->data);
+                                        }
+                                        else {
+                                            std::memcpy(dstPtr, op->data, td.typeSize);
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ---------------------------------------------------------
+            // ステップX: Patch(部分修正)の適用
+            // ---------------------------------------------------------
+            // 移動・生成が完了した「最終的な場所」を取得
+            size_t finalIndex    = 0;
+            size_t finalChunkIdx = SearchEntityIn(entityID, &finalIndex);
+
+            if (finalChunkIdx != InvalidIndex) {
+                Chunk *finalChunk = _chunks[finalChunkIdx].get();
+
+                for (auto *op : ops) {
+                    if (op->kind == PendingOpKind::PatchComponent) {
+                        // 対象コンポーネントのポインタを取得
+                        void *ptr = finalChunk->GetComponentPtrByType(op->type, finalIndex);
+
+                        // ポインタが存在すれば（コンポーネントを持っていれば）、修正関数を実行
+                        if (ptr && op->patcher) {
+                            op->patcher(ptr);
+                        }
+                    }
+                }
+            }
+        }
+
+        // 4. 掃除
+        for (auto &c : _chunks) {
+            c->CompactHoles([this](EntityID entity, Chunk *chunk, size_t newIndex) {
+                // 位置を更新
+                size_t chunkIdx = GetChunkIndex(chunk);
+                UpdateEntityLocation(entity, chunkIdx, newIndex);
+
+                // 既存のコールバックも呼ぶ（Worldの_entityCacheも更新される）
+                if (_onEntityMove) {
+                    _onEntityMove(entity, chunk, newIndex);
+                }
+            });
+        }
+
+        return destroyedEntities;
+    }
+}
+ 
+=============================== 
+ファイル: CCL_JobSystem.cpp 
+=============================== 
+#include "CCL_JobSystem.h"
+
+
+#include "tracy/Tracy.hpp"
+
+
+
+namespace CCL::ECS::Core {
+
+    // =======================================================================
+    // 開店準備（コンストラクタ）
+    // =======================================================================
+    JobSystem::JobSystem()
+    {
+        // 1. パソコンの脳みそ（物理コア数）を調べる
+        unsigned int coreCount = std::thread::hardware_concurrency();
+        if (coreCount == 0) coreCount = 4; // 分からなければとりあえず4人雇う
+
+        // 2. コアの数だけシェフ（スレッド）を作成
+        // _workers.emplace_back した瞬間に、スレッドが生成され
+        // WorkerLoop() という関数が別世界（別スレッド）で動き出します。
+        for (unsigned int i = 0; i < coreCount; ++i) {
+            _workers.emplace_back([this] { WorkerLoop(); });
+        }
+    }
+
+    // =======================================================================
+    // 閉店作業（デストラクタ）
+    // =======================================================================
+    JobSystem::~JobSystem()
+    {
+        // 1. 「もう閉店ですよ」という看板（フラグ）を立てる
+        // ★重要: ここで Mutex ロックをする理由
+        // シェフが「フラグ確認」→「寝る準備」→「実際に寝る」までのわずかな隙間に
+        // この書き換えが発生すると、シェフが「閉店に気づかずに永遠に寝てしまう」事故が起きるため。
+        // ロックすることで「シェフが寝る準備を完了するまで」待ってから書き換える。
+        {
+            std::unique_lock<std::mutex> lock(_queueMutex);
+            _shutdown = true;
+        }
+
+        // 2. 非常ベルを鳴らして全員叩き起こす
+        // 寝ているシェフ全員が `wait` から目覚め、`_shutdown` フラグを見て帰宅準備に入る。
+        _condition.notify_all();
+
+        // 3. 全員が更衣室から出てくる（スレッドが終了する）のを待つ
+        for (std::thread &worker : _workers) {
+            if (worker.joinable()) {
+                worker.join(); // シェフが完全に帰るまでここで待機
+            }
+        }
+    }
+
+    // =======================================================================
+    // 仕事の依頼（Execute）
+    // =======================================================================
+    void JobSystem::Execute(Job job, JobCounter *counter)
+    {
+        // 1. カウンターを「先に」増やしておく（★超重要）
+        // なぜ？：もし「キューに入れてから」増やすと、シェフが爆速すぎて
+        // 「店長が増やす前に、シェフが終わらせて減らしてしまう」可能性があるから。
+        // 0 -> -1 になってバグるのを防ぐため、仕事を入れる前に「予約」として増やしておく。
+        if (counter) {
+            counter->count.fetch_add(1);
+        }
+
+        {
+            // 2. 鍵をかけてボード（キュー）を独占する
+            std::unique_lock<std::mutex> lock(_queueMutex);
+
+            // 仕事のボードにjob（システム処理function）を貼り付ける
+            _jobQueue.push({std::move(job), counter});
+        }
+        // ここでロック解除（スコープ抜け）
+
+        // 3. 休憩室にベルを鳴らす。「1人起きてー！」
+        // 寝ているシェフの中から1人だけを起こす。
+        _condition.notify_one();
+    }
+
+    // =======================================================================
+    // 完了待ち（WaitForCounter）
+    // =======================================================================
+    void JobSystem::WaitForCounter(JobCounter *counter)
+    {
+        if (!counter) return;
+
+        // カウンターが0になるまでループ
+        while (counter->count.load() > 0) {
+
+            // --- 待ってるだけじゃなくて手伝う！ ---
+            InternalJob job;
+            bool        foundJob = false;
+
+            {
+                // ロックして仕事があるか確認
+                std::unique_lock<std::mutex> lock(_queueMutex);
+                if (!_jobQueue.empty()) {
+                    job = std::move(_jobQueue.front());
+                    _jobQueue.pop();
+                    foundJob = true;
+                }
+            }
+
+            if (foundJob) {
+                // 仕事があったら実行する（店長自ら調理場へ！）
+                if (job.task) {
+                    job.task();
+                }
+                // 終わったらカウンターを減らす
+                if (job.counter) {
+                    job.counter->count.fetch_sub(1);
+                }
+            }
+            else {
+
+                // 仕事もないなら、仕方ないのでYieldして他のスレッドにCPUを譲る
+                // (まだカウンターが0じゃない＝誰かが実行中)
+                std::this_thread::yield();
+            }
+        }
+    }
+
+    // =======================================================================
+    // シェフの業務マニュアル（WorkerLoop）
+    // =======================================================================
+    void JobSystem::WorkerLoop()
+    {
+        // スレッドに名前を付ける
+        tracy::SetThreadName("Worker Thread");
+
+
+
+        while (true) {              // 基本的に死ぬまで働く無限ループ
+            InternalJob currentJob; // 自分の手元に持ってくる仕事入れ（お盆）
+
+            // ---【エリアA：注文ボードの前（立ち入り禁止区域）】---
+            {
+                // 1. 鍵（Mutex）をかける。
+                // これで、他のシェフや店長はこの { } の中に入れない。
+                // 注文ボード(_jobQueue)を触れるのは、世界で自分一人だけ！
+                std::unique_lock<std::mutex> lock(_queueMutex);
+
+                // 2. 「仕事が来る」または「閉店(_shutdown)」まで寝て待つ
+                // wait関数は賢いので、寝ている間は「鍵を一時的に返却」してくれる。
+                // ベル(_condition)が鳴ったら飛び起きて、再び「鍵を奪い取って」から処理を再開する。
+                _condition.wait(lock, [this] { return _shutdown || !_jobQueue.empty(); });
+
+                // 起きた時に「閉店」かつ「仕事も空っぽ」なら、帰宅(return)する
+                if (_shutdown && _jobQueue.empty()) {
+                    return; // スレッド終了
+                }
+
+                // 3. ボードから一番前の注文票を1枚剥がして、自分の手元(currentJob)に移す
+                currentJob = std::move(_jobQueue.front()); // コピー・移動
+                _jobQueue.pop();                           // ボードから削除（破り捨てる）
+            }
+            // ---【エリアA終了：ロック解除】---
+            // ここで `lock` 変数が消滅するので、自動的に鍵が開く。
+            // これで他のシェフもボードに近づけるようになる。
+
+            // ---【エリアB：調理場（並列作業エリア）】---
+            // ここはロックしていないので、全シェフが同時に作業できる！
+
+            // 4. 仕事を実行！
+            if (currentJob.task) {
+
+                // 【バトンの開封と実行】
+                // 先ほどカプセル化された [sys, dt]() { sys->UpdateImpl(dt); } がここで発動！
+                currentJob.task(); // ここで重い処理（物理演算など）が走る
+            }
+
+            // 5. 完了報告
+            // 「一丁あがり！」カウンターを1減らす。
+            // 0になったら、待っている店長（WaitForCounter）が解放される。
+            if (currentJob.counter) {
+                currentJob.counter->count.fetch_sub(1);
+            }
+        }
+    }
+
+} // namespace CCL::ECS::Core 
+=============================== 
+ファイル: CCL_World.cpp 
+=============================== 
+#include "CCL_World.h"
+#include "../System/CCL_SystemManager.h"
+#include "Engine/Graphics/Renderer/ShapeRenderer.h"
+#include <algorithm>
+#include <cassert>
+#include <cstring>
+
+// Tracyのインクルード
+#include "tracy/Tracy.hpp"
+
+
+namespace CCL::ECS::Core {
+    using namespace CCL::ECS;
+
+    World::World()
+    {
+        _entityGenerations.resize(1024, 1); // 初期サイズ確保
+        _nextUnusedIndex = 1;               // インデックス0は予約
+    }
+
+    World::~World()
+    {
+        _chunkManager.FinalizeAll();
+        _pendingOps.Clear();
+    }
+
+    void World::Clear()
+    {
+        // 1. 保留中の操作を破棄
+        _pendingOps.Clear();
+        _chunkManager.FinalizeAll();
+
+        // イベントの購読（Subscribe）も全て白紙に戻す
+        _eventBus.Clear();
+
+        // 3. キャッシュとID管理情報をリセット
+        _entityGenerations.clear();
+        _freeIndices.clear();
+
+        // インデックスを初期状態(1)に戻す
+        _nextUnusedIndex = 1;
+
+        // ※ _resources (シングルトン) は残す設計にするか、消す設計にするかはお好みで。
+        //   通常、Gridなどのリソースは再登録が必要になるため、ここで消しても良いですが、
+        //   Initialize() で一度しか登録しない設計なら消さない方が無難です。
+        //   今回は「エンティティのリセット」が目的なので resources は触りません。
+    }
+
+
+
+    // コンポーネント追加リクエストの実装部分
+    // World.h の AddComponent<T> から呼ばれます
+    void World::RequestAddComponent(EntityID entity,
+        TypeID                               tid,
+        size_t                               size,
+        const std::function<void(void *)>   &ctor,
+        const Destructor                    &dtor,
+        TypeData::ConstructFunc              copyCtor,
+        TypeData::AssignFunc                 assigner,
+        TypeData::MoveFunc                   mover,
+        const char                          *name)
+    {
+        if (!IsEntityValid(entity)) return;
+
+        PendingOp op;
+        op.kind     = PendingOpKind::AddComponent;
+        op.entity   = entity;
+        op.type     = tid;
+        op.typeSize = size;
+        op.destructor = dtor;
+        // 関数ポインタの保存
+        // ChunkManagerの ScrutinyAndApply で TypeData を生成する際、
+        // これらのポインタがないと nullptr になり、memcpy へのフォールバックが発生してしまう
+        op.constructor = copyCtor;
+        op.assigner    = assigner;
+        op.mover       = mover;
+        op.name = name; // カプセルに名前を入れる
+
+        // ここでコンストラクタを即時実行せず、factoryに保存する
+        if (ctor) {
+            op.factory = ctor;
+            op.data    = nullptr; // dataは使わない
+        }
+        else {
+            // ctorがない場合（従来通り）はメモリ確保してコピー用データを作る
+            void *mem = _frameAllocator.Alloc(size);
+            std::memset(mem, 0, size); // またはデフォルト構築
+            op.data    = mem;
+            op.factory = nullptr;
+        }
+
+        _pendingOps.Add(op);
+    }
+
+    void World::RequestRemoveComponent(EntityID entity, TypeID tid)
+    {
+        // 世代チェック
+        if (!IsEntityValid(entity)) return;
+
+        PendingOp op;
+        op.kind     = PendingOpKind::RemoveComponent;
+        op.entity   = entity;
+        op.type     = tid;
+        op.typeSize = 0; // 削除時はサイズ情報は不要
+        op.data     = nullptr;
+
+        _pendingOps.Add(op);
+    }
+
+    EntityID World::RequestSpawnEntity(const Archetype &archetype)
+    {
+        uint32_t index;
+        uint32_t generation;
+
+        // --- Phase 1: 世代付きIDの発行 ---
+        {
+            // 再利用リストに空きがあればそれを使う
+            if (!_freeIndices.empty()) {
+                index = _freeIndices.back();
+                _freeIndices.pop_back();
+                generation = _entityGenerations[index];
+            }
+            // 空きがなければ新規発行
+            else {
+                index = _nextUnusedIndex++;
+                if (index >= _entityGenerations.size()) {
+                    _entityGenerations.resize(index + 1024, 1);
+                }
+                generation                = 1;
+                _entityGenerations[index] = 1;
+            }
+        }
+
+        EntityID id = EntityHandle::Combine(index, generation);
+
+        // --- Phase 2: PendingOp への登録 ---
+        // アーキタイプ情報はコピーしてヒープに置く（ポインタで渡すため）
+        // ★修正: new Archetype(...) をフレームアロケータに
+        Archetype *heapArch = _frameAllocator.New<Archetype>(archetype);
+
+        PendingOp op;
+        op.kind   = PendingOpKind::Spawn;
+        op.entity = id; // 新しい世代付きIDをセット
+        op.data   = reinterpret_cast<void *>(heapArch);
+
+        _pendingOps.Add(op);
+
+        // 生成したIDを即座に返す（ユーザーはすぐこのIDを使える）
+        return id;
+    }
+
+    void World::RecycleEntityID(EntityID id)
+    {
+        uint32_t index = EntityHandle::GetIndex(id);
+
+        // ここが世代オーバーフロー対策
+        // UINT32_MAXまで行ったら1に戻す（0は無効値として避ける）
+        if (_entityGenerations[index] == UINT32_MAX) {
+            _entityGenerations[index] = 1;
+        }
+        else {
+            _entityGenerations[index]++;
+        }
+
+        // インデックスを再利用リストへ
+        _freeIndices.push_back(index);
+    }
+
+    void World::RequestDestroyEntity(EntityID entity)
+    {
+        PendingOp op;
+        op.kind     = PendingOpKind::Destroy;
+        op.entity   = entity;
+        op.type     = InvalidTypeID; // destroy marker
+        op.typeSize = 0;
+        op.data     = nullptr;
+
+        _pendingOps.Add(op);
+    }
+
+    // --- ScrutinyAndApply: 遅延実行関数 ---
+    //  やってはいけないこと
+    //  ────────────────────────
+    //  System実行中に...
+    //  entity.AddComponent<Velocity>()
+    //  ↓
+    //  即座にChunk移動が発生すると...
+    //  ↓
+    //  今まさにループ中のChunk構造が変わり、イテレータが無効化される
+    //  ↓
+    //  クラッシュ / メモリ破壊
+    //
+    //  安全な遅延実行モデル
+    //  ────────────────────────
+    //  [System実行中]
+    //    → 変更要求だけをPendingOpsに記録（Request...）
+    //
+    //  [Systemが全部終わった後]
+    //    → ScrutinyAndApply()
+    //      → まとめて整合性を保ちながら実行
+    //      → 次フレームのSystemは最新状態で動く
+    //
+    void World::ScrutinyAndApply()
+    {
+        // 構造変更の適用時間を計測
+        ZoneScopedN("World::ScrutinyAndApply");
+
+
+        // 1. 溜まっていた予約（AddComponent, RemoveComponent, Spawn, Destroy）を
+        //    ChunkManager に渡して、物理的なメモリ移動や生成を実行させる
+        //    戻り値として、実際に削除されたEntityIDのリストを受け取る
+
+        // 1. 保留されていた構造変更を適用
+        //    この内部で SetEntityMoveCallback で登録したラムダが呼ばれ、
+        //    _entityCache が自動的に更新されます！
+        std::vector<EntityID> deadList = _chunkManager.ApplyPendingOperations(_pendingOps);
+
+
+
+        // 3. IDをリサイクル（世代を上げてフリーリストへ）
+        for (EntityID id : deadList) {
+            RecycleEntityID(id);
+        }
+
+
+        // 3. アロケータのリセット
+        // これで一時メモリは一瞬で解放されます。delete op.data は不要です。
+        // (デストラクタが必要な場合は PendingOps::Clear 内で呼ぶ必要がありますが、
+        //  生データコピーなら不要、管理が必要なら工夫がいりますが、一旦メモリ解放優先で)
+        _pendingOps.Clear();
+        _frameAllocator.Reset(); // ★ 一瞬でリセット
+
+        // 構造変更があったことを記録
+        _isStructureDirty = true;
+    }
+
+    // GetEntityArchetype の実装
+    const Archetype &World::GetEntityArchetype(EntityID entity) const
+    {
+        size_t entityIdx = 0;
+        // ChunkManagerのO(1) vectorアクセスを利用
+        size_t chunkIdx = _chunkManager.SearchEntityIn(entity, &entityIdx);
+
+        if (chunkIdx == InvalidIndex) {
+            // 存在しない、または削除済みの場合は空のアーキタイプを返す
+            static const Archetype emptyArchetype;
+            return emptyArchetype;
+        }
+
+        return _chunkManager.GetChunks()[chunkIdx]->GetArchetype();
+    }
+
+    bool World::HasComponent(EntityID entity, TypeID tid)
+    {
+        return GetComponentOfEntity(entity, tid) != nullptr;
+    }
+
+    // Low-level access
+    void *World::GetComponentOfEntity(EntityID entity, TypeID tid)
+    {
+        size_t entityIdx = 0;
+        size_t chunkIdx  = _chunkManager.SearchEntityIn(entity, &entityIdx);
+        if (chunkIdx == InvalidIndex) return nullptr;
+        return _chunkManager.GetChunks()[chunkIdx]->GetComponentPtrByType(tid, entityIdx);
+    }
+
+} // namespace CCL::ECS::Core

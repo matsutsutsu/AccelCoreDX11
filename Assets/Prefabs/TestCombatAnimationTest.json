@@ -1,0 +1,102 @@
+{
+    "entities": [
+        {
+            "components": {
+                "AnimParameters": null,
+                "AnimStateMachine": {
+                    "graphPath": "Assets/Animations/Nodes/TestAnimationNode.json"
+                },
+                "Animator": {
+                    "isLoop": true,
+                    "playbackSpeed": 1.0
+                },
+                "CombatRosterComponent": {
+                    "count": 1,
+                    "entries": [
+                        {
+                            "id": 4294967302,
+                            "tag": "RightHand"
+                        }
+                    ]
+                },
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Enemy/Boss.glb"
+                },
+                "Name": {
+                    "name": "BoneAttachmentTest"
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        1.0,
+                        -0.0,
+                        -6.229854676575997e-08
+                    ],
+                    "scale": [
+                        0.30000001192092896,
+                        0.30000001192092896,
+                        0.30000001192092896
+                    ]
+                }
+            },
+            "id": 4294967301
+        },
+        {
+            "components": {
+                "BoneAttachmentComponent": {
+                    "boneName": "hand_R"
+                },
+                "Name": {
+                    "name": "prim"
+                },
+                "Primitive": {
+                    "color": [
+                        0.14671826362609863,
+                        1.0,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 17.600000381469727,
+                    "isWireframe": true,
+                    "radius": 1.0,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 3
+                },
+                "Transform": {
+                    "Parent Entity ID": 4294967301,
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        -0.699999988079071,
+                        -6.400000095367432
+                    ],
+                    "rotation": [
+                        0.6558151245117188,
+                        -0.012310614809393883,
+                        0.012310633435845375,
+                        0.7547208070755005
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967302
+        }
+    ],
+    "name": "BoneAttachmentTest"
+}

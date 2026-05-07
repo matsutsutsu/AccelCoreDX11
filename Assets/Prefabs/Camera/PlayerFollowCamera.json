@@ -1,0 +1,56 @@
+{
+    "entities": [
+        {
+            "components": {
+                "CameraAimLookAt": {
+                    "damping": 10.0,
+                    "offset": [
+                        0.0,
+                        1.5,
+                        0.0
+                    ],
+                    "target": 5
+                },
+                "CameraBodyFollow": {
+                    "damping": 5.0,
+                    "lockY": false,
+                    "offset": [
+                        0.0,
+                        5.199999809265137,
+                        -10.0
+                    ],
+                    "target": 5
+                },
+                "Name": null,
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        5.0,
+                        -10.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "VirtualCamera": {
+                    "blendTime": 1.0,
+                    "farClip": 1000.0,
+                    "fov": 70.5,
+                    "nearClip": 0.10000000149011612,
+                    "priority": 10
+                }
+            },
+            "id": 4294967298
+        }
+    ],
+    "name": "PlayerFollowCamera"
+}

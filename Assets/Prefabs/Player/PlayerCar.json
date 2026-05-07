@@ -1,0 +1,54 @@
+{
+    "entities": [
+        {
+            "components": {
+                "Animator": {
+                    "isLoop": true,
+                    "playbackSpeed": 1.0
+                },
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Player/pony_cartoon.glb"
+                },
+                "Name": {
+                    "name": "PlayerCar"
+                },
+                "PlayerCar": {
+                    "acceleration": 600.0,
+                    "turnSpeed": 130.0,
+                    "visualOffset": [
+                        0.0,
+                        -0.8299999833106995,
+                        0.0
+                    ],
+                    "visualRotation": [
+                        0.0,
+                        90.0,
+                        0.0
+                    ]
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.6598515510559082,
+                        0.15669381618499756,
+                        9.719261169433594
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.5603902339935303,
+                        0.0,
+                        0.8282109498977661
+                    ],
+                    "scale": [
+                        0.004999999888241291,
+                        0.004999999888241291,
+                        0.004999999888241291
+                    ]
+                }
+            },
+            "id": 4294967300
+        }
+    ],
+    "name": "PlayerCar"
+}

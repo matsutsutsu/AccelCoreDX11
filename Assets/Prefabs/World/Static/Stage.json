@@ -1,0 +1,19 @@
+{
+  "name": "Stage",
+  "components": {
+    "Transform": {
+      "position": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0]
+    },
+    "Model": {
+      "path": "Data/Model/Stage/ExampleStage.glb"
+    },
+    "Material": {}, 
+    "StaticMesh": {
+      "isLargeMesh": true
+    },
+    "RigidBody": {
+      "isStatic": true
+    }
+  }
+}

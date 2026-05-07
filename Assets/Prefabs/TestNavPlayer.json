@@ -1,0 +1,53 @@
+{
+    "entities": [
+        {
+            "components": {
+                "Name": {
+                    "name": "TestNavPlayer"
+                },
+                "PlayerComponent": {
+                    "moveSpeed": 30.0,
+                    "turnSpeed": 10.0
+                },
+                "Primitive": {
+                    "color": [
+                        0.0,
+                        1.0,
+                        0.061775922775268555,
+                        1.0
+                    ],
+                    "height": 2.200000047683716,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 3
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        1.600000023841858,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 8589934596
+        }
+    ],
+    "name": "TestNavPlayer"
+}

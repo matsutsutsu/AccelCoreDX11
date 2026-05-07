@@ -1,0 +1,186 @@
+[Project Structure] 
+ 
+Folder PATH listing for volume Windows
+Volume serial number is 0255-C8DA
+C:.
+„    structure.txt
+„    _dump_structure.bat
+„    
+„¥„Ÿ„Ÿ„ŸEnemy
+„    „    Boss.cereal
+„    „    Boss.glb
+„    „    Enemy_Boid.glb
+„    „    Enemy_Evader.glb
+„    „    Enemy_Fire.glb
+„    „    Enemy_Jumper.glb
+„    „    Enemy_Pawn.cereal
+„    „    Enemy_Pawn.glb
+„    „    Enemy_Tank.glb
+„    „    
+„    „¥„Ÿ„Ÿ„ŸBoss_motion
+„    „        Boss_death.fbx
+„    „        Boss_move.fbx
+„    „        Boss_samon.fbx
+„    „        Boss_slash.fbx
+„    „        Boss_tackle.fbx
+„    „        
+„    „¤„Ÿ„Ÿ„ŸTextures
+„            boss_Base.png
+„            Enemy_A_T_Base.png
+„            Enemy_B_T_Base.png
+„            Enemy_C_T_Base.png
+„            Enemy_D_T_Base.png
+„            Enemy_E_T_Base.png
+„            
+„¥„Ÿ„Ÿ„ŸMapChip
+„    „    7.glb
+„    „    Floor.glb
+„    „    Hashira.glb
+„    „    Kabe1.glb
+„    „    torch.glb
+„    „    Wall.cereal
+„    „    Wall.glb
+„    „    Yuka.glb
+„    „    
+„    „¥„Ÿ„Ÿ„Ÿ0
+„    „    „    tutorial.glb
+„    „    „    
+„    „    „¤„Ÿ„Ÿ„ŸTextures
+„    „            standardSurface1_Base.png
+„    „            standardSurface1_Emissive.png
+„    „            standardSurface1_MetallicRoughness.png
+„    „            standardSurface1_Normal.png
+„    „            standardSurface1_Occlusion.png
+„    „            
+„    „¥„Ÿ„Ÿ„Ÿ1
+„    „    „    1.glb
+„    „    „    
+„    „    „¤„Ÿ„Ÿ„ŸTextures
+„    „            standardSurface1_Base.png
+„    „            standardSurface1_Emissive.png
+„    „            standardSurface1_MetallicRoughness.png
+„    „            standardSurface1_Normal.png
+„    „            standardSurface1_Occlusion.png
+„    „            
+„    „¥„Ÿ„Ÿ„Ÿ2
+„    „    „    2.glb
+„    „    „    
+„    „    „¤„Ÿ„Ÿ„ŸTextures
+„    „            standardSurface1_Base.png
+„    „            standardSurface1_Emissive.png
+„    „            standardSurface1_MetallicRoughness.png
+„    „            standardSurface1_Normal.png
+„    „            standardSurface1_Occlusion.png
+„    „            
+„    „¥„Ÿ„Ÿ„Ÿ3
+„    „    „    3.glb
+„    „    „    
+„    „    „¤„Ÿ„Ÿ„ŸTextures
+„    „            standardSurface1_Base.png
+„    „            standardSurface1_Emissive.png
+„    „            standardSurface1_MetallicRoughness.png
+„    „            standardSurface1_Normal.png
+„    „            standardSurface1_Occlusion.png
+„    „            
+„    „¥„Ÿ„Ÿ„Ÿ4
+„    „    „    4.glb
+„    „    „    
+„    „    „¤„Ÿ„Ÿ„ŸTextures
+„    „            standardSurface1_Base.png
+„    „            standardSurface1_Emissive.png
+„    „            standardSurface1_MetallicRoughness.png
+„    „            standardSurface1_Normal.png
+„    „            standardSurface1_Occlusion.png
+„    „            
+„    „¥„Ÿ„Ÿ„Ÿ5
+„    „    „    5.glb
+„    „    „    
+„    „    „¤„Ÿ„Ÿ„ŸTextures
+„    „            standardSurface1_Base.png
+„    „            standardSurface1_Emissive.png
+„    „            standardSurface1_MetallicRoughness.png
+„    „            standardSurface1_Normal.png
+„    „            standardSurface1_Occlusion.png
+„    „            
+„    „¥„Ÿ„Ÿ„Ÿ6
+„    „    „    6.glb
+„    „    „    
+„    „    „¤„Ÿ„Ÿ„ŸTextures
+„    „            standardSurface1_Base.png
+„    „            standardSurface1_Emissive.png
+„    „            standardSurface1_MetallicRoughness.png
+„    „            standardSurface1_Normal.png
+„    „            standardSurface1_Occlusion.png
+„    „            
+„    „¥„Ÿ„Ÿ„ŸNewModel
+„    „    „    Yuka.cereal
+„    „    „    Yuka.glb
+„    „    „    
+„    „    „¤„Ÿ„Ÿ„ŸTextures
+„    „            standardSurface1_Base.png
+„    „            standardSurface1_Emissive.png
+„    „            standardSurface1_MetallicRoughness.png
+„    „            standardSurface1_Normal.png
+„    „            standardSurface1_Occlusion.png
+„    „            
+„    „¥„Ÿ„Ÿ„ŸTextures
+„    „        standardSurface1_Base.png
+„    „        standardSurface1_Emissive.png
+„    „        standardSurface1_MetallicRoughness.png
+„    „        standardSurface1_Normal.png
+„    „        standardSurface1_Occlusion.png
+„    „        
+„    „¤„Ÿ„Ÿ„ŸTutorial
+„        „    tutorial_click.glb
+„        „    
+„        „¥„Ÿ„Ÿ„ŸMove
+„        „    „    tutorial_move.glb
+„        „    „    
+„        „    „¤„Ÿ„Ÿ„ŸTextures
+„        „            standardSurface1_Base.png
+„        „            standardSurface1_Emissive.png
+„        „            standardSurface1_MetallicRoughness.png
+„        „            standardSurface1_Normal.png
+„        „            standardSurface1_Occlusion.png
+„        „            
+„        „¤„Ÿ„Ÿ„ŸTextures
+„                standardSurface1_Base.png
+„                standardSurface1_Emissive.png
+„                standardSurface1_MetallicRoughness.png
+„                standardSurface1_Normal.png
+„                standardSurface1_Occlusion.png
+„                
+„¥„Ÿ„Ÿ„ŸObject
+„    „    Coin.glb
+„    „    
+„    „¤„Ÿ„Ÿ„ŸTextures
+„            standardSurface1_Base.png
+„            
+„¥„Ÿ„Ÿ„ŸPlayer
+„    „    Player.cereal
+„    „    Player.glb
+„    „    Player_Tpose.fbx
+„    „    Player_Tpose.glb
+„    „    Player_Tpose_2.glb
+„    „    
+„    „¥„Ÿ„Ÿ„Ÿmotion
+„    „        Player_Attak.fbx
+„    „        Player_Attak_2.fbx
+„    „        Player_Death.fbx
+„    „        Player_Death_2.fbx
+„    „        Player_Idle.fbx
+„    „        Player_Idle_2.fbx
+„    „        Player_Run.fbx
+„    „        Player_Run_2.fbx
+„    „        
+„    „¤„Ÿ„Ÿ„ŸTextures
+„            PC_T_Base.png
+„            Tsue_T_Base.png
+„            
+„¥„Ÿ„Ÿ„ŸShape
+„        Sphere.glb
+„        
+„¤„Ÿ„Ÿ„ŸWeapon
+        Pistol.glb
+        Staff.glb
+        

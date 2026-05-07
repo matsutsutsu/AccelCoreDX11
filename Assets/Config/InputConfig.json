@@ -1,0 +1,72 @@
+{
+    "Actions": [
+        {
+            "Bindings": [
+                {
+                    "Device": "Mouse_Button",
+                    "Key": "BTN_LEFT"
+                },
+                {
+                    "Device": "GamePad_Button",
+                    "Key": "BTN_RIGHT_TRIGGER"
+                }
+            ],
+            "Name": "Attack"
+        },
+        {
+            "Bindings": [
+                {
+                    "Device": "Keyboard",
+                    "Key": "SPACE"
+                },
+                {
+                    "Device": "GamePad_Button",
+                    "Key": "BTN_A"
+                }
+            ],
+            "Name": "Jump"
+        }
+    ],
+    "Axes": [
+        {
+            "Bindings": [
+                {
+                    "Device": "Keyboard",
+                    "Key": "W",
+                    "Scale": 1.0
+                },
+                {
+                    "Device": "Keyboard",
+                    "Key": "S",
+                    "Scale": -1.0
+                },
+                {
+                    "Device": "GamePad_AxisLY",
+                    "Key": "NONE",
+                    "Scale": 1.0
+                }
+            ],
+            "Name": "Throttle"
+        },
+        {
+            "Bindings": [
+                {
+                    "Device": "Keyboard",
+                    "Key": "D",
+                    "Scale": 1.0
+                },
+                {
+                    "Device": "Keyboard",
+                    "Key": "A",
+                    "Scale": -1.0
+                },
+                {
+                    "Device": "GamePad_AxisLX",
+                    "Key": "NONE",
+                    "Scale": 1.0
+                }
+            ],
+            "Name": "Steer"
+        }
+    ]
+}

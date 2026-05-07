@@ -1,0 +1,130 @@
+{
+    "entities": [
+        {
+            "components": {
+                "Animator": {
+                    "currentAnimIndex": 2,
+                    "isLoop": true,
+                    "playbackSpeed": 1.0
+                },
+                "CapsuleCollider": {
+                    "center": [
+                        0.0,
+                        1.0,
+                        0.0
+                    ],
+                    "height": 2.0,
+                    "layer": 2,
+                    "mask": 68,
+                    "radius": 0.5
+                },
+                "Gun": {
+                    "coolDownTimer": -1.825392246246338e-07,
+                    "fireInterval": 0.5,
+                    "gun": {
+                        "baseBulletCount": 1,
+                        "baseSpeed": 20.0,
+                        "baseSpread": 0.0,
+                        "endMods": [],
+                        "maxEndSlots": 3,
+                        "maxOnHitSlots": 3,
+                        "maxSpawnSlots": 3,
+                        "maxTravelSlots": 3,
+                        "onHitMods": [],
+                        "spawnMods": [],
+                        "spawnOffset": 0.20000000298023224,
+                        "travelMods": []
+                    }
+                },
+                "Health": {
+                    "currentHealth": 100.0,
+                    "invincibilityDuration": 1.0,
+                    "maxHealth": 100.0,
+                    "team": 0
+                },
+                "Material": null,
+                "Model": {
+                    "path": "Assets/Models/Player/Player.glb"
+                },
+                "Player": {
+                    "moveSpeed": 10.0,
+                    "padSlot": 0,
+                    "turnSpeed": 12.0
+                },
+                "RigidBody": {
+                    "bounciness": 0.0,
+                    "dynamicFriction": 0.5,
+                    "isStatic": false,
+                    "linearDamping": 0.9800000190734863,
+                    "mass": 10.0,
+                    "maxSpeed": 40.0,
+                    "minSpeed": 5.0,
+                    "useGravity": true,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                "Transform": {
+                    "position": [
+                        100.81692504882813,
+                        0.0,
+                        89.9847183227539
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.3554057478904724,
+                        0.70710678,
+                        -0.9347114562988281
+                    ],
+                    "scale": [
+                        0.02500000037252903,
+                        0.02500000037252903,
+                        0.02500000037252903
+                    ]
+                }
+            },
+            "id": 4294967348
+        },
+        {
+            "components": {
+                "PointLight": {
+                    "attenuation": [
+                        2.309999942779541,
+                        0.04899999871850014,
+                        0.012500000186264515
+                    ],
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 7.5,
+                    "range": 8.800000190734863
+                },
+                "Transform": {
+                    "parentID": 4294967348,
+                    "position": [
+                        0.0,
+                        114.80000305175781,
+                        -17.799999237060547
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967349
+        }
+    ],
+    "name": "Entity"
+}

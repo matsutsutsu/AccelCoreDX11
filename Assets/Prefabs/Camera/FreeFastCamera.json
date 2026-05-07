@@ -1,0 +1,45 @@
+{
+    "entities": [
+        {
+            "components": {
+                "CameraBodyFree": {
+                    "currentPitch": -37.79997253417969,
+                    "currentYaw": 60.00001525878906,
+                    "lookSpeed": 0.20000000298023224,
+                    "moveSpeed": 40.566001892089844
+                },
+                "Name": {
+                    "name": "FreeFastCamera"
+                },
+                "Transform": {
+                    "isStatic": false,
+                    "position": [
+                        -60.79587173461914,
+                        32.87596893310547,
+                        6.683801651000977
+                    ],
+                    "rotation": [
+                        0.2805204391479492,
+                        0.4730428457260132,
+                        -0.16195861995220184,
+                        0.8193339705467224
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "VirtualCamera": {
+                    "blendTime": 2.0,
+                    "farClip": 1000.0,
+                    "fov": 60.29999923706055,
+                    "nearClip": 0.10000000149011612,
+                    "priority": 100
+                }
+            },
+            "id": 4294967298
+        }
+    ],
+    "name": "FreeFastCamera"
+}

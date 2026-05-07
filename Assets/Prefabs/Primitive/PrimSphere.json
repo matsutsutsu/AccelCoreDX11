@@ -1,0 +1,21 @@
+{
+  "name": "Primitive Sphere",
+  "components": {
+    "Transform": {
+      "position": [2.0, 2.0, 0.0],
+      "scale": [1.0, 1.0, 1.0]
+    },
+    "Primitive": {
+      "type": 1,
+      "radius": 0.5,
+      "color": [0.8, 0.2, 0.2, 1.0]
+    },
+    "RigidBody": {
+      "mass": 1.0,
+      "useGravity": false,
+      "bounciness": 0.5,
+      "friction": 0.5,
+      "isStatic": true
+    }
+  }
+}
