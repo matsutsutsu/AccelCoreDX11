@@ -427,6 +427,12 @@
     <Filter Include="Source\Game\Logics\AI\BehaviorTree\_Meta">
       <UniqueIdentifier>{8ef38902-d889-483c-9b95-bbfdb73fdd31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Engine\GamePlay\Transform\Motion">
+      <UniqueIdentifier>{f3694a70-3703-46c0-9d5d-73ceb532fbab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Game\Logics\Combat\Shader">
+      <UniqueIdentifier>{e6f9e5c3-4a61-4021-9e2a-030f464799f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\implot-master\implot.h">
@@ -1518,6 +1524,9 @@
     <ClInclude Include="Source\Game\Logics\AI\BehaviorTree\BossActionSystem.h">
       <Filter>Source\Game\Logics\AI\BehaviorTree</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\GamePlay\Transform\Motion\MotionComponent.h">
+      <Filter>Source\Engine\GamePlay\Transform\Motion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\implot-master\implot.cpp">
@@ -2353,6 +2362,9 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\BossActionComponentMeta.cpp">
       <Filter>Source\Game\Logics\AI\BehaviorTree\_Meta</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\GamePlay\Transform\Motion\MotionComponentMeta.cpp">
+      <Filter>Source\Engine\GamePlay\Transform\Motion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

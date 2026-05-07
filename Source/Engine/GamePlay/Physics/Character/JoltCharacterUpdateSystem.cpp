@@ -112,6 +112,7 @@ void JoltCharacterUpdateSystem::Update(float rawDt) {
             JPH::RVec3 pos = handle.character->GetPosition();
             trans.position = { pos.GetX(), pos.GetY(), pos.GetZ() };
             trans.isStatic = false;
+            trans.isDirty = true;
 
             // 幽霊（Kinematic Body）の同期
             if (auto* kinBody = _world->GetComponent<JoltHandleComponent>(id)) {

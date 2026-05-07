@@ -67,6 +67,8 @@ void JoltPullSystem::Update(float dt)
 
         // TransformUpdateSystemに変更を知らせて行列を再計算させる
         trans.isStatic = false;
+
+        trans.isDirty = true;
         });
 }
 

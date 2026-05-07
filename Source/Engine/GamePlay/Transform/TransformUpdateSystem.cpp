@@ -64,16 +64,6 @@ static void UpdateTransformRecursiveHelper(Core::World* world, EntityID entity, 
         trans->isDirty = false;
     }
 
-    // --- 3. 【重要】自分の行列が確定した直後に、自分のModelの骨格行列を最新にベイクする ---
-    if (isUpdated) {
-        if (auto* modelComp = world->GetComponent<ModelComponent>(entity)) {
-            if (Model* model = modelComp->GetModel()) {
-                // モデルに対して「今の自分の座標」を教え、全ボーンの空間座標を更新させる
-                model->UpdateTransform(trans->worldMatrix);
-            }
-        }
-    }
-
     // --- 4. 子エンティティへ再帰伝播 ---
     EntityID childID = trans->firstChildID;
     while (childID != 0) {

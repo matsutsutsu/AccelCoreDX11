@@ -20,6 +20,7 @@
 #include "Engine/Graphics/Renderer/RenderQueue.h"
 #include "Engine/Graphics/Shader/ShaderResources.h"
 
+#include "Engine/GamePlay/Core/Time/TimeState.h"
 
 #include "tracy/Tracy.hpp"
 
@@ -90,6 +91,9 @@ void BaseScene::Initialize()
     _worldPtr->AddResource<ParticleRenderer *>(graphics.GetParticleRenderer());
     _worldPtr->AddResource<PrimitiveRenderer *>(graphics.GetPrimitiveRenderer());
     _worldPtr->AddResource<ShapeRenderer *>(graphics.GetShapeRenderer());
+
+    _worldPtr->AddResource<TimeContext>();
+
 
     // TriggerSystem 等がアクセスできるように、SystemManager のポインタをリソースとして登録
     _worldPtr->AddResource<CCL::ECS::SystemManager *>(_ecsContext->GetSystemManager());

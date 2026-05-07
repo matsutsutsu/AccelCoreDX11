@@ -334,6 +334,7 @@
     <ClInclude Include="Source\Engine\GamePlay\Physics\RigidBody\JoltRigidbodyComponent.h" />
     <ClInclude Include="Source\Engine\GamePlay\Transform\BoneAttachmentComponent.h" />
     <ClInclude Include="Source\Engine\GamePlay\Transform\HierarchyCleanupSystem.h" />
+    <ClInclude Include="Source\Engine\GamePlay\Transform\Motion\MotionComponent.h" />
     <ClInclude Include="Source\Engine\GamePlay\Transform\PendingParentComponent.h" />
     <ClInclude Include="Source\Engine\GamePlay\Transform\TransformComponent.h" />
     <ClInclude Include="Source\Engine\GamePlay\Transform\TransformUpdateSystem.h" />
@@ -661,6 +662,7 @@
     <ClCompile Include="Source\Engine\GamePlay\Physics\Jolt\JoltShapeUpdateSystem.cpp" />
     <ClCompile Include="Source\Engine\GamePlay\Physics\Jolt\JoltUpdateSystem.cpp" />
     <ClCompile Include="Source\Engine\GamePlay\Transform\HierarchyCleanupSystem.cpp" />
+    <ClCompile Include="Source\Engine\GamePlay\Transform\Motion\MotionComponentMeta.cpp" />
     <ClCompile Include="Source\Engine\GamePlay\Transform\TransformComponentMeta.cpp" />
     <ClCompile Include="Source\Engine\GamePlay\Transform\TransformUpdateSystem.cpp" />
     <ClCompile Include="Source\Engine\GamePlay\Utils\MiscComponentMeta.cpp" />
