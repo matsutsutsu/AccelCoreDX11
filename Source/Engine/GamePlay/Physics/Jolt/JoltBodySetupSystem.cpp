@@ -105,44 +105,120 @@ void JoltBodySetupSystem::Update(float dt)
         // =======================================================
         // 4. Mesh Collider (地形) の自動抽出と生成
         // =======================================================
+        // JoltBodySetupSystem.cpp の MeshCollider ブロック
+        // =======================================================
+        // 4. Mesh Collider (地形) の自動抽出と生成
+        // =======================================================
         else if (auto* meshCol = _world->GetComponent<JoltMeshColliderComponent>(id)) {
 
             auto* modelComp = _world->GetComponent<ModelComponent>(id);
             if (!modelComp || !modelComp->GetModel() || !meshCol->isEnabled) return;
+
             Model* model = modelComp->GetModel();
+            const ModelResource* res = model->GetResource();
+            if (!res) return;
 
-            JPH::VertexList joltVertices;
-            JPH::IndexedTriangleList joltTriangles;
+            // ==============================================================
+            // 親を辿って確実な「ワールド行列」を自己計算する
+            // ==============================================================
+            DirectX::XMMATRIX worldMat = DirectX::XMMatrixIdentity();
+            CCL::ECS::EntityID currNode = id;
+            std::vector<CCL::ECS::EntityID> hierarchy;
 
-            for (const Model::Mesh& mesh : model->GetMeshes()) {
-                if (!mesh.data || !mesh.node) continue;
-                uint32_t vertexOffset = static_cast<uint32_t>(joltVertices.size());
-
-                // ★ TransformUpdate -> ModelPoseUpdate を経由した「完璧な最新行列」
-                DirectX::XMMATRIX nodeGlobalMat = DirectX::XMLoadFloat4x4(&mesh.node->globalTransform);
-
-                for (const auto& v : mesh.data->vertices) {
-                    DirectX::XMVECTOR localPos = DirectX::XMVectorSet(v.position.x, v.position.y, v.position.z, 1.0f);
-                    // 頂点にスケール・回転・座標の全てを焼き付ける
-                    DirectX::XMVECTOR globalPos = DirectX::XMVector3TransformCoord(localPos, nodeGlobalMat);
-                    joltVertices.push_back(JPH::Float3(
-                        DirectX::XMVectorGetX(globalPos), DirectX::XMVectorGetY(globalPos), DirectX::XMVectorGetZ(globalPos)
-                    ));
-                }
-
-                // ★ 右手系・左手系の反転対応（すり抜け防止）
-                for (size_t i = 0; i < mesh.data->indices.size(); i += 3) {
-                    joltTriangles.push_back(JPH::IndexedTriangle(
-                        mesh.data->indices[i + 0] + vertexOffset,
-                        mesh.data->indices[i + 2] + vertexOffset, // 反転
-                        mesh.data->indices[i + 1] + vertexOffset
-                    ));
-                }
+            while (currNode != CCL::ECS::InvalidEntityID && currNode != 0) {
+                auto* t = _world->GetComponent<TransformComponent>(currNode);
+                if (!t) break;
+                hierarchy.push_back(currNode);
+                CCL::ECS::EntityID nextNode = t->parentID;
+                if (nextNode == currNode) break;
+                currNode = nextNode;
             }
 
-            if (joltTriangles.empty()) return;
-            JPH::MeshShapeSettings meshSettings(joltVertices, joltTriangles);
-            shape = meshSettings.Create().Get(); // 縮小ラッパーは不要。頂点が既に縮小済み。
+            for (auto it = hierarchy.rbegin(); it != hierarchy.rend(); ++it) {
+                auto* t = _world->GetComponent<TransformComponent>(*it);
+                t->UpdateMatrix(worldMat);
+                worldMat = DirectX::XMLoadFloat4x4(&t->worldMatrix);
+            }
+
+            // 行列分解：絶対スケール、絶対回転、絶対座標を抽出
+            DirectX::XMVECTOR vScale, vRot, vPos;
+            DirectX::XMMatrixDecompose(&vScale, &vRot, &vPos, worldMat);
+
+            spawnPos = { DirectX::XMVectorGetX(vPos), DirectX::XMVectorGetY(vPos), DirectX::XMVectorGetZ(vPos) };
+            spawnRot = { DirectX::XMVectorGetX(vRot), DirectX::XMVectorGetY(vRot), DirectX::XMVectorGetZ(vRot), DirectX::XMVectorGetW(vRot) };
+            spawnScale = { DirectX::XMVectorGetX(vScale), DirectX::XMVectorGetY(vScale), DirectX::XMVectorGetZ(vScale) };
+
+            // ==============================================================
+            // ★ システム内キャッシュ（辞書）
+            // ==============================================================
+            static std::unordered_map<const ModelResource*, JPH::ShapeRefC> shapeCache;
+            JPH::ShapeRefC baseShape;
+
+            auto it = shapeCache.find(res);
+            if (it != shapeCache.end()) {
+                baseShape = it->second;
+            }
+            else {
+                JPH::VertexList joltVertices;
+                JPH::IndexedTriangleList joltTriangles;
+
+                // ==============================================================
+                // ★ 究極の修正: 二重スケール(0.01倍極小化)の防止
+                // そのまま抽出するとすでに0.1倍された金型ができ、さらにScaledShape(0.1)されてしまう。
+                // そのため、一旦 Entity の影響を消す「単位行列(1.0倍)」を流し込んでリセットする！
+                // ==============================================================
+                DirectX::XMMATRIX identityMat = DirectX::XMMatrixIdentity();
+                DirectX::XMFLOAT4X4 tempMat; // 一時保存用の構造体
+
+                // 1. 単位行列でリセットする場合
+                DirectX::XMStoreFloat4x4(&tempMat, identityMat);
+                model->UpdateTransform(tempMat);
+
+                for (const Model::Mesh& mesh : model->GetMeshes()) {
+                    if (!mesh.data || !mesh.node) continue;
+                    uint32_t vertexOffset = static_cast<uint32_t>(joltVertices.size());
+
+                    // 純粋な FBX/GLTF のオリジナルローカル行列(Scale 1.0) が取得できる
+                    DirectX::XMMATRIX nodeMat = DirectX::XMLoadFloat4x4(&mesh.node->globalTransform);
+
+                    for (const auto& v : mesh.data->vertices) {
+                        DirectX::XMVECTOR localPos = DirectX::XMVectorSet(v.position.x, v.position.y, v.position.z, 1.0f);
+                        DirectX::XMVECTOR nodePos = DirectX::XMVector3TransformCoord(localPos, nodeMat);
+                        joltVertices.push_back(JPH::Float3(
+                            DirectX::XMVectorGetX(nodePos), DirectX::XMVectorGetY(nodePos), DirectX::XMVectorGetZ(nodePos)
+                        ));
+                    }
+
+                    for (size_t i = 0; i < mesh.data->indices.size(); i += 3) {
+                        joltTriangles.push_back(JPH::IndexedTriangle(
+                            mesh.data->indices[i + 0] + vertexOffset,
+                            mesh.data->indices[i + 2] + vertexOffset, // 反転
+                            mesh.data->indices[i + 1] + vertexOffset
+                        ));
+                    }
+                }
+
+                if (joltTriangles.empty()) return;
+
+                JPH::MeshShapeSettings meshSettings(joltVertices, joltTriangles);
+                baseShape = meshSettings.Create().Get();
+                shapeCache[res] = baseShape;
+
+                // ★ 抽出が終わったら、描画システムが壊れないように元の世界行列（worldMat）に戻してあげる
+                DirectX::XMStoreFloat4x4(&tempMat, worldMat);
+                model->UpdateTransform(tempMat);
+            }
+
+            if (!baseShape) return;
+
+            // ==============================================================
+            // 組み立て: 金型(純粋な1.0倍)に、ECSの絶対Scale(0.1倍など)を適用して完成！
+            // ==============================================================
+            JPH::ScaledShapeSettings scaledSettings(
+                baseShape,
+                JPH::Vec3(spawnScale.x, spawnScale.y, spawnScale.z)
+            );
+            shape = scaledSettings.Create().Get();
         }
 
         // コライダーコンポーネントが一つも無い場合は物理実体を作れないのでスキップ
