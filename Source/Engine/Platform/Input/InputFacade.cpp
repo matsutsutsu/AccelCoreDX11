@@ -82,11 +82,14 @@
      // 既存のバインディングをクリア（再読み込みに対応するため）
      m_actionBindings.clear();
      m_axisBindings.clear();
+     m_actionNames.clear(); // 名前リストもクリア
+     m_axisNames.clear();
 
      // 1. Actions の読み込み
      if (doc.contains("Actions")) {
          for (const auto& actionJson : doc["Actions"]) {
              std::string name = actionJson["Name"].get<std::string>();
+
              for (const auto& bindJson : actionJson["Bindings"]) {
                  InputDeviceType device = StringToDeviceType(bindJson["Device"].get<std::string>());
                  unsigned int keyCode = StringToKeyCode(bindJson["Key"].get<std::string>());
@@ -100,6 +103,7 @@
      if (doc.contains("Axes")) {
          for (const auto& axisJson : doc["Axes"]) {
              std::string name = axisJson["Name"].get<std::string>();
+
              for (const auto& bindJson : axisJson["Bindings"]) {
                  InputDeviceType device = StringToDeviceType(bindJson["Device"].get<std::string>());
                  unsigned int keyCode = StringToKeyCode(bindJson["Key"].get<std::string>());
@@ -119,11 +123,21 @@
  // =======================================================
  void InputFacade::AddActionBinding(const std::string& actionName, InputDeviceType device, unsigned int keyCode) {
      uint32_t hash = CCL::Utils::HashString(actionName);
+
+     // エディタ等から動的に呼ばれた場合のために名前をチェック
+     m_actionNames.push_back(actionName);
+
      m_actionBindings[hash].push_back({ device, keyCode, 1.0f });
  }
 
  void InputFacade::AddAxisBinding(const std::string& axisName, InputDeviceType device, unsigned int keyCode, float scale) {
      uint32_t hash = CCL::Utils::HashString(axisName);
+
+     // エディタ等から動的に呼ばれた場合のために名前をチェック
+     if (std::find(m_axisNames.begin(), m_axisNames.end(), axisName) == m_axisNames.end()) {
+         m_axisNames.push_back(axisName);
+     }
+
      m_axisBindings[hash].push_back({ device, keyCode, scale });
  }
 

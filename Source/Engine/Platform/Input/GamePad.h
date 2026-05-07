@@ -92,5 +92,4 @@ private:
 	float				triggerL = 0.0f;
 	float				triggerR = 0.0f;
 	int					slot = 0;
-	int					retryDelayTimer = 0;
 };

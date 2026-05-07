@@ -24,7 +24,8 @@ struct InputBinding {
 };
 
 // 3. 純粋な入力API
-class IInputAPI {
+class IInputAPI 
+{
 public:
     virtual ~IInputAPI() = default;
 
