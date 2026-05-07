@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "",
+        "targetModelPath": "",
+        "targetAnimName": "Jog_Fwd_Start",
+        "duration": 1.5,
+        "events": []
+    }
+}

@@ -5,7 +5,7 @@
 #include "Engine/Core/Math/StringHash.h"
 #include "Game/Core/SystemPriority.h"
 #include "ECS/System/CCL_SystemRegistry.h"
-#include "Game/Logic/AI/BehaviorTree/Data/ActionRegistry.h"
+#include "Game/Logics/AI/BehaviorTree/Data/ActionRegistry.h"
 #include <cmath>
 
 using namespace CCL::ECS;

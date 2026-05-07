@@ -1,0 +1,62 @@
+{
+    "assetId": 1,
+    "editor_links": [
+        {
+            "endPin": 8,
+            "id": 10,
+            "startPin": 3
+        },
+        {
+            "endPin": 5,
+            "id": 11,
+            "startPin": 9
+        }
+    ],
+    "editor_nodes": [
+        {
+            "actionId": 0,
+            "id": 2,
+            "inputPinId": 0,
+            "name": "ROOT",
+            "outputPinId": 3,
+            "posX": 0.0,
+            "posY": 0.0,
+            "type": 0
+        },
+        {
+            "actionId": 2005,
+            "id": 4,
+            "inputPinId": 5,
+            "name": "アクション (Action)",
+            "outputPinId": 0,
+            "posX": -18.0,
+            "posY": 302.0,
+            "type": 4
+        },
+        {
+            "actionId": 0,
+            "id": 7,
+            "inputPinId": 8,
+            "name": "セレクター (Selector)",
+            "outputPinId": 9,
+            "posX": 14.0,
+            "posY": 142.0,
+            "type": 1
+        }
+    ],
+    "last_id_counter": 11,
+    "nodes": [
+        {
+            "actionOrConditionId": 0,
+            "children": [
+                1
+            ],
+            "type": "Selector"
+        },
+        {
+            "actionOrConditionId": 2005,
+            "children": [],
+            "type": "Action"
+        }
+    ]
+}

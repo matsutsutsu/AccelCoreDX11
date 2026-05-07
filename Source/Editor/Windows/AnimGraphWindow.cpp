@@ -623,7 +623,7 @@ void AnimGraphWindow::DrawStateSettings(uint32_t stateHash) {
             if (ImGui::Button("ファイルを選択 (Browse...)##Motion", ImVec2(-1, 0))) {
                 char filename[MAX_PATH] = {};
                 if (Dialog::OpenFileName(filename, MAX_PATH, "JSON Files\0*.json\0", "Select Anim Sequence",
-                    "Data/Animations/Node", GetActiveWindow()) == DialogResult::OK) {
+                    "Assets/Animations/Node", GetActiveWindow()) == DialogResult::OK) {
                     namespace fs = std::filesystem;
                     std::error_code ec;
                     fs::path relPath = fs::relative(filename, fs::current_path(), ec);
@@ -794,7 +794,7 @@ void AnimGraphWindow::DrawToolbar() {
         char filename[MAX_PATH] = {};
         auto result = Dialog::SaveFileName(
             filename, MAX_PATH, "JSON Files\0*.json\0", "Save Anim Graph", "json",
-            "Data/Animations/Node", GetActiveWindow()
+            "Assets/Animations/Node", GetActiveWindow()
         );
 
         if (result == DialogResult::OK) {
@@ -814,7 +814,7 @@ void AnimGraphWindow::DrawToolbar() {
         char filename[MAX_PATH] = {};
         auto result = Dialog::OpenFileName(
             filename, MAX_PATH, "JSON Files\0*.json\0", "Select Anim Graph File",
-            "Data/Animations/Node", GetActiveWindow()
+            "Assets/Animations/Node", GetActiveWindow()
         );
 
         if (result == DialogResult::OK) {

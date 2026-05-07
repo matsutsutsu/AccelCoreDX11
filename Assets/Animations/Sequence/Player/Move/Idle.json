@@ -1,0 +1,10 @@
+{
+    "AnimSequence": {
+        "sequenceName": "Idle",
+        "targetModelPath": "",
+        "targetAnimName": "Idle_Combat_Seq_0",
+        "duration": 10.0,
+        "disableRootMotionDefault": false,
+        "events": []
+    }
+}

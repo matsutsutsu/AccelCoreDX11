@@ -35,7 +35,7 @@ void EditorWindowManager::Initialize()
     // =========================================================
     RegisterWindow<InspectorWindow>();
     RegisterWindow<HierarchyWindow>();
-    //RegisterWindow<AssetBrowserWindow>();
+    RegisterWindow<AssetBrowserWindow>();
 
     // =========================================================
     // ★ デフォルトでは「非表示」にするサブウィンドウ
@@ -64,7 +64,7 @@ void RefreshPrefabList(EditorContext &context)
     context.prefabFiles.clear();
 
     // スキャン対象のディレクトリ (必要に応じて変更してください)
-    std::string targetPath = "Data/Prefabs";
+    std::string targetPath = "Assets/Prefabs";
 
     if (fs::exists(targetPath)) {
         try {
@@ -145,7 +145,7 @@ void EditorWindowManager::DrawMainMenuBar(EditorContext &context)
                 static const char *filter = "Scene Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
 
                 if (Dialog::OpenFileName(filename, 256, filter, "Open Scene",
-                    "Data/Scene", hWnd) ==
+                    "Assets/Scene", hWnd) ==
                     DialogResult::OK) {
 
                     //  即時ロードせず、パスを保存して予約する
@@ -164,7 +164,7 @@ void EditorWindowManager::DrawMainMenuBar(EditorContext &context)
                 static const char *filter = "Scene Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
 
                 if (Dialog::SaveFileName(filename, 256, filter, "Save Scene", "json",
-                    "Data/Scene", hWnd) ==
+                    "Assets/Scene", hWnd) ==
                     DialogResult::OK) {
 
                     //  即時ロードせず、パスを保存して予約する

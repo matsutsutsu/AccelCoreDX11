@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "Jump_Loop",
+        "targetModelPath": "",
+        "targetAnimName": "Jump_Combat_Loop_0_Seq_0",
+        "duration": 0.3333333432674408,
+        "events": []
+    }
+}

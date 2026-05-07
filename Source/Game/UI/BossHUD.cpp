@@ -6,8 +6,8 @@
 //    if (!uiManager) return;
 //
 //    // ★ 注意: テクスチャのパスは実際のプロジェクトのものに合わせてください
-//    std::wstring boardPath = L"Data/Sprite/UIBar/BossBord.png";
-//    std::wstring hpBarPath = L"Data/Sprite/UIBar/BossHPBar.png";
+//    std::wstring boardPath = L"Assets/Sprite/UIBar/BossBord.png";
+//    std::wstring hpBarPath = L"Assets/Sprite/UIBar/BossHPBar.png";
 //
 //    uiManager->LoadSprite("Tex_BossBord", boardPath.c_str());
 //    uiManager->LoadSprite("Tex_BossHP_Fill", hpBarPath.c_str());

@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "Jaamo_Run",
+        "targetModelPath": "",
+        "targetAnimName": "Running",
+        "duration": 0.7000001668930054,
+        "events": []
+    }
+}

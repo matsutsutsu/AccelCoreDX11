@@ -1,0 +1,543 @@
+{
+    "anyStatePosX": -675.0,
+    "anyStatePosY": 26.0,
+    "anyStateTransitions": [
+        {
+            "blendDuration": 0.10000000149011612,
+            "conditions": [
+                {
+                    "op": 3,
+                    "paramHash": 771216480,
+                    "paramName": "Damage",
+                    "threshold": 0.0
+                }
+            ],
+            "logicType": 0,
+            "targetStateHash": 1700614218
+        }
+    ],
+    "entryPosX": -19.0,
+    "entryPosY": 10.0,
+    "entryStateHash": 1168775091,
+    "states": [
+        {
+            "isLoop": true,
+            "nodePosX": -3.0,
+            "nodePosY": 183.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Boss/Idle.json",
+            "sequenceName": "Idle",
+            "speedCurveName": "",
+            "stateHash": 1168775091,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 1,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.5
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 2371348074
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 44339351,
+                            "paramName": "JumpStart",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 4230495222
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 3985696913,
+                            "paramName": "Charge",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 2298705196
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 2470003750,
+                            "paramName": "EvadeStart",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 2815707159
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": 557.0,
+            "nodePosY": -41.0,
+            "playbackSpeed": 0.699999988079071,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Boss/Walk_F_Start.json",
+            "sequenceName": "Walk_Start",
+            "speedCurveName": "",
+            "stateHash": 2371348074,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 1943543909
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 3985696913,
+                            "paramName": "Charge",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 2298705196
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 44339351,
+                            "paramName": "JumpStart",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 4230495222
+                }
+            ]
+        },
+        {
+            "isLoop": true,
+            "nodePosX": 813.0,
+            "nodePosY": -43.0,
+            "playbackSpeed": 0.699999988079071,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Boss/Walk_F_Loop.json",
+            "sequenceName": "Walk_Loop",
+            "speedCurveName": "",
+            "stateHash": 1943543909,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 2,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 3.5
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 1110837980
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 3985696913,
+                            "paramName": "Charge",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 2298705196
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 44339351,
+                            "paramName": "JumpStart",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 4230495222
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": 1053.0,
+            "nodePosY": -41.0,
+            "playbackSpeed": 0.699999988079071,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Boss/Walk_F_Stop.json",
+            "sequenceName": "Walk_Stop",
+            "speedCurveName": "",
+            "stateHash": 1110837980,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 1168775091
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 3985696913,
+                            "paramName": "Charge",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 2298705196
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 44339351,
+                            "paramName": "JumpStart",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 4230495222
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": 29.0,
+            "nodePosY": 665.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Boss/Jump_Start.json",
+            "sequenceName": "Jump_Start",
+            "speedCurveName": "",
+            "stateHash": 4230495222,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.0
+                        },
+                        {
+                            "op": 0,
+                            "paramHash": 2646078375,
+                            "paramName": "IsAirborne",
+                            "threshold": 1.0
+                        }
+                    ],
+                    "logicType": 1,
+                    "targetStateHash": 3736249836
+                }
+            ]
+        },
+        {
+            "isLoop": true,
+            "nodePosX": 301.0,
+            "nodePosY": 665.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Boss/Jump_Loop.json",
+            "sequenceName": "Jump_Loop",
+            "speedCurveName": "",
+            "stateHash": 3736249836,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 3204239090,
+                            "paramName": "JumpEnd",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 517565587
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": 557.0,
+            "nodePosY": 665.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Boss/Jump_End.json",
+            "sequenceName": "Jump_End",
+            "speedCurveName": "",
+            "stateHash": 517565587,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 1168775091
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": 669.0,
+            "nodePosY": 341.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Boss/Tackle_Start.json",
+            "sequenceName": "Tackle_Start",
+            "speedCurveName": "",
+            "stateHash": 2298705196,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 4064768622
+                }
+            ]
+        },
+        {
+            "isLoop": true,
+            "nodePosX": 925.0,
+            "nodePosY": 341.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Boss/Tackle_Loop.json",
+            "sequenceName": "Tackle_Loop",
+            "speedCurveName": "",
+            "stateHash": 4064768622,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 2,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 6.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 1294762261
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": 1181.0,
+            "nodePosY": 341.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Boss/Tackle_End.json",
+            "sequenceName": "Tackle_End",
+            "speedCurveName": "",
+            "stateHash": 1294762261,
+            "transitions": [
+                {
+                    "blendDuration": 0.4000000059604645,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 1168775091
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 1,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.5
+                        },
+                        {
+                            "op": 4,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 2371348074
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": -659.0,
+            "nodePosY": 183.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Boss/Hit_DamageKari.json",
+            "sequenceName": "HitDamage",
+            "speedCurveName": "",
+            "stateHash": 1700614218,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 1168775091
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 2470003750,
+                            "paramName": "EvadeStart",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 2815707159
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": -947.0,
+            "nodePosY": 441.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Boss/BackStep_Start.json",
+            "sequenceName": "Evade_Start",
+            "speedCurveName": "",
+            "stateHash": 2815707159,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 0,
+                            "paramHash": 926561185,
+                            "paramName": "IsEvading",
+                            "threshold": 1.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 3254085571
+                }
+            ]
+        },
+        {
+            "isLoop": true,
+            "nodePosX": -675.0,
+            "nodePosY": 441.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Boss/BackStep_Loop.json",
+            "sequenceName": "Evade_Loop",
+            "speedCurveName": "",
+            "stateHash": 3254085571,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 2425066883,
+                            "paramName": "EvadeEnd",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 204266098
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": -387.0,
+            "nodePosY": 441.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Boss/BackStep_End.json",
+            "sequenceName": "Evade_End",
+            "speedCurveName": "",
+            "stateHash": 204266098,
+            "transitions": [
+                {
+                    "blendDuration": 0.4000000059604645,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "logicType": 0,
+                    "targetStateHash": 1168775091
+                }
+            ]
+        }
+    ]
+}

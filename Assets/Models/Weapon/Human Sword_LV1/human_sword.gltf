@@ -1,0 +1,220 @@
+{
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 27793,
+      "max": [
+        0.11298345029354095,
+        0.5999413132667542,
+        0.03346088528633118
+      ],
+      "min": [
+        -0.11298450082540512,
+        -0.5920153856277466,
+        -0.03281131014227867
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 27793,
+      "max": [
+        0.9999903440475464,
+        0.9987251162528992,
+        0.9999932646751404
+      ],
+      "min": [
+        -0.9999969005584717,
+        -0.9998989105224609,
+        -0.9999459981918335
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 27793,
+      "max": [
+        0.9999617338180542,
+        0.9999465942382813,
+        0.9999111294746399,
+        1.0
+      ],
+      "min": [
+        -0.9999455809593201,
+        -0.9997856020927429,
+        -0.999995768070221,
+        1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 27793,
+      "max": [
+        0.7261409759521484,
+        1.0
+      ],
+      "min": [
+        -1.2235776836178047e-09,
+        0.0
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5125,
+      "count": 127842,
+      "max": [
+        27792
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 333516,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 333516,
+      "byteOffset": 333516,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 444688,
+      "byteOffset": 667032,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 222344,
+      "byteOffset": 1111720,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 511368,
+      "byteOffset": 1334064,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 1845432,
+      "uri": "human_sword.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "Human Sword_LV1_Diffuse.png"
+    },
+    {
+      "uri": "Human Sword_LV1_Roughness.png"
+    },
+    {
+      "uri": "Human Sword_LV1_Normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "name": "Human Sword_LV1",
+      "normalTexture": {
+        "index": 2
+      },
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.800000011920929,
+          0.800000011920929,
+          0.800000011920929,
+          1.0
+        ],
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0.0,
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "mesh": 0,
+      "name": "Human Sword_LV1",
+      "rotation": [
+        6.717942113709796e-08,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        100.0,
+        100.00001525878906,
+        100.00001525878906
+      ],
+      "translation": [
+        0.0,
+        0.0,
+        -7.105427357601002e-13
+      ]
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ]
+}

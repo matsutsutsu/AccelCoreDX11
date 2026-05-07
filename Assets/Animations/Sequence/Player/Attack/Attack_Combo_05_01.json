@@ -1,0 +1,16 @@
+{
+    "AnimSequence": {
+        "sequenceName": "",
+        "targetModelPath": "",
+        "targetAnimName": "Combo_Attack_Wave_05_01_Seq_0",
+        "duration": 1.5833333730697632,
+        "events": [
+            {
+                "startTime": 0.18333333730697633,
+                "endTime": 0.4333333373069763,
+                "eventName": "HitBox",
+                "stringParam": "RightHand"
+            }
+        ]
+    }
+}

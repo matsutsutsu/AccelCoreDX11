@@ -1,0 +1,517 @@
+{
+    "entities": [
+        {
+            "components": {
+                "CameraBodyFree": {
+                    "currentPitch": -57.80002212524414,
+                    "currentYaw": 65.20001220703125,
+                    "lookSpeed": 0.20000000298023224,
+                    "moveSpeed": 28.04764175415039
+                },
+                "Name": {
+                    "name": "New Entity "
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        -140.69471740722656,
+                        -479.7140808105469,
+                        1140.701171875
+                    ],
+                    "rotation": [
+                        0.4071425795555115,
+                        0.47167474031448364,
+                        -0.2603785991668701,
+                        0.7375370264053345
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "VirtualCamera": {
+                    "blendTime": 1.0,
+                    "farClip": 1000.0,
+                    "fov": 45.0,
+                    "nearClip": 0.10000000149011612,
+                    "priority": 1
+                }
+            },
+            "id": 4294967297
+        },
+        {
+            "components": {
+                "DirectionalLight": {
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "groundColor": [
+                        0.10000000149011612,
+                        0.10000000149011612,
+                        0.05000000074505806,
+                        1.0
+                    ],
+                    "intensity": 6.599999904632568,
+                    "skyColor": [
+                        0.30000001192092896,
+                        0.4000000059604645,
+                        0.6000000238418579,
+                        1.0
+                    ]
+                },
+                "Name": {
+                    "name": "LightManager"
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.6633018255233765,
+                        -0.16796337068080902,
+                        0.15641210973262787,
+                        0.7122880220413208
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967298
+        },
+        {
+            "components": {
+                "CameraBodyFPS": {
+                    "Target Entity ID": 4294967303,
+                    "currentPitch": -71.49998474121094,
+                    "currentYaw": 31963.962890625,
+                    "eyeOffset": [
+                        0.0,
+                        1.7000000476837158,
+                        0.0
+                    ],
+                    "mouseSensitivity": 3.5
+                },
+                "Name": {
+                    "name": "FPSCamera"
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        1.4388378858566284,
+                        1.4995265007019043,
+                        -3.8301665782928467
+                    ],
+                    "rotation": [
+                        0.4602864980697632,
+                        0.4998794496059418,
+                        0.359893262386322,
+                        -0.639322817325592
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "VirtualCamera": {
+                    "blendTime": 0.20000000298023224,
+                    "farClip": 1000.0,
+                    "fov": 60.29999923706055,
+                    "nearClip": 0.10000000149011612,
+                    "priority": 0
+                }
+            },
+            "id": 4294967299
+        },
+        {
+            "components": {
+                "CameraBodyTPS": {
+                    "Target Entity ID": 4294967303,
+                    "currentPitch": 8.000032424926758,
+                    "currentYaw": -6640.54296875,
+                    "distance": 8.5,
+                    "lookSpeedX": 300.0,
+                    "lookSpeedY": 200.0,
+                    "targetOffset": [
+                        0.0,
+                        0.800000011920929,
+                        0.0
+                    ]
+                },
+                "CameraLockOn": {
+                    "Last Target Entity ID": 4294967306,
+                    "Target Entity ID": 18446744073709551615,
+                    "focusWeight": 0.4000000059604645,
+                    "maxDistance": 28.0,
+                    "maxFov": 65.0,
+                    "minDistance": 4.0,
+                    "minFov": 45.0,
+                    "rotationDamping": 10.0,
+                    "sideOffset": 1.5
+                },
+                "Name": {
+                    "name": "TPSCamera"
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        9.374127388000488,
+                        -0.5863087773323059,
+                        -1.024034023284912
+                    ],
+                    "rotation": [
+                        0.04036950692534447,
+                        0.8145164251327515,
+                        0.057096369564533234,
+                        -0.5759099125862122
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "VirtualCamera": {
+                    "blendTime": 0.20000000298023224,
+                    "farClip": 1000.0,
+                    "fov": 60.00000762939453,
+                    "nearClip": 0.10000000149011612,
+                    "priority": 100
+                }
+            },
+            "id": 4294967300
+        },
+        {
+            "components": {
+                "EnemyTag": {
+                    "CanLockON": false
+                },
+                "JoltBoxCollider": {
+                    "halfExtent": [
+                        0.5,
+                        0.5,
+                        0.5
+                    ],
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "localRotationEuler": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                "Name": {
+                    "name": "Test04"
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        8.600000381469727,
+                        5.0,
+                        -4.599999904632568
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967301
+        },
+        {
+            "components": {
+                "BoneAttachmentComponent": {
+                    "boneName": "hand_r"
+                },
+                "BoundingBox": null,
+                "JoltCapsuleCollider": {
+                    "halfHeight": 0.6100000143051147,
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.4000000059604645
+                    ],
+                    "localRotationEuler": [
+                        -89.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.4000000059604645
+                },
+                "Material": null,
+                "Model": {
+                    "assetPath": "Data/Model/Weapon/cyber_sword_gltf/scene.gltf"
+                },
+                "Name": {
+                    "name": "Sword"
+                },
+                "Transform": {
+                    "Parent Entity ID": 4294967303,
+                    "isStatic": false,
+                    "position": [
+                        0.10000000149011612,
+                        0.05000000074505806,
+                        0.05000000074505806
+                    ],
+                    "rotation": [
+                        -0.5996140837669373,
+                        -0.3928022086620331,
+                        -0.42773255705833435,
+                        0.5506489872932434
+                    ],
+                    "scale": [
+                        0.15000000596046448,
+                        0.15000000596046448,
+                        0.15000000596046448
+                    ]
+                },
+                "Visibility": null
+            },
+            "id": 4294967302
+        },
+        {
+            "components": {
+                "AnimParameters": null,
+                "AnimStateMachine": {
+                    "graphPath": "Data/Animations/Node/PlayerB_AnimGraphNode.json"
+                },
+                "Animator": {
+                    "isLoop": true,
+                    "playbackSpeed": 1.0
+                },
+                "Blackboard": null,
+                "BoundingBox": null,
+                "CharacterMovementInput": null,
+                "CombatRosterComponent": {
+                    "count": 1,
+                    "entries": [
+                        {
+                            "id": 4294967302,
+                            "tag": "RightHand"
+                        }
+                    ]
+                },
+                "FPSPlayerViewComponent": {
+                    "baseFOV": 60.0,
+                    "fovInterpSpeed": 15.0,
+                    "idleBobAmount": 0.05000000074505806,
+                    "idleBobSpeed": 1.0,
+                    "runBobAmount": 0.25,
+                    "runBobSpeed": 12.0,
+                    "walkBobAmount": 0.15000000596046448,
+                    "walkBobSpeed": 8.0
+                },
+                "JoltCapsuleCollider": {
+                    "halfHeight": 0.5,
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "localRotationEuler": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "JoltCharacterConfig": {
+                    "characterMass": 70.0,
+                    "gravityScale": 1.0,
+                    "jumpSpeed": 12.0,
+                    "maxSlopeAngle": 46.0,
+                    "maxStepHeight": 0.5,
+                    "walkSpeed": 18.0
+                },
+                "JoltRigidbody": {
+                    "friction": 0.05000000074505806,
+                    "gravityFactor": 1.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": false,
+                    "motionType": 2,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "Material": null,
+                "Model": {
+                    "assetPath": "Data/Model/Player/SciFiSoldier.glb"
+                },
+                "ModifierComponent": null,
+                "ModifierStatusComponent": null,
+                "Motion": {
+                    "acceleration": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "angularVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "friction": 0.0,
+                    "maxSpeed": 100.0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                "Name": {
+                    "name": "Player_Model"
+                },
+                "StaminaComponent": {
+                    "consumeRate": 2.0,
+                    "fFOVMult": 0.8999999761581421,
+                    "fIdleBobAmt": 1.5,
+                    "fIdleBobSpd": 0.800000011920929,
+                    "fIdleTilt": 1.2000000476837158,
+                    "fMoveSpeedMult": 0.699999988079071,
+                    "fRecMult": 0.5,
+                    "fWalkBobAmt": 2.0,
+                    "fWalkBobSpd": 1.2999999523162842,
+                    "fWalkTilt": 2.0,
+                    "fatigueThreshold": 0.4000000059604645,
+                    "maxStamina": 100.0,
+                    "moveRecMult": 0.75,
+                    "recDelayTime": 0.6000000238418579,
+                    "recoveryRate": 12.0
+                },
+                "TPSPlayerComponent": {
+                    "DecideKey": "Decided",
+                    "LockOnChenge": "LockOnChenge",
+                    "LockOnKey": "LockOn",
+                    "TargetingKey": "Target",
+                    "dodgeKey": "Dodge",
+                    "guardKey": "Guard",
+                    "jumpKey": "Jump",
+                    "moveFB": "MoveFB",
+                    "moveLR": "MoveLR",
+                    "rotationSpeed": 15.0,
+                    "runSpeed": 15.0,
+                    "sprintKey": "Sprint",
+                    "walkSpeed": 10.0
+                },
+                "TPSPlayerStateComponent": {
+                    "LungeSpeed": 1.0,
+                    "attackDuration": 0.6000000238418579,
+                    "comboWindowStart": 0.10000000149011612,
+                    "dodgeDashSpeed": 45.0,
+                    "dodgeDuration": 0.25,
+                    "dodgeFriction": 2.0,
+                    "dodgeMaxTurnAngle": 0.7853981852531433,
+                    "dodgeStaminaCost": 15.0,
+                    "finishDuration": 1.0,
+                    "lockOnMaxRange": 50.0,
+                    "lockOnStaminaCost": 5.0,
+                    "lungeRange": 5.0,
+                    "maxComboCount": 4,
+                    "pauseDuration": 0.125,
+                    "warpInterval": 0.10000000149011612
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        1.4388381242752075,
+                        -0.2004738301038742,
+                        -3.830167055130005
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.9851490259170532,
+                        0.0,
+                        0.1716989427804947
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                },
+                "Visibility": null
+            },
+            "id": 4294967303
+        },
+        {
+            "components": {
+                "BoundingBox": null,
+                "JoltMeshCollider": {
+                    "isEnabled": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 0.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": false,
+                    "motionType": 0,
+                    "objectLayer": 0,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "Material": null,
+                "Model": {
+                    "assetPath": "Data/Model/Sponza/Sponza.gltf"
+                },
+                "Name": {
+                    "name": "Sponza"
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        10.0,
+                        10.0,
+                        10.0
+                    ]
+                },
+                "Visibility": null
+            },
+            "id": 4294967304
+        }
+    ]
+}

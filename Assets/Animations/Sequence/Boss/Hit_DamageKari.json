@@ -1,0 +1,35 @@
+{
+    "AnimSequence": {
+        "duration": 0.966666579246521,
+        "events": [],
+        "rootMotionCurve": {
+            "keys": [
+                {
+                    "time": 0.0,
+                    "value": 1.0
+                },
+                {
+                    "time": 1.0,
+                    "value": 1.0
+                }
+            ],
+            "name": "RootMotion"
+        },
+        "sequenceName": "",
+        "speedCurve": {
+            "keys": [
+                {
+                    "time": 0.0,
+                    "value": 1.0
+                },
+                {
+                    "time": 1.0,
+                    "value": 1.0
+                }
+            ],
+            "name": "Speed"
+        },
+        "targetAnimName": "Stun_Start_0",
+        "targetModelPath": ""
+    }
+}

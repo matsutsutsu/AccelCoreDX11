@@ -87,7 +87,7 @@ void InspectorWindow::DrawContents(EditorContext &context)
         DialogConfig cfg;
         cfg.title = "Save Prefab";
         cfg.filter = "JSON Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
-        cfg.defaultDir = "Data/Prefabs";
+        cfg.defaultDir = "Assets/Prefabs";
         cfg.ext = "json";
         cfg.historyKey = "PrefabSave"; // プレハブ保存用の履歴キー
 

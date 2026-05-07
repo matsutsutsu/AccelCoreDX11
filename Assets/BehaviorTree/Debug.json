@@ -1,0 +1,40 @@
+{
+    "assetId": 1,
+    "editor_links": [
+        {
+            "endPin": 5,
+            "id": 6,
+            "startPin": 3
+        }
+    ],
+    "editor_nodes": [
+        {
+            "actionId": 0,
+            "id": 2,
+            "inputPinId": 0,
+            "name": "ROOT",
+            "outputPinId": 3,
+            "posX": 0.0,
+            "posY": 0.0,
+            "type": 0
+        },
+        {
+            "actionId": 101,
+            "id": 4,
+            "inputPinId": 5,
+            "name": "アクション (Action)",
+            "outputPinId": 0,
+            "posX": -2.0,
+            "posY": 158.0,
+            "type": 4
+        }
+    ],
+    "last_id_counter": 6,
+    "nodes": [
+        {
+            "actionOrConditionId": 101,
+            "children": [],
+            "type": "Action"
+        }
+    ]
+}

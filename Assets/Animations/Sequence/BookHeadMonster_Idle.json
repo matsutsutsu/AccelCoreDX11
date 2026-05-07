@@ -1,0 +1,20 @@
+{
+    "AnimSequence": {
+        "sequenceName": "",
+        "targetModelPath": "",
+        "targetAnimName": "Idle",
+        "duration": 10.000000953674317,
+        "events": [
+            {
+                "time": 0.0,
+                "eventName": "HitBox_Start",
+                "stringParam": ""
+            },
+            {
+                "time": 0.5666666626930237,
+                "eventName": "HitBox_End",
+                "stringParam": ""
+            }
+        ]
+    }
+}

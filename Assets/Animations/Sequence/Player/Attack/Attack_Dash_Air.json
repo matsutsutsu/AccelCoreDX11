@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "Attack_Dash_Air",
+        "targetModelPath": "",
+        "targetAnimName": "Dash_Air_Attack_Seq_0",
+        "duration": 0.6666666865348816,
+        "events": []
+    }
+}

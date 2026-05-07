@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "Power_Attack_Start",
+        "targetModelPath": "",
+        "targetAnimName": "Power_Attack_Start_Seq_0",
+        "duration": 0.3333333432674408,
+        "events": []
+    }
+}

@@ -406,9 +406,6 @@
     <Filter Include="Source\Editor\Windows\AI">
       <UniqueIdentifier>{1ff0cdf0-5abd-45cf-ae35-e46ba9c7b987}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Game\Logics\AI\BehaviorTree\__Meta">
-      <UniqueIdentifier>{8ef38902-d889-483c-9b95-bbfdb73fdd31}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Game\Logics\AI\BehaviorTree\Data">
       <UniqueIdentifier>{562c3a01-244e-46ab-b064-571c92727868}</UniqueIdentifier>
     </Filter>
@@ -426,6 +423,9 @@
     </Filter>
     <Filter Include="Source\Game\System">
       <UniqueIdentifier>{5db5ed1f-d8d6-4b21-a130-a1f1281f64a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Game\Logics\AI\BehaviorTree\_Meta">
+      <UniqueIdentifier>{8ef38902-d889-483c-9b95-bbfdb73fdd31}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1512,6 +1512,12 @@
     <ClInclude Include="Source\Editor\Windows\UIEditorWindow.h">
       <Filter>Source\Editor\Windows\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Logics\AI\BehaviorTree\BossActionComponent.h">
+      <Filter>Source\Game\Logics\AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\AI\BehaviorTree\BossActionSystem.h">
+      <Filter>Source\Game\Logics\AI\BehaviorTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\implot-master\implot.cpp">
@@ -2172,7 +2178,7 @@
       <Filter>Source\Game\Logics\AI\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\BehaviorTreeComponentMeta.cpp">
-      <Filter>Source\Game\Logics\AI\BehaviorTree\__Meta</Filter>
+      <Filter>Source\Game\Logics\AI\BehaviorTree\_Meta</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Logics\Test\TestAnimationPlayerComponentMeta.cpp">
       <Filter>Source\Game\Logics\Test\TestAnimation</Filter>
@@ -2341,6 +2347,12 @@
     </ClCompile>
     <ClCompile Include="Source\Editor\Windows\UIEditorWindow.cpp">
       <Filter>Source\Editor\Windows\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\BossActionSystem.cpp">
+      <Filter>Source\Game\Logics\AI\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\BossActionComponentMeta.cpp">
+      <Filter>Source\Game\Logics\AI\BehaviorTree\_Meta</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

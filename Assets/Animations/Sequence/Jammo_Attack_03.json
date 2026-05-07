@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "Attack_03",
+        "targetModelPath": "",
+        "targetAnimName": "Attack",
+        "duration": 0.8000002503395081,
+        "events": []
+    }
+}

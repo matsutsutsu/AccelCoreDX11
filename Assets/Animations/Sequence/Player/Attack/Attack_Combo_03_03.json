@@ -1,0 +1,84 @@
+{
+    "AnimSequence": {
+        "duration": 1.933333158493042,
+        "events": [
+            {
+                "endTime": 1.5166666507720947,
+                "eventName": "BB_AcceptInput_True",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 0.0,
+                "stringParam": ""
+            },
+            {
+                "endTime": 0.5,
+                "eventName": "HitBox",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 0.20000000298023224,
+                "stringParam": "RightHand"
+            },
+            {
+                "endTime": 0.949999988079071,
+                "eventName": "HitBox",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 0.75,
+                "stringParam": "RightHand"
+            },
+            {
+                "endTime": 2.133333444595337,
+                "eventName": "BB_AttackNext_True",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 1.25,
+                "stringParam": ""
+            },
+            {
+                "endTime": 1.5166666507720947,
+                "eventName": "BB_AcceptInput_False",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 1.5166666507720947,
+                "stringParam": ""
+            },
+            {
+                "endTime": 2.133333444595337,
+                "eventName": "BB_AttackNext_False",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 2.133333444595337,
+                "stringParam": ""
+            }
+        ],
+        "rootMotionCurve": {
+            "keys": [
+                {
+                    "time": 0.0,
+                    "value": 1.0
+                },
+                {
+                    "time": 1.0,
+                    "value": 1.0
+                }
+            ],
+            "name": "RootMotion"
+        },
+        "sequenceName": "Attack_Combo_03",
+        "speedCurve": {
+            "keys": [
+                {
+                    "time": 0.0,
+                    "value": 1.0
+                },
+                {
+                    "time": 1.0,
+                    "value": 1.0
+                }
+            ],
+            "name": "Speed"
+        },
+        "targetAnimName": "Combo_Attack_03_03_Seq_0",
+        "targetModelPath": ""
+    }
+}

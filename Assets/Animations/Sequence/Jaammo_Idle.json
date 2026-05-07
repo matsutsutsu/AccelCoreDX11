@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "Jaamo_Idle",
+        "targetModelPath": "",
+        "targetAnimName": "Idle",
+        "duration": 1.6666663885116578,
+        "events": []
+    }
+}

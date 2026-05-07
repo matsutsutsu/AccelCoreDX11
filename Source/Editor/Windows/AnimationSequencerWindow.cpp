@@ -521,7 +521,7 @@ void AnimationSequencerWindow::DrawContents(EditorContext& context)
     if (ImGui::Button("Save JSON...")) {
         char filename[MAX_PATH] = {};
         if (Dialog::SaveFileName(filename, MAX_PATH, "JSON Files\0*.json\0", "Save Anim Sequence", "json",
-            "Data/Animations/Sequence", GetActiveWindow()) == DialogResult::OK) {
+            "Assets/Animations/Sequence", GetActiveWindow()) == DialogResult::OK) {
             namespace fs = std::filesystem;
             std::error_code ec;
             fs::path relPath = fs::relative(filename, fs::current_path(), ec);
@@ -546,7 +546,7 @@ void AnimationSequencerWindow::DrawContents(EditorContext& context)
     if (ImGui::Button("Load JSON...")) {
         char filename[MAX_PATH] = {};
         if (Dialog::OpenFileName(filename, MAX_PATH, "JSON Files\0*.json\0", "Load Anim Sequence",
-            "Data/Animations/Sequence", GetActiveWindow()) == DialogResult::OK) {
+            "Assets/Animations/Sequence", GetActiveWindow()) == DialogResult::OK) {
             namespace fs = std::filesystem;
             std::error_code ec;
             fs::path relPath = fs::relative(filename, fs::current_path(), ec);
@@ -800,7 +800,7 @@ void AnimationSequencerWindow::DrawContents(EditorContext& context)
                         : "Prefab Files\0*.json\0All Files\0*.*\0";
                     char filename[256] = {};
                     if (Dialog::OpenFileName(filename, 256, filter, "Select File",
-                        "Data/Animations/Sequence", GetActiveWindow()) == DialogResult::OK) {
+                        "Assets/Animations/Sequence", GetActiveWindow()) == DialogResult::OK) {
                         namespace fs = std::filesystem;
                         std::error_code ec;
                         std::string finalPath = fs::relative(filename, fs::current_path(), ec).generic_string();

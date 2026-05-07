@@ -461,7 +461,7 @@ void DroneFormationSystem::OnGui() {
 
                 // 指定された数だけ生成
                 for (int i = 0; i < m_guiDroneCount; ++i) {
-                    EntityID droneId = Prefab::SpawnPrefab(*_world, "Data/Prefabs/Enemy/Drone.json");
+                    EntityID droneId = Prefab::SpawnPrefab(*_world, "Assets/Prefabs/Enemy/Drone.json");
                     auto droneRef = CCL::ECS::Core::EntityRef(_world, droneId);
 
                     droneRef.Set<TransformComponent>({ .position = spawnBasePos });

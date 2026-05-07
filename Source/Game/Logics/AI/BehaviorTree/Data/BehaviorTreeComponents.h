@@ -37,9 +37,9 @@ struct BehaviorTreeComponent {
     // --- 巨大なオブジェクト群 (ポインタ/コンテナ系) ---
     std::shared_ptr<BTAsset> sharedAsset;
 
-    std::string assetPath = "Data/BehaviorTree/BossAI.json";
+    std::string assetPath = "Assets/BehaviorTree/BossAI.json";
     std::string loadedAssetPath = "";
-    std::string phase2AssetPath = "Data/BehaviorTree/BossAI_Phase2.json";
+    std::string phase2AssetPath = "Assets/BehaviorTree/BossAI_Phase2.json";
     std::string lastFrameTreeLog = "";
 
     std::vector<BTDebugState> debugNodeStates;

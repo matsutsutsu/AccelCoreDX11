@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "LevelStart",
+        "targetModelPath": "",
+        "targetAnimName": "LevelStart",
+        "duration": 5.0,
+        "events": []
+    }
+}

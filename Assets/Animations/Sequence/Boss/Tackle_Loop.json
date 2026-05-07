@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "",
+        "targetModelPath": "",
+        "targetAnimName": "Travel_Fwd_Loop",
+        "duration": 3.0,
+        "events": []
+    }
+}

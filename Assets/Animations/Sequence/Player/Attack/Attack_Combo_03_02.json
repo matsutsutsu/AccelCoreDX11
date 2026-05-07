@@ -1,0 +1,76 @@
+{
+    "AnimSequence": {
+        "duration": 1.4166666269302368,
+        "events": [
+            {
+                "endTime": 1.2999999523162842,
+                "eventName": "BB_AcceptInput_True",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 0.0,
+                "stringParam": ""
+            },
+            {
+                "endTime": 0.3499999940395355,
+                "eventName": "HitBox",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 0.10000000149011612,
+                "stringParam": "RightHand"
+            },
+            {
+                "endTime": 1.1333333253860474,
+                "eventName": "BB_AttackNext_True",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 0.5666666626930237,
+                "stringParam": ""
+            },
+            {
+                "endTime": 1.1333333253860474,
+                "eventName": "BB_AttackNext_False",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 1.1333333253860474,
+                "stringParam": ""
+            },
+            {
+                "endTime": 1.2999999523162842,
+                "eventName": "BB_AcceptInput_False",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 1.2999999523162842,
+                "stringParam": ""
+            }
+        ],
+        "rootMotionCurve": {
+            "keys": [
+                {
+                    "time": 0.0,
+                    "value": 1.0
+                },
+                {
+                    "time": 1.0,
+                    "value": 1.0
+                }
+            ],
+            "name": "RootMotion"
+        },
+        "sequenceName": "Attack_Comb_02",
+        "speedCurve": {
+            "keys": [
+                {
+                    "time": 0.0,
+                    "value": 1.0
+                },
+                {
+                    "time": 1.0,
+                    "value": 1.0
+                }
+            ],
+            "name": "Speed"
+        },
+        "targetAnimName": "Combo_Attack_03_02_Seq_0",
+        "targetModelPath": ""
+    }
+}

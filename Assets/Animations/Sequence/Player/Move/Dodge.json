@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "Dodge",
+        "targetModelPath": "",
+        "targetAnimName": "Dodge_Combat_to_Run_Fast_F_Seq_0",
+        "duration": 0.6666666865348816,
+        "events": []
+    }
+}

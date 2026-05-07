@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "Death",
+        "targetModelPath": "",
+        "targetAnimName": "Hit_Combat_Death_Seq_0",
+        "duration": 2.9666666984558107,
+        "events": []
+    }
+}

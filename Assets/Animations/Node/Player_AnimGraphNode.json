@@ -1,0 +1,471 @@
+{
+    "entryPosX": -307.0,
+    "entryPosY": -470.0,
+    "entryStateHash": 1722289461,
+    "states": [
+        {
+            "isLoop": true,
+            "nodePosX": 141.0,
+            "nodePosY": -473.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Player/Move/Idle.json",
+            "sequenceName": "Idle",
+            "speedCurveName": "",
+            "stateHash": 1722289461,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 1,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.75
+                        }
+                    ],
+                    "targetStateHash": 1705511842
+                },
+                {
+                    "blendDuration": 0.019999999552965164,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 4112963184,
+                            "paramName": "Dodge",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1688734223
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 240607861,
+                            "paramName": "Attack_1",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1671956604
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 236909357,
+                            "paramName": "Jump",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 4230495222
+                }
+            ]
+        },
+        {
+            "isLoop": true,
+            "nodePosX": 461.0,
+            "nodePosY": -775.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Player/Move/Run_Loop.json",
+            "sequenceName": "Run",
+            "speedCurveName": "",
+            "stateHash": 1705511842,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 2,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.7400000095367432
+                        },
+                        {
+                            "op": 1,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1722289461
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 4112963184,
+                            "paramName": "Dodge",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1688734223
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 240607861,
+                            "paramName": "Attack_1",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1671956604
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 236909357,
+                            "paramName": "Jump",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 4230495222
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": 717.0,
+            "nodePosY": -601.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Player/Move/Dodge.json",
+            "sequenceName": "Dodge",
+            "speedCurveName": "",
+            "stateHash": 1688734223,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1722289461
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 1,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.75
+                        },
+                        {
+                            "op": 4,
+                            "paramHash": 2166136261,
+                            "paramName": "",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1705511842
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": 349.0,
+            "nodePosY": -153.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Player/Attack/Attack_Combo_03_01.json",
+            "sequenceName": "Attack_01",
+            "speedCurveName": "",
+            "stateHash": 1671956604,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 190275004,
+                            "paramName": "Attack_2",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1655178985
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 2166136261,
+                            "paramName": "",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1722289461
+                },
+                {
+                    "blendDuration": 0.10000000149011612,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 4112963184,
+                            "paramName": "Dodge",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1688734223
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": 573.0,
+            "nodePosY": -151.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Player/Attack/Attack_Combo_03_02.json",
+            "sequenceName": "Attack_02",
+            "speedCurveName": "",
+            "stateHash": 1655178985,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 207052623,
+                            "paramName": "Attack_3",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1638401366
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 2166136261,
+                            "paramName": "",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1722289461
+                },
+                {
+                    "blendDuration": 0.10000000149011612,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 4112963184,
+                            "paramName": "Dodge",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1688734223
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [],
+                    "targetStateHash": 1655178985
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": 877.0,
+            "nodePosY": -201.0,
+            "playbackSpeed": 1.2000000476837158,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Player/Attack/Attack_Combo_03_03.json",
+            "sequenceName": "Attack_03",
+            "speedCurveName": "",
+            "stateHash": 1638401366,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 156719766,
+                            "paramName": "Attack_4",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1621623747
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 2166136261,
+                            "paramName": "",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1722289461
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [],
+                    "targetStateHash": 1638401366
+                },
+                {
+                    "blendDuration": 0.10000000149011612,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 4112963184,
+                            "paramName": "Dodge",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1688734223
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": 1165.0,
+            "nodePosY": -153.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Player/Attack/Attack_Combo_03_04.json",
+            "sequenceName": "Attack_04",
+            "speedCurveName": "",
+            "stateHash": 1621623747,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 2166136261,
+                            "paramName": "",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1722289461
+                },
+                {
+                    "blendDuration": 0.10000000149011612,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 4112963184,
+                            "paramName": "Dodge",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1688734223
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 1,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 10.0
+                        }
+                    ],
+                    "targetStateHash": 1705511842
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": -83.0,
+            "nodePosY": -665.0,
+            "playbackSpeed": 0.6000000238418579,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Player/Move/Jump_Start.json",
+            "sequenceName": "Jump_Start",
+            "speedCurveName": "",
+            "stateHash": 4230495222,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 2166136261,
+                            "paramName": "",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 3736249836
+                },
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 1811853052,
+                            "paramName": "Landing",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 517565587
+                }
+            ]
+        },
+        {
+            "isLoop": true,
+            "nodePosX": -83.0,
+            "nodePosY": -953.0,
+            "playbackSpeed": 0.8500000238418579,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Player/Move/Jump_Loop.json",
+            "sequenceName": "Jump_Loop",
+            "speedCurveName": "",
+            "stateHash": 3736249836,
+            "transitions": [
+                {
+                    "blendDuration": 0.41999998688697815,
+                    "conditions": [
+                        {
+                            "op": 0,
+                            "paramHash": 737641368,
+                            "paramName": "IsFalling",
+                            "threshold": 1.0
+                        }
+                    ],
+                    "targetStateHash": 517565587
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": 189.0,
+            "nodePosY": -1017.0,
+            "playbackSpeed": 1.0,
+            "rootMotionCurveName": "",
+            "sequenceFilePath": "Data/Animations/Sequence/Player/Move/Jump_End.json",
+            "sequenceName": "Jump_Land",
+            "speedCurveName": "",
+            "stateHash": 517565587,
+            "transitions": [
+                {
+                    "blendDuration": 0.20000000298023224,
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 2166136261,
+                            "paramName": "",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1722289461
+                }
+            ]
+        }
+    ]
+}

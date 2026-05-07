@@ -16,9 +16,6 @@ class SceneInitializer {
     // カメラテスト
     static void SpawnCameraTest(CCL::ECS::Core::World &world, ID3D11Device *device, int count);
 
-    static void SpawnFPSPlayer(CCL::ECS::Core::World& world);
-    static void SpawnTPSPlayer(CCL::ECS::Core::World& world);
-
 
     // ボスとドローン群の生成テスト環境
     static void SpawnBossAndDronesTest(CCL::ECS::Core::World& world,int count);

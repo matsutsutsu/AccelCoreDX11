@@ -427,6 +427,8 @@
     <ClInclude Include="Source\Engine\UI\Widgets\UIText.h" />
     <ClInclude Include="Source\Game\Core\AllComponents.h" />
     <ClInclude Include="Source\Game\Core\SystemPriority.h" />
+    <ClInclude Include="Source\Game\Logics\AI\BehaviorTree\BossActionComponent.h" />
+    <ClInclude Include="Source\Game\Logics\AI\BehaviorTree\BossActionSystem.h" />
     <ClInclude Include="Source\Game\Logics\AI\BehaviorTree\BossAISystem.h" />
     <ClInclude Include="Source\Game\Logics\AI\BehaviorTree\Data\ActionRegistry.h" />
     <ClInclude Include="Source\Game\Logics\AI\BehaviorTree\Data\BehaviorTreeBuilder.h" />
@@ -724,6 +726,8 @@
     <ClCompile Include="Source\Engine\UI\UIManager.cpp" />
     <ClCompile Include="Source\Game\Core\GamePlayComponentMeta.cpp" />
     <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\BehaviorTreeComponentMeta.cpp" />
+    <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\BossActionComponentMeta.cpp" />
+    <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\BossActionSystem.cpp" />
     <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\BossAISystem.cpp" />
     <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\Data\BehaviorTreeBuilder.cpp" />
     <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\Data\BehaviorTreeLoader.cpp" />

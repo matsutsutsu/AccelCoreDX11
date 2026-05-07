@@ -1,0 +1,60 @@
+{
+    "AnimSequence": {
+        "duration": 2.066666603088379,
+        "events": [
+            {
+                "endTime": 0.9166666865348816,
+                "eventName": "HitBox",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 0.4166666567325592,
+                "stringParam": "RightHand"
+            },
+            {
+                "endTime": 2.7833333015441895,
+                "eventName": "BB_AcceptInput_True",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 0.8999999761581421,
+                "stringParam": ""
+            },
+            {
+                "endTime": 2.7833333015441895,
+                "eventName": "BB_AcceptInput_False",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 2.7833333015441895,
+                "stringParam": ""
+            }
+        ],
+        "rootMotionCurve": {
+            "keys": [
+                {
+                    "time": 0.0,
+                    "value": 1.0
+                },
+                {
+                    "time": 1.0,
+                    "value": 1.0
+                }
+            ],
+            "name": "RootMotion"
+        },
+        "sequenceName": "Attack_Combo_04",
+        "speedCurve": {
+            "keys": [
+                {
+                    "time": 0.0,
+                    "value": 1.0
+                },
+                {
+                    "time": 1.0,
+                    "value": 1.0
+                }
+            ],
+            "name": "Speed"
+        },
+        "targetAnimName": "Combo_Attack_03_04_Seq_0",
+        "targetModelPath": ""
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "Dodge",
+        "targetModelPath": "",
+        "targetAnimName": "Jump-Flip",
+        "duration": 0.46666666865348818,
+        "events": []
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "Run_Start",
+        "targetModelPath": "",
+        "targetAnimName": "Run_Combat_Start_F_0_RM_Seq_0",
+        "duration": 0.5833333134651184,
+        "events": []
+    }
+}

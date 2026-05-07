@@ -1,0 +1,60 @@
+{
+    "AnimSequence": {
+        "duration": 1.7833331823349,
+        "events": [
+            {
+                "endTime": 0.5666666626930237,
+                "eventName": "HitBox",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 0.38333332538604736,
+                "stringParam": "RightHand"
+            },
+            {
+                "endTime": 1.2166666984558105,
+                "eventName": "BB_AcceptInput_True",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 0.5,
+                "stringParam": ""
+            },
+            {
+                "endTime": 1.2166666984558105,
+                "eventName": "BB_AcceptInput_False",
+                "floatParam1": 0.0,
+                "floatParam2": 0.0,
+                "startTime": 1.2166666984558105,
+                "stringParam": ""
+            }
+        ],
+        "rootMotionCurve": {
+            "keys": [
+                {
+                    "time": 0.0,
+                    "value": 1.0
+                },
+                {
+                    "time": 1.0,
+                    "value": 1.0
+                }
+            ],
+            "name": "RootMotion"
+        },
+        "sequenceName": "CounterAttack",
+        "speedCurve": {
+            "keys": [
+                {
+                    "time": 0.0,
+                    "value": 1.0
+                },
+                {
+                    "time": 1.0,
+                    "value": 1.0
+                }
+            ],
+            "name": "Speed"
+        },
+        "targetAnimName": "Run_Attack_02_Seq_0",
+        "targetModelPath": ""
+    }
+}

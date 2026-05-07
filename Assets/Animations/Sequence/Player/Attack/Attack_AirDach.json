@@ -1,0 +1,16 @@
+{
+    "AnimSequence": {
+        "sequenceName": "Air_Attack",
+        "targetModelPath": "",
+        "targetAnimName": "Dash_Air_Attack_Seq_0",
+        "duration": 1.2666666865348816,
+        "events": [
+            {
+                "startTime": 0.38333332538604739,
+                "endTime": 0.4833333194255829,
+                "eventName": "HitBox",
+                "stringParam": "RightHand"
+            }
+        ]
+    }
+}

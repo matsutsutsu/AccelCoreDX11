@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "Recall",
+        "targetModelPath": "",
+        "targetAnimName": "Recall",
+        "duration": 10.0,
+        "events": []
+    }
+}

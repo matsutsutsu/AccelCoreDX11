@@ -3,12 +3,35 @@
         {
             "Bindings": [
                 {
+                    "Device": "Keyboard",
+                    "Key": "E"
+                }
+            ],
+            "Name": "Dodge"
+        },
+        {
+            "Bindings": [
+                {
+                    "Device": "Mouse_Button",
+                    "Key": "BTN_RIGHT"
+                }
+            ],
+            "Name": "Target"
+        },
+        {
+            "Bindings": [
+                {
                     "Device": "Mouse_Button",
                     "Key": "BTN_LEFT"
-                },
+                }
+            ],
+            "Name": "Decided"
+        },
+        {
+            "Bindings": [
                 {
-                    "Device": "GamePad_Button",
-                    "Key": "BTN_RIGHT_TRIGGER"
+                    "Device": "Keyboard",
+                    "Key": "F"
                 }
             ],
             "Name": "Attack"
@@ -17,11 +40,16 @@
             "Bindings": [
                 {
                     "Device": "Keyboard",
-                    "Key": "SPACE"
-                },
+                    "Key": "R"
+                }
+            ],
+            "Name": "LockOn"
+        },
+        {
+            "Bindings": [
                 {
-                    "Device": "GamePad_Button",
-                    "Key": "BTN_A"
+                    "Device": "Keyboard",
+                    "Key": "SPACE"
                 }
             ],
             "Name": "Jump"
@@ -31,42 +59,22 @@
         {
             "Bindings": [
                 {
-                    "Device": "Keyboard",
-                    "Key": "W",
-                    "Scale": 1.0
-                },
-                {
-                    "Device": "Keyboard",
-                    "Key": "S",
-                    "Scale": -1.0
-                },
-                {
                     "Device": "GamePad_AxisLY",
-                    "Key": "NONE",
+                    "Key": "W",
                     "Scale": 1.0
                 }
             ],
-            "Name": "Throttle"
+            "Name": "MoveFB"
         },
         {
             "Bindings": [
                 {
-                    "Device": "Keyboard",
-                    "Key": "D",
-                    "Scale": 1.0
-                },
-                {
-                    "Device": "Keyboard",
-                    "Key": "A",
-                    "Scale": -1.0
-                },
-                {
                     "Device": "GamePad_AxisLX",
-                    "Key": "NONE",
+                    "Key": "A",
                     "Scale": 1.0
                 }
             ],
-            "Name": "Steer"
+            "Name": "MoveLR"
         }
     ]
 }

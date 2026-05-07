@@ -1,0 +1,9 @@
+{
+    "AnimSequence": {
+        "sequenceName": "Attack_Air_To_Floor_End",
+        "targetModelPath": "",
+        "targetAnimName": "Attack_Air_To_Floor_End_01_Seq_0",
+        "duration": 1.4833333492279053,
+        "events": []
+    }
+}

@@ -1,0 +1,115 @@
+{
+    "entryPosX": 93.0,
+    "entryPosY": -230.0,
+    "entryStateHash": 1168775091,
+    "states": [
+        {
+            "isLoop": true,
+            "nodePosX": 93.0,
+            "nodePosY": -25.0,
+            "playbackSpeed": 1.0,
+            "sequenceFilePath": "Data/Animations/Sequence/BookHeadMonster_Idle.json",
+            "sequenceName": "Idle",
+            "speedCurveName": "",
+            "stateHash": 1168775091,
+            "transitions": [
+                {
+                    "conditions": [
+                        {
+                            "op": 1,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 1.0
+                        }
+                    ],
+                    "targetStateHash": 2371348074
+                },
+                {
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 2343121693,
+                            "paramName": "Attack",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 2343121693
+                }
+            ]
+        },
+        {
+            "isLoop": true,
+            "nodePosX": 509.0,
+            "nodePosY": -199.0,
+            "playbackSpeed": 1.0,
+            "sequenceFilePath": "Data/Animations/Sequence/BookHeadMonster_Run.json",
+            "sequenceName": "Run",
+            "speedCurveName": "",
+            "stateHash": 2371348074,
+            "transitions": [
+                {
+                    "conditions": [
+                        {
+                            "op": 2,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 1.0
+                        }
+                    ],
+                    "targetStateHash": 1168775091
+                },
+                {
+                    "conditions": [
+                        {
+                            "op": 3,
+                            "paramHash": 2343121693,
+                            "paramName": "Attack",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 2343121693
+                }
+            ]
+        },
+        {
+            "isLoop": false,
+            "nodePosX": 861.0,
+            "nodePosY": 57.0,
+            "playbackSpeed": 1.0,
+            "sequenceFilePath": "Data/Animations/Sequence/BookHeadMonster_Attack.json",
+            "sequenceName": "Attack",
+            "speedCurveName": "",
+            "stateHash": 2343121693,
+            "transitions": [
+                {
+                    "conditions": [
+                        {
+                            "op": 4,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 1168775091
+                },
+                {
+                    "conditions": [
+                        {
+                            "op": 1,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 1.0
+                        },
+                        {
+                            "op": 4,
+                            "paramHash": 174817312,
+                            "paramName": "Speed",
+                            "threshold": 0.0
+                        }
+                    ],
+                    "targetStateHash": 2371348074
+                }
+            ]
+        }
+    ]
+}
