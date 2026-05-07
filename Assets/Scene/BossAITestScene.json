@@ -76,7 +76,7 @@
                     "freezeScale": 0.0,
                     "group": 0,
                     "hitStopTimer": 0.0,
-                    "localDt": 0.01600000075995922
+                    "localDt": 0.01666666753590107
                 },
                 "ToneMapConfig": {
                     "exposure": 0.4000000059604645
@@ -102,13 +102,13 @@
                     ]
                 }
             },
-            "id": 4294967317
+            "id": 4294967301
         },
         {
             "components": {
                 "CameraBodyFree": {
-                    "currentPitch": -16.399646759033203,
-                    "currentYaw": 76.999755859375,
+                    "currentPitch": -17.199634552001953,
+                    "currentYaw": 86.79979705810547,
                     "lookSpeed": 0.20000000298023224,
                     "moveSpeed": 20.177637100219727
                 },
@@ -125,15 +125,15 @@
                     "Parent Entity ID": 0,
                     "isStatic": false,
                     "position": [
-                        -16.606779098510742,
-                        6.0018792152404785,
-                        -7.635682582855225
+                        -27.245189666748047,
+                        9.072822570800781,
+                        -9.376324653625488
                     ],
                     "rotation": [
-                        0.11162036657333374,
-                        0.616148829460144,
-                        -0.08878645300865173,
-                        0.7746086120605469
+                        0.10864647477865219,
+                        0.6793612241744995,
+                        -0.10274150222539902,
+                        0.7184068560600281
                     ],
                     "scale": [
                         1.0,
@@ -149,1160 +149,7 @@
                     "priority": 100
                 }
             },
-            "id": 4294967301
-        },
-        {
-            "components": {
-                "JoltMeshCollider": {
-                    "isEnabled": true
-                },
-                "JoltRigidbody": {
-                    "friction": 0.20000000298023224,
-                    "gravityFactor": 1.0,
-                    "initialVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isSensor": false,
-                    "motionType": 0,
-                    "objectLayer": 0,
-                    "restitution": 0.0,
-                    "useCCD": false
-                },
-                "Material": null,
-                "Model": {
-                    "assetPath": "Assets/Models/Stage/ExampleStage.glb"
-                },
-                "Name": {
-                    "name": "ExampleStage"
-                },
-                "Time State": {
-                    "freezeScale": 0.0,
-                    "group": 0,
-                    "hitStopTimer": 0.0,
-                    "localDt": 0.01666666753590107
-                },
-                "Transform": {
-                    "Parent Entity ID": 0,
-                    "isStatic": false,
-                    "position": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            "id": 4294967303
-        },
-        {
-            "components": {
-                "DroneComponent": {
-                    "localIndex": 3,
-                    "moveSpeed": 40.0,
-                    "orbitRadius": 8.0,
-                    "ownerBossId": 4294967300,
-                    "totalDrones": 12
-                },
-                "HitboxComponent": {
-                    "damageAmount": 10.0,
-                    "hitStopDuration": 0.20999999344348907,
-                    "hitStopFreezeScale": 0.800000011920929,
-                    "isActive": true
-                },
-                "JoltRigidbody": {
-                    "friction": 0.20000000298023224,
-                    "gravityFactor": 0.0,
-                    "initialVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isSensor": true,
-                    "motionType": 2,
-                    "objectLayer": 1,
-                    "restitution": 0.0,
-                    "useCCD": false
-                },
-                "JoltSphereCollider": {
-                    "localOffset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "radius": 0.5
-                },
-                "Name": {
-                    "name": "Drone"
-                },
-                "Primitive": {
-                    "color": [
-                        1.0,
-                        0.48648643493652344,
-                        0.0,
-                        1.0
-                    ],
-                    "height": 1.0,
-                    "isWireframe": false,
-                    "radius": 0.5,
-                    "size": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "type": 1
-                },
-                "Time State": {
-                    "freezeScale": 0.20000000298023224,
-                    "group": 0,
-                    "hitStopTimer": 0.0,
-                    "localDt": 0.01666666753590107
-                },
-                "Transform": {
-                    "Parent Entity ID": 0,
-                    "isStatic": false,
-                    "position": [
-                        -2.802596928649634e-45,
-                        -0.12155827134847641,
-                        1.401298464324817e-45
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.8506507873535156,
-                        0.0,
-                        -0.5257312059402466
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            "id": 4294967308
-        },
-        {
-            "components": {
-                "DroneComponent": {
-                    "localIndex": 1,
-                    "moveSpeed": 40.0,
-                    "orbitRadius": 8.0,
-                    "ownerBossId": 4294967300,
-                    "totalDrones": 12
-                },
-                "HitboxComponent": {
-                    "damageAmount": 10.0,
-                    "hitStopDuration": 0.20999999344348907,
-                    "hitStopFreezeScale": 0.800000011920929,
-                    "isActive": true
-                },
-                "JoltRigidbody": {
-                    "friction": 0.20000000298023224,
-                    "gravityFactor": 0.0,
-                    "initialVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isSensor": true,
-                    "motionType": 2,
-                    "objectLayer": 1,
-                    "restitution": 0.0,
-                    "useCCD": false
-                },
-                "JoltSphereCollider": {
-                    "localOffset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "radius": 0.5
-                },
-                "Name": {
-                    "name": "Drone"
-                },
-                "Primitive": {
-                    "color": [
-                        1.0,
-                        0.48648643493652344,
-                        0.0,
-                        1.0
-                    ],
-                    "height": 1.0,
-                    "isWireframe": false,
-                    "radius": 0.5,
-                    "size": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "type": 1
-                },
-                "Time State": {
-                    "freezeScale": 0.20000000298023224,
-                    "group": 0,
-                    "hitStopTimer": 0.0,
-                    "localDt": 0.01666666753590107
-                },
-                "Transform": {
-                    "Parent Entity ID": 0,
-                    "isStatic": false,
-                    "position": [
-                        5.605193857299268e-45,
-                        -0.12185116112232208,
-                        -9.80908925027372e-45
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.25666797161102295,
-                        0.0,
-                        0.9664996266365051
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            "id": 4294967306
-        },
-        {
-            "components": {
-                "DroneComponent": {
-                    "localIndex": 4,
-                    "moveSpeed": 40.0,
-                    "orbitRadius": 8.0,
-                    "ownerBossId": 4294967300,
-                    "totalDrones": 12
-                },
-                "HitboxComponent": {
-                    "damageAmount": 10.0,
-                    "hitStopDuration": 0.20999999344348907,
-                    "hitStopFreezeScale": 0.800000011920929,
-                    "isActive": true
-                },
-                "JoltRigidbody": {
-                    "friction": 0.20000000298023224,
-                    "gravityFactor": 0.0,
-                    "initialVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isSensor": true,
-                    "motionType": 2,
-                    "objectLayer": 1,
-                    "restitution": 0.0,
-                    "useCCD": false
-                },
-                "JoltSphereCollider": {
-                    "localOffset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "radius": 0.5
-                },
-                "Name": {
-                    "name": "Drone"
-                },
-                "Primitive": {
-                    "color": [
-                        1.0,
-                        0.48648643493652344,
-                        0.0,
-                        1.0
-                    ],
-                    "height": 1.0,
-                    "isWireframe": false,
-                    "radius": 0.5,
-                    "size": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "type": 1
-                },
-                "Time State": {
-                    "freezeScale": 0.20000000298023224,
-                    "group": 0,
-                    "hitStopTimer": 0.0,
-                    "localDt": 0.01666666753590107
-                },
-                "Transform": {
-                    "Parent Entity ID": 0,
-                    "isStatic": false,
-                    "position": [
-                        -1.401298464324817e-45,
-                        -0.12190565466880798,
-                        5.605193857299268e-45
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.9925075769424438,
-                        0.0,
-                        -0.12218321859836578
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            "id": 4294967304
-        },
-        {
-            "components": {
-                "DroneComponent": {
-                    "localIndex": 0,
-                    "moveSpeed": 40.0,
-                    "orbitRadius": 8.0,
-                    "ownerBossId": 4294967300,
-                    "totalDrones": 12
-                },
-                "HitboxComponent": {
-                    "damageAmount": 10.0,
-                    "hitStopDuration": 0.20999999344348907,
-                    "hitStopFreezeScale": 0.800000011920929,
-                    "isActive": true
-                },
-                "JoltRigidbody": {
-                    "friction": 0.20000000298023224,
-                    "gravityFactor": 0.0,
-                    "initialVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isSensor": true,
-                    "motionType": 2,
-                    "objectLayer": 1,
-                    "restitution": 0.0,
-                    "useCCD": false
-                },
-                "JoltSphereCollider": {
-                    "localOffset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "radius": 0.5
-                },
-                "Name": {
-                    "name": "Drone"
-                },
-                "Primitive": {
-                    "color": [
-                        1.0,
-                        0.48648643493652344,
-                        0.0,
-                        1.0
-                    ],
-                    "height": 1.0,
-                    "isWireframe": false,
-                    "radius": 0.5,
-                    "size": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "type": 1
-                },
-                "Time State": {
-                    "freezeScale": 0.20000000298023224,
-                    "group": 0,
-                    "hitStopTimer": 0.0,
-                    "localDt": 0.01666666753590107
-                },
-                "Transform": {
-                    "Parent Entity ID": 0,
-                    "isStatic": false,
-                    "position": [
-                        0.0,
-                        -0.12193022668361664,
-                        8.407790785948902e-45
-                    ],
-                    "rotation": [
-                        0.0,
-                        1.0,
-                        0.0,
-                        -6.229852544947789e-08
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            "id": 4294967305
-        },
-        {
-            "components": {
-                "DroneComponent": {
-                    "localIndex": 2,
-                    "moveSpeed": 40.0,
-                    "orbitRadius": 8.0,
-                    "ownerBossId": 4294967300,
-                    "totalDrones": 12
-                },
-                "HitboxComponent": {
-                    "damageAmount": 10.0,
-                    "hitStopDuration": 0.20999999344348907,
-                    "hitStopFreezeScale": 0.800000011920929,
-                    "isActive": true
-                },
-                "JoltRigidbody": {
-                    "friction": 0.20000000298023224,
-                    "gravityFactor": 0.0,
-                    "initialVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isSensor": true,
-                    "motionType": 2,
-                    "objectLayer": 1,
-                    "restitution": 0.0,
-                    "useCCD": false
-                },
-                "JoltSphereCollider": {
-                    "localOffset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "radius": 0.5
-                },
-                "Name": {
-                    "name": "Drone"
-                },
-                "Primitive": {
-                    "color": [
-                        1.0,
-                        0.48648643493652344,
-                        0.0,
-                        1.0
-                    ],
-                    "height": 1.0,
-                    "isWireframe": false,
-                    "radius": 0.5,
-                    "size": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "type": 1
-                },
-                "Time State": {
-                    "freezeScale": 0.20000000298023224,
-                    "group": 0,
-                    "hitStopTimer": 0.0,
-                    "localDt": 0.01666666753590107
-                },
-                "Transform": {
-                    "Parent Entity ID": 0,
-                    "isStatic": false,
-                    "position": [
-                        -1.401298464324817e-45,
-                        -0.12197507917881012,
-                        -1.401298464324817e-45
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.38268348574638367,
-                        0.0,
-                        -0.9238795042037964
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            "id": 4294967307
-        },
-        {
-            "components": {
-                "DroneComponent": {
-                    "localIndex": 5,
-                    "moveSpeed": 40.0,
-                    "orbitRadius": 8.0,
-                    "ownerBossId": 4294967300,
-                    "totalDrones": 12
-                },
-                "HitboxComponent": {
-                    "damageAmount": 10.0,
-                    "hitStopDuration": 0.20999999344348907,
-                    "hitStopFreezeScale": 0.800000011920929,
-                    "isActive": true
-                },
-                "JoltRigidbody": {
-                    "friction": 0.20000000298023224,
-                    "gravityFactor": 0.0,
-                    "initialVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isSensor": true,
-                    "motionType": 2,
-                    "objectLayer": 1,
-                    "restitution": 0.0,
-                    "useCCD": false
-                },
-                "JoltSphereCollider": {
-                    "localOffset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "radius": 0.5
-                },
-                "Name": {
-                    "name": "Drone"
-                },
-                "Primitive": {
-                    "color": [
-                        1.0,
-                        0.48648643493652344,
-                        0.0,
-                        1.0
-                    ],
-                    "height": 1.0,
-                    "isWireframe": false,
-                    "radius": 0.5,
-                    "size": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "type": 1
-                },
-                "Time State": {
-                    "freezeScale": 0.20000000298023224,
-                    "group": 0,
-                    "hitStopTimer": 0.0,
-                    "localDt": 0.01666666753590107
-                },
-                "Transform": {
-                    "Parent Entity ID": 0,
-                    "isStatic": false,
-                    "position": [
-                        2.802596928649634e-45,
-                        -0.12197548896074295,
-                        1.401298464324817e-45
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.8506508469581604,
-                        0.0,
-                        -0.5257310271263123
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            "id": 4294967309
-        },
-        {
-            "components": {
-                "DroneComponent": {
-                    "localIndex": 6,
-                    "moveSpeed": 40.0,
-                    "orbitRadius": 8.0,
-                    "ownerBossId": 4294967300,
-                    "totalDrones": 12
-                },
-                "HitboxComponent": {
-                    "damageAmount": 10.0,
-                    "hitStopDuration": 0.20999999344348907,
-                    "hitStopFreezeScale": 0.800000011920929,
-                    "isActive": true
-                },
-                "JoltRigidbody": {
-                    "friction": 0.20000000298023224,
-                    "gravityFactor": 0.0,
-                    "initialVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isSensor": true,
-                    "motionType": 2,
-                    "objectLayer": 1,
-                    "restitution": 0.0,
-                    "useCCD": false
-                },
-                "JoltSphereCollider": {
-                    "localOffset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "radius": 0.5
-                },
-                "Name": {
-                    "name": "Drone"
-                },
-                "Primitive": {
-                    "color": [
-                        1.0,
-                        0.48648643493652344,
-                        0.0,
-                        1.0
-                    ],
-                    "height": 1.0,
-                    "isWireframe": false,
-                    "radius": 0.5,
-                    "size": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "type": 1
-                },
-                "Time State": {
-                    "freezeScale": 0.20000000298023224,
-                    "group": 0,
-                    "hitStopTimer": 0.0,
-                    "localDt": 0.01666666753590107
-                },
-                "Transform": {
-                    "Parent Entity ID": 0,
-                    "isStatic": false,
-                    "position": [
-                        5.605193857299268e-45,
-                        -0.121975839138031,
-                        4.203895392974451e-45
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.8944271802902222,
-                        0.0,
-                        0.44721364974975586
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            "id": 4294967310
-        },
-        {
-            "components": {
-                "DroneComponent": {
-                    "localIndex": 7,
-                    "moveSpeed": 40.0,
-                    "orbitRadius": 8.0,
-                    "ownerBossId": 4294967300,
-                    "totalDrones": 12
-                },
-                "HitboxComponent": {
-                    "damageAmount": 10.0,
-                    "hitStopDuration": 0.20999999344348907,
-                    "hitStopFreezeScale": 0.800000011920929,
-                    "isActive": true
-                },
-                "JoltRigidbody": {
-                    "friction": 0.20000000298023224,
-                    "gravityFactor": 0.0,
-                    "initialVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isSensor": true,
-                    "motionType": 2,
-                    "objectLayer": 1,
-                    "restitution": 0.0,
-                    "useCCD": false
-                },
-                "JoltSphereCollider": {
-                    "localOffset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "radius": 0.5
-                },
-                "Name": {
-                    "name": "Drone"
-                },
-                "Primitive": {
-                    "color": [
-                        1.0,
-                        0.48648643493652344,
-                        0.0,
-                        1.0
-                    ],
-                    "height": 1.0,
-                    "isWireframe": false,
-                    "radius": 0.5,
-                    "size": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "type": 1
-                },
-                "Time State": {
-                    "freezeScale": 0.20000000298023224,
-                    "group": 0,
-                    "hitStopTimer": 0.0,
-                    "localDt": 0.01666666753590107
-                },
-                "Transform": {
-                    "Parent Entity ID": 0,
-                    "isStatic": false,
-                    "position": [
-                        1.401298464324817e-45,
-                        -0.12197551876306534,
-                        -4.203895392974451e-45
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.16018225252628326,
-                        0.0,
-                        -0.9870874881744385
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            "id": 4294967311
-        },
-        {
-            "components": {
-                "DroneComponent": {
-                    "localIndex": 8,
-                    "moveSpeed": 40.0,
-                    "orbitRadius": 8.0,
-                    "ownerBossId": 4294967300,
-                    "totalDrones": 12
-                },
-                "HitboxComponent": {
-                    "damageAmount": 10.0,
-                    "hitStopDuration": 0.20999999344348907,
-                    "hitStopFreezeScale": 0.800000011920929,
-                    "isActive": true
-                },
-                "JoltRigidbody": {
-                    "friction": 0.20000000298023224,
-                    "gravityFactor": 0.0,
-                    "initialVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isSensor": true,
-                    "motionType": 2,
-                    "objectLayer": 1,
-                    "restitution": 0.0,
-                    "useCCD": false
-                },
-                "JoltSphereCollider": {
-                    "localOffset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "radius": 0.5
-                },
-                "Name": {
-                    "name": "Drone"
-                },
-                "Primitive": {
-                    "color": [
-                        1.0,
-                        0.48648643493652344,
-                        0.0,
-                        1.0
-                    ],
-                    "height": 1.0,
-                    "isWireframe": false,
-                    "radius": 0.5,
-                    "size": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "type": 1
-                },
-                "Time State": {
-                    "freezeScale": 0.20000000298023224,
-                    "group": 0,
-                    "hitStopTimer": 0.0,
-                    "localDt": 0.01666666753590107
-                },
-                "Transform": {
-                    "Parent Entity ID": 0,
-                    "isStatic": false,
-                    "position": [
-                        5.605193857299268e-45,
-                        -0.12197552621364594,
-                        -1.401298464324817e-45
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.6154122352600098,
-                        0.0,
-                        0.7882055044174194
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            "id": 4294967312
-        },
-        {
-            "components": {
-                "DroneComponent": {
-                    "localIndex": 9,
-                    "moveSpeed": 40.0,
-                    "orbitRadius": 8.0,
-                    "ownerBossId": 4294967300,
-                    "totalDrones": 12
-                },
-                "HitboxComponent": {
-                    "damageAmount": 10.0,
-                    "hitStopDuration": 0.20999999344348907,
-                    "hitStopFreezeScale": 0.800000011920929,
-                    "isActive": true
-                },
-                "JoltRigidbody": {
-                    "friction": 0.20000000298023224,
-                    "gravityFactor": 0.0,
-                    "initialVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isSensor": true,
-                    "motionType": 2,
-                    "objectLayer": 1,
-                    "restitution": 0.0,
-                    "useCCD": false
-                },
-                "JoltSphereCollider": {
-                    "localOffset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "radius": 0.5
-                },
-                "Name": {
-                    "name": "Drone"
-                },
-                "Primitive": {
-                    "color": [
-                        1.0,
-                        0.48648643493652344,
-                        0.0,
-                        1.0
-                    ],
-                    "height": 1.0,
-                    "isWireframe": false,
-                    "radius": 0.5,
-                    "size": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "type": 1
-                },
-                "Time State": {
-                    "freezeScale": 0.20000000298023224,
-                    "group": 0,
-                    "hitStopTimer": 0.0,
-                    "localDt": 0.01666666753590107
-                },
-                "Transform": {
-                    "Parent Entity ID": 0,
-                    "isStatic": false,
-                    "position": [
-                        -5.605193857299268e-45,
-                        -0.12197552621364594,
-                        -2.802596928649634e-45
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.5257310271263123,
-                        0.0,
-                        -0.8506508469581604
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            "id": 4294967313
-        },
-        {
-            "components": {
-                "DroneComponent": {
-                    "localIndex": 10,
-                    "moveSpeed": 40.0,
-                    "orbitRadius": 8.0,
-                    "ownerBossId": 4294967300,
-                    "totalDrones": 12
-                },
-                "HitboxComponent": {
-                    "damageAmount": 10.0,
-                    "hitStopDuration": 0.20999999344348907,
-                    "hitStopFreezeScale": 0.800000011920929,
-                    "isActive": true
-                },
-                "JoltRigidbody": {
-                    "friction": 0.20000000298023224,
-                    "gravityFactor": 0.0,
-                    "initialVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isSensor": true,
-                    "motionType": 2,
-                    "objectLayer": 1,
-                    "restitution": 0.0,
-                    "useCCD": false
-                },
-                "JoltSphereCollider": {
-                    "localOffset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "radius": 0.5
-                },
-                "Name": {
-                    "name": "Drone"
-                },
-                "Primitive": {
-                    "color": [
-                        1.0,
-                        0.48648643493652344,
-                        0.0,
-                        1.0
-                    ],
-                    "height": 1.0,
-                    "isWireframe": false,
-                    "radius": 0.5,
-                    "size": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "type": 1
-                },
-                "Time State": {
-                    "freezeScale": 0.20000000298023224,
-                    "group": 0,
-                    "hitStopTimer": 0.0,
-                    "localDt": 0.01666666753590107
-                },
-                "Transform": {
-                    "Parent Entity ID": 0,
-                    "isStatic": false,
-                    "position": [
-                        1.401298464324817e-45,
-                        -0.12197551876306534,
-                        -5.605193857299268e-45
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.12218329310417175,
-                        0.0,
-                        -0.9925075769424438
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            "id": 4294967314
-        },
-        {
-            "components": {
-                "DroneComponent": {
-                    "localIndex": 0,
-                    "moveSpeed": 40.0,
-                    "orbitRadius": 8.0,
-                    "ownerBossId": 4294967300,
-                    "totalDrones": 1
-                },
-                "HitboxComponent": {
-                    "damageAmount": 10.0,
-                    "hitStopDuration": 0.20999999344348907,
-                    "hitStopFreezeScale": 0.800000011920929,
-                    "isActive": true
-                },
-                "JoltRigidbody": {
-                    "friction": 0.20000000298023224,
-                    "gravityFactor": 0.0,
-                    "initialVelocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isSensor": true,
-                    "motionType": 2,
-                    "objectLayer": 1,
-                    "restitution": 0.0,
-                    "useCCD": false
-                },
-                "JoltSphereCollider": {
-                    "localOffset": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "radius": 0.5
-                },
-                "Name": {
-                    "name": "Drone"
-                },
-                "Primitive": {
-                    "color": [
-                        1.0,
-                        0.48648643493652344,
-                        0.0,
-                        1.0
-                    ],
-                    "height": 1.0,
-                    "isWireframe": false,
-                    "radius": 0.5,
-                    "size": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "type": 1
-                },
-                "Time State": {
-                    "freezeScale": 0.20000000298023224,
-                    "group": 0,
-                    "hitStopTimer": 0.0,
-                    "localDt": 0.01666666753590107
-                },
-                "Transform": {
-                    "Parent Entity ID": 0,
-                    "isStatic": false,
-                    "position": [
-                        2.802596928649634e-45,
-                        -0.12197697907686234,
-                        1.1210387714598537e-44
-                    ],
-                    "rotation": [
-                        0.0,
-                        0.9925075769424438,
-                        0.0,
-                        -0.12218321859836578
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            "id": 4294967315
-        },
-        {
-            "components": {
-                "Name": {
-                    "name": "TargetPlayer"
-                },
-                "Primitive": {
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "height": 1.0,
-                    "isWireframe": false,
-                    "radius": 0.5,
-                    "size": [
-                        0.30000001192092896,
-                        0.30000001192092896,
-                        0.30000001192092896
-                    ],
-                    "type": 0
-                },
-                "TPSPlayerComponent": {
-                    "DecideKey": "Decide",
-                    "LockOnChenge": "LockOnChenge",
-                    "LockOnKey": "lockOn",
-                    "TargetingKey": "Targeting",
-                    "dodgeKey": "Dodge",
-                    "guardKey": "Guard",
-                    "jumpKey": "Jump",
-                    "moveFB": "MoveFB",
-                    "moveLR": "MoveLR",
-                    "rotationSpeed": 15.0,
-                    "runSpeed": 15.0,
-                    "sprintKey": "Sprint",
-                    "walkSpeed": 10.0
-                },
-                "Time State": {
-                    "freezeScale": 0.0,
-                    "group": 0,
-                    "hitStopTimer": 0.0,
-                    "localDt": 0.01666666753590107
-                },
-                "Transform": {
-                    "Parent Entity ID": 0,
-                    "isStatic": false,
-                    "position": [
-                        0.0,
-                        0.800000011920929,
-                        -4.400000095367432
-                    ],
-                    "rotation": [
-                        7.450580152834618e-09,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            "id": 4294967316
+            "id": 4294967302
         },
         {
             "components": {
@@ -1381,15 +228,15 @@
                     "Parent Entity ID": 0,
                     "isStatic": false,
                     "position": [
-                        -0.0002508299658074975,
-                        -0.016238490119576454,
-                        0.0
+                        -0.0002500705304555595,
+                        -0.01738637313246727,
+                        -4.400122165679932
                     ],
                     "rotation": [
                         0.0,
-                        1.0,
+                        3.181233478244394e-05,
                         0.0,
-                        2.9124315915396437e-05
+                        1.0
                     ],
                     "scale": [
                         1.0,
@@ -1398,7 +245,1160 @@
                     ]
                 }
             },
-            "id": 4294967302
+            "id": 4294967317
+        },
+        {
+            "components": {
+                "JoltMeshCollider": {
+                    "isEnabled": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 1.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": false,
+                    "motionType": 0,
+                    "objectLayer": 0,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "Material": null,
+                "Model": {
+                    "assetPath": "Assets/Models/Stage/ExampleStage.glb"
+                },
+                "Name": {
+                    "name": "ExampleStage"
+                },
+                "Time State": {
+                    "freezeScale": 0.0,
+                    "group": 0,
+                    "hitStopTimer": 0.0,
+                    "localDt": 0.01666666753590107
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967303
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 1,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 8.0,
+                    "ownerBossId": 4294967299,
+                    "totalDrones": 12
+                },
+                "HitboxComponent": {
+                    "damageAmount": 10.0,
+                    "hitStopDuration": 0.20999999344348907,
+                    "hitStopFreezeScale": 0.800000011920929,
+                    "isActive": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 0.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": true,
+                    "motionType": 2,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "JoltSphereCollider": {
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "Name": {
+                    "name": "Drone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Time State": {
+                    "freezeScale": 0.20000000298023224,
+                    "group": 0,
+                    "hitStopTimer": 0.0,
+                    "localDt": 0.01666666753590107
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        -18.033084869384766,
+                        1.156653881072998,
+                        1.9940574169158936
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.7743269801139832,
+                        0.0,
+                        -0.6327857375144958
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 12884901896
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 0,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 8.0,
+                    "ownerBossId": 4294967317,
+                    "totalDrones": 12
+                },
+                "HitboxComponent": {
+                    "damageAmount": 10.0,
+                    "hitStopDuration": 0.20999999344348907,
+                    "hitStopFreezeScale": 0.800000011920929,
+                    "isActive": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 0.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": true,
+                    "motionType": 2,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "JoltSphereCollider": {
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "Name": {
+                    "name": "Drone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Time State": {
+                    "freezeScale": 0.20000000298023224,
+                    "group": 0,
+                    "hitStopTimer": 0.0,
+                    "localDt": 0.01666666753590107
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        2.891831636428833,
+                        6.5580949783325195,
+                        -1.3639731407165527
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.28068071603775024,
+                        0.0,
+                        0.959801197052002
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 12884901904
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 2,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 8.0,
+                    "ownerBossId": 4294967317,
+                    "totalDrones": 12
+                },
+                "HitboxComponent": {
+                    "damageAmount": 10.0,
+                    "hitStopDuration": 0.20999999344348907,
+                    "hitStopFreezeScale": 0.800000011920929,
+                    "isActive": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 0.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": true,
+                    "motionType": 2,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "JoltSphereCollider": {
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "Name": {
+                    "name": "Drone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Time State": {
+                    "freezeScale": 0.20000000298023224,
+                    "group": 0,
+                    "hitStopTimer": 0.0,
+                    "localDt": 0.01666666753590107
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        -1.1757875680923462,
+                        6.550504207611084,
+                        -0.39626169204711914
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.20905262231826782,
+                        0.0,
+                        0.9779044389724731
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 12884901907
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 3,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 8.0,
+                    "ownerBossId": 4294967317,
+                    "totalDrones": 12
+                },
+                "HitboxComponent": {
+                    "damageAmount": 10.0,
+                    "hitStopDuration": 0.20999999344348907,
+                    "hitStopFreezeScale": 0.800000011920929,
+                    "isActive": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 0.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": true,
+                    "motionType": 2,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "JoltSphereCollider": {
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "Name": {
+                    "name": "Drone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Time State": {
+                    "freezeScale": 0.20000000298023224,
+                    "group": 0,
+                    "hitStopTimer": 0.0,
+                    "localDt": 0.01666666753590107
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        -3.0028350353240967,
+                        6.542013168334961,
+                        -1.535064935684204
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.4421294629573822,
+                        0.0,
+                        0.8969513177871704
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 12884901906
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 4,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 8.0,
+                    "ownerBossId": 4294967317,
+                    "totalDrones": 12
+                },
+                "HitboxComponent": {
+                    "damageAmount": 10.0,
+                    "hitStopDuration": 0.20999999344348907,
+                    "hitStopFreezeScale": 0.800000011920929,
+                    "isActive": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 0.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": true,
+                    "motionType": 2,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "JoltSphereCollider": {
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "Name": {
+                    "name": "Drone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Time State": {
+                    "freezeScale": 0.20000000298023224,
+                    "group": 0,
+                    "hitStopTimer": 0.0,
+                    "localDt": 0.01666666753590107
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        -4.033092975616455,
+                        6.542013168334961,
+                        -3.4201979637145996
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.6484983563423157,
+                        0.0,
+                        0.7612160444259644
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 12884901905
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 5,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 8.0,
+                    "ownerBossId": 4294967317,
+                    "totalDrones": 12
+                },
+                "HitboxComponent": {
+                    "damageAmount": 10.0,
+                    "hitStopDuration": 0.20999999344348907,
+                    "hitStopFreezeScale": 0.800000011920929,
+                    "isActive": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 0.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": true,
+                    "motionType": 2,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "JoltSphereCollider": {
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "Name": {
+                    "name": "Drone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Time State": {
+                    "freezeScale": 0.20000000298023224,
+                    "group": 0,
+                    "hitStopTimer": 0.0,
+                    "localDt": 0.01666666753590107
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        -3.982757568359375,
+                        6.542013168334961,
+                        -5.567899703979492
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.8153009414672852,
+                        0.0,
+                        0.5790373682975769
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 12884901903
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 6,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 8.0,
+                    "ownerBossId": 4294967317,
+                    "totalDrones": 12
+                },
+                "HitboxComponent": {
+                    "damageAmount": 10.0,
+                    "hitStopDuration": 0.20999999344348907,
+                    "hitStopFreezeScale": 0.800000011920929,
+                    "isActive": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 0.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": true,
+                    "motionType": 2,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "JoltSphereCollider": {
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "Name": {
+                    "name": "Drone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Time State": {
+                    "freezeScale": 0.20000000298023224,
+                    "group": 0,
+                    "hitStopTimer": 0.0,
+                    "localDt": 0.01666666753590107
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        -2.8653054237365723,
+                        6.542013168334961,
+                        -7.402709007263184
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.9323610067367554,
+                        0.0,
+                        0.36152881383895874
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 12884901902
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 7,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 8.0,
+                    "ownerBossId": 4294967317,
+                    "totalDrones": 12
+                },
+                "HitboxComponent": {
+                    "damageAmount": 10.0,
+                    "hitStopDuration": 0.20999999344348907,
+                    "hitStopFreezeScale": 0.800000011920929,
+                    "isActive": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 0.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": true,
+                    "motionType": 2,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "JoltSphereCollider": {
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "Name": {
+                    "name": "Drone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Time State": {
+                    "freezeScale": 0.20000000298023224,
+                    "group": 0,
+                    "hitStopTimer": 0.0,
+                    "localDt": 0.01666666753590107
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        -0.9801716804504395,
+                        6.542013168334961,
+                        -8.432966232299805
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.9925345778465271,
+                        0.0,
+                        0.12196387350559235
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 12884901901
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 8,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 8.0,
+                    "ownerBossId": 4294967317,
+                    "totalDrones": 12
+                },
+                "HitboxComponent": {
+                    "damageAmount": 10.0,
+                    "hitStopDuration": 0.20999999344348907,
+                    "hitStopFreezeScale": 0.800000011920929,
+                    "isActive": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 0.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": true,
+                    "motionType": 2,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "JoltSphereCollider": {
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "Name": {
+                    "name": "Drone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Time State": {
+                    "freezeScale": 0.20000000298023224,
+                    "group": 0,
+                    "hitStopTimer": 0.0,
+                    "localDt": 0.01666666753590107
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        1.1675301790237427,
+                        6.542013168334961,
+                        -8.38262939453125
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.9567170739173889,
+                        0.0,
+                        0.2910197079181671
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 12884901900
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 9,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 8.0,
+                    "ownerBossId": 4294967317,
+                    "totalDrones": 12
+                },
+                "HitboxComponent": {
+                    "damageAmount": 10.0,
+                    "hitStopDuration": 0.20999999344348907,
+                    "hitStopFreezeScale": 0.800000011920929,
+                    "isActive": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 0.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": true,
+                    "motionType": 2,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "JoltSphereCollider": {
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "Name": {
+                    "name": "Drone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Time State": {
+                    "freezeScale": 0.20000000298023224,
+                    "group": 0,
+                    "hitStopTimer": 0.0,
+                    "localDt": 0.01666666753590107
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        3.002333164215088,
+                        6.542013168334961,
+                        -7.265180587768555
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.8561975359916687,
+                        0.0,
+                        0.5166485905647278
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 12884901899
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 10,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 8.0,
+                    "ownerBossId": 4294967317,
+                    "totalDrones": 12
+                },
+                "HitboxComponent": {
+                    "damageAmount": 10.0,
+                    "hitStopDuration": 0.20999999344348907,
+                    "hitStopFreezeScale": 0.800000011920929,
+                    "isActive": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 0.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": true,
+                    "motionType": 2,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "JoltSphereCollider": {
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "Name": {
+                    "name": "Drone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Time State": {
+                    "freezeScale": 0.20000000298023224,
+                    "group": 0,
+                    "hitStopTimer": 0.0,
+                    "localDt": 0.01666666753590107
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        4.032593727111816,
+                        6.542013168334961,
+                        -5.380041122436523
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.7034390568733215,
+                        0.0,
+                        0.7107555270195007
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 12884901898
+        },
+        {
+            "components": {
+                "DroneComponent": {
+                    "localIndex": 11,
+                    "moveSpeed": 40.0,
+                    "orbitRadius": 8.0,
+                    "ownerBossId": 4294967317,
+                    "totalDrones": 12
+                },
+                "HitboxComponent": {
+                    "damageAmount": 10.0,
+                    "hitStopDuration": 0.20999999344348907,
+                    "hitStopFreezeScale": 0.800000011920929,
+                    "isActive": true
+                },
+                "JoltRigidbody": {
+                    "friction": 0.20000000298023224,
+                    "gravityFactor": 0.0,
+                    "initialVelocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "isSensor": true,
+                    "motionType": 2,
+                    "objectLayer": 1,
+                    "restitution": 0.0,
+                    "useCCD": false
+                },
+                "JoltSphereCollider": {
+                    "localOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "radius": 0.5
+                },
+                "Name": {
+                    "name": "Drone"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        0.48648643493652344,
+                        0.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "type": 1
+                },
+                "Time State": {
+                    "freezeScale": 0.20000000298023224,
+                    "group": 0,
+                    "hitStopTimer": 0.0,
+                    "localDt": 0.01666666753590107
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        3.9822559356689453,
+                        6.542013168334961,
+                        -3.232339382171631
+                    ],
+                    "rotation": [
+                        0.0,
+                        0.5077627897262573,
+                        0.0,
+                        0.8614969253540039
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 12884901897
+        },
+        {
+            "components": {
+                "Name": {
+                    "name": "TargetPlayer"
+                },
+                "Primitive": {
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "height": 1.0,
+                    "isWireframe": false,
+                    "radius": 0.5,
+                    "size": [
+                        0.30000001192092896,
+                        0.30000001192092896,
+                        0.30000001192092896
+                    ],
+                    "type": 0
+                },
+                "TPSPlayerComponent": {
+                    "DecideKey": "Decide",
+                    "LockOnChenge": "LockOnChenge",
+                    "LockOnKey": "lockOn",
+                    "TargetingKey": "Targeting",
+                    "dodgeKey": "Dodge",
+                    "guardKey": "Guard",
+                    "jumpKey": "Jump",
+                    "moveFB": "MoveFB",
+                    "moveLR": "MoveLR",
+                    "rotationSpeed": 15.0,
+                    "runSpeed": 15.0,
+                    "sprintKey": "Sprint",
+                    "walkSpeed": 10.0
+                },
+                "Time State": {
+                    "freezeScale": 0.0,
+                    "group": 0,
+                    "hitStopTimer": 0.0,
+                    "localDt": 0.01666666753590107
+                },
+                "Transform": {
+                    "Parent Entity ID": 0,
+                    "isStatic": false,
+                    "position": [
+                        0.0,
+                        0.800000011920929,
+                        -4.400000095367432
+                    ],
+                    "rotation": [
+                        7.450580152834618e-09,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "id": 4294967316
         }
     ]
 }

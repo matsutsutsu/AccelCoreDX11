@@ -6,128 +6,173 @@ D:.
 Да   structure.txt
 Да   _dump_structure.bat
 Да   
+ДеДЯДЯДЯAnimations
+Да   ДеДЯДЯДЯCurve
+Да   Да       TestCurve_01.json
+Да   Да       
+Да   ДеДЯДЯДЯNode
+Да   Да       Boss_AnimGraphNode.json
+Да   Да       PlayerB_AnimGraphNode.json
+Да   Да       Player_AnimGraphNode.json
+Да   Да       
+Да   ДдДЯДЯДЯSequence
+Да       Да   BookHeadMonster_Attack.json
+Да       Да   BookHeadMonster_Idle.json
+Да       Да   BookHeadMonster_Run.json
+Да       Да   Jaammo_Dodge.json
+Да       Да   Jaammo_Idle.json
+Да       Да   Jammo_Attack_01.json
+Да       Да   Jammo_Attack_02.json
+Да       Да   Jammo_Attack_03.json
+Да       Да   Jammo_Run.json
+Да       Да   Muriel_Jump_Start_Big.json
+Да       Да   Muriel_LevelStrat.json
+Да       Да   Muriel_Recall.json
+Да       Да   
+Да       ДеДЯДЯДЯBoss
+Да       Да       BackStep_End.json
+Да       Да       BackStep_Loop.json
+Да       Да       BackStep_Start.json
+Да       Да       Hit_DamageKari.json
+Да       Да       Idle.json
+Да       Да       Jump_End.json
+Да       Да       Jump_Loop.json
+Да       Да       Jump_Start.json
+Да       Да       Tackle_End.json
+Да       Да       Tackle_Loop.json
+Да       Да       Tackle_Start.json
+Да       Да       Walk_F_Loop.json
+Да       Да       Walk_F_Start.json
+Да       Да       Walk_F_Stop.json
+Да       Да       
+Да       ДдДЯДЯДЯPlayer
+Да           ДеДЯДЯДЯAttack
+Да           Да       Attack_AirDach.json
+Да           Да       Attack_Air_To_Floor_End.json
+Да           Да       Attack_Air_To_Floor_Loop.json
+Да           Да       Attack_Air_To_Floor_Start.json
+Да           Да       Attack_Combo_03_01.json
+Да           Да       Attack_Combo_03_02.json
+Да           Да       Attack_Combo_03_03.json
+Да           Да       Attack_Combo_03_04.json
+Да           Да       Attack_Combo_05_01.json
+Да           Да       Attack_Combo_05_02.json
+Да           Да       Attack_Combo_05_03.json
+Да           Да       Attack_Combo_05_04.json
+Да           Да       Attack_CounterAttack.json
+Да           Да       Attack_Dash_Air.json
+Да           Да       Power_Attack_Loop.json
+Да           Да       Power_Attack_Start.json
+Да           Да       
+Да           ДдДЯДЯДЯMove
+Да                   Death.json
+Да                   Dodge.json
+Да                   Idle.json
+Да                   Jump_End.json
+Да                   Jump_Loop.json
+Да                   Jump_Start.json
+Да                   Run_Loop.json
+Да                   Run_Start.json
+Да                   Run_Stop.json
+Да                   
 ДеДЯДЯДЯAudio
-Да   Да   Fire.mp3
-Да   Да   Fire2.mp3
-Да   Да   Hit.wav
-Да   Да   Portal.mp3
-Да   Да   Sindou.mp3
-Да   Да   whip.mp3
+Да   Да   Master.bank
+Да   Да   Master.strings.bank
+Да   Да   sei_ge_kan_koro01.mp3
+Да   Да   sen_ge_taoreru05.mp3
 Да   Да   
 Да   ДеДЯДЯДЯBGM
 Да   Да       BossBGM.mp4
 Да   Да       GameBGM.mp3
 Да   Да       ShopBGM.mp3
 Да   Да       
-Да   ДеДЯДЯДЯSE
-Да   ДдДЯДЯДЯwav
-Да           BossBGM.wav
-Да           BossSlash2.wav
-Да           BossTackle.wav
-Да           BossVoice.wav
-Да           CameraShake.wav
-Да           Fire.wav
-Да           Fire2.wav
-Да           GameBGM.wav
-Да           Portal.wav
-Да           ShopBGM.wav
-Да           Sindou.wav
-Да           
+Да   ДдДЯДЯДЯFModProject
+Да       Да   FModProject.fspro
+Да       Да   
+Да       ДеДЯДЯДЯAssets
+Да       Да       sei_ge_kan_koro01.mp3
+Да       Да       
+Да       ДеДЯДЯДЯBuild
+Да       Да   ДдДЯДЯДЯDesktop
+Да       Да           Master.bank
+Да       Да           Master.strings.bank
+Да       Да           
+Да       ДдДЯДЯДЯMetadata
+Да           Да   Master.xml
+Да           Да   Mixer.xml
+Да           Да   Tags.xml
+Да           Да   Workspace.xml
+Да           Да   
+Да           ДеДЯДЯДЯAsset
+Да           Да       {7daec63a-8ea0-41e4-bd79-169bc9b40bc6}.xml
+Да           Да       
+Да           ДеДЯДЯДЯAudioFile
+Да           Да       {f96456e2-07c4-4c83-b439-fbe05992b82c}.xml
+Да           Да       
+Да           ДеДЯДЯДЯBank
+Да           Да       {d35f937f-7607-4f33-b2c6-99410e8cec2e}.xml
+Да           Да       
+Да           ДеДЯДЯДЯBankFolder
+Да           Да       {9a82d091-e7ea-40c0-8302-24fb44ba2e24}.xml
+Да           Да       
+Да           ДеДЯДЯДЯEffectPresetFolder
+Да           Да       {f39b2c34-299a-4a54-8652-2b1596889cde}.xml
+Да           Да       
+Да           ДеДЯДЯДЯEncodingSetting
+Да           Да       {ae9e26ef-663e-4a46-b5ed-fd90dfec11fa}.xml
+Да           Да       
+Да           ДеДЯДЯДЯEvent
+Да           Да       {3bd47c17-127c-4b6d-b1f6-aeb1c99b9dd3}.xml
+Да           Да       {47135933-8627-4431-a045-3829c623e768}.xml
+Да           Да       {b2400ba4-cbe7-4078-b65d-641a7f3e9739}.xml
+Да           Да       
+Да           ДеДЯДЯДЯEventFolder
+Да           Да       {509f32ab-ce67-4f19-80ea-b54aa7248fce}.xml
+Да           Да       
+Да           ДеДЯДЯДЯParameterPresetFolder
+Да           Да       {3a382e9e-8ff8-4ecc-bb86-c8f43e91fb5f}.xml
+Да           Да       
+Да           ДеДЯДЯДЯPlatform
+Да           Да       {6de4a7b3-7532-43a0-bbea-5bf07301779e}.xml
+Да           Да       
+Да           ДеДЯДЯДЯProfilerFolder
+Да           Да       {12068bdd-4718-4aba-877f-32bd9362d511}.xml
+Да           Да       
+Да           ДеДЯДЯДЯReturn
+Да           Да       {bacc163d-a428-4075-a8c3-96ae33ab735e}.xml
+Да           Да       
+Да           ДеДЯДЯДЯSandboxFolder
+Да           Да       {6667f0de-74fa-412c-a799-5337398a28ba}.xml
+Да           Да       
+Да           ДдДЯДЯДЯSnapshotGroup
+Да                   {11df7bab-209a-4125-9897-3e925502c8f7}.xml
+Да                   
+ДеДЯДЯДЯBehaviorTree
+Да       BossAI_Phase2.json
+Да       Debug.json
+Да       DebugCircle.json
+Да       TestBossAIGrapth.json
+Да       
+ДеДЯДЯДЯConfig
+Да       AudioConfig.json
+Да       InputConfig.json
+Да       
 ДеДЯДЯДЯFonts
 Да       ArialUni.ttf
 Да       font.fnt
 Да       font.png
+Да       RictyDiminished-Bold.ttf
+Да       RictyDiminished-BoldOblique.ttf
+Да       RictyDiminished-Oblique.ttf
+Да       RictyDiminished-Regular.ttf
 Да       
-ДеДЯДЯДЯGame
-Да   ДеДЯДЯДЯPrefabs
-Да   Да   ДеДЯДЯДЯCamera
-Да   Да   Да       DeathCamera.json
-Да   Да   Да       FollowCamera.json
-Да   Да   Да       FreeCamera.json
-Да   Да   Да       TitleCamera.json
-Да   Да   Да       
-Да   Да   ДеДЯДЯДЯEnemy
-Да   Да   Да       Boss.json
-Да   Да   Да       EnemyBoid.json
-Да   Да   Да       EnemyEvader.json
-Да   Да   Да       EnemyFire.json
-Да   Да   Да       EnemyJumper.json
-Да   Да   Да       EnemyPawn.json
-Да   Да   Да       EnemyTank.json
-Да   Да   Да       
-Да   Да   ДеДЯДЯДЯGamePlay
-Да   Да   Да       Boid.json
-Да   Да   Да       EnemyChaser.json
-Да   Да   Да       Player.json
-Да   Да   Да       
-Да   Да   ДеДЯДЯДЯLight
-Да   Да   Да       BossLighting.json
-Да   Да   Да       GameLighting - ГRГsБ[.json
-Да   Да   Да       GameLighting.json
-Да   Да   Да       LightingSetup.json
-Да   Да   Да       PlayerLight.json
-Да   Да   Да       PointLight.json
-Да   Да   Да       PortalLight.json
-Да   Да   Да       SpotLight.json
-Да   Да   Да       
-Да   Да   ДеДЯДЯДЯPrimitive
-Да   Да   Да       PrimBox.json
-Да   Да   Да       PrimCapusule.json
-Да   Да   Да       PrimCone.json
-Да   Да   Да       PrimCylinder.json
-Да   Да   Да       PrimSphere.json
-Да   Да   Да       
-Да   Да   ДеДЯДЯДЯTest
-Да   Да   Да       GPUParticle.json
-Да   Да   Да       PhysicsBall.json
-Да   Да   Да       RenderModel.json
-Да   Да   Да       TestSphere.json
-Да   Да   Да       
-Да   Да   ДдДЯДЯДЯWorld
-Да   Да       ДеДЯДЯДЯMap
-Да   Да       Да       Map_Floor.json
-Да   Да       Да       Map_Wall.json
-Да   Да       Да       Portal.json
-Да   Да       Да       
-Да   Да       ДдДЯДЯДЯStatic
-Да   Да               Stage.json
-Да   Да               StaticFloor.json
-Да   Да               
-Да   ДеДЯДЯДЯScenes
-Да   Да       ParticleScene.json
-Да   Да       TestScene.json
-Да   Да       
-Да   ДеДЯДЯДЯScripts
-Да   Да       BossAI.lua
-Да   Да       PortalLogic.lua
-Да   Да       Test.lua
-Да   Да       
-Да   ДдДЯДЯДЯWorld
-Да       ДеДЯДЯДЯStage
-Да       Да       ShopStage.json
-Да       Да       Stage5_BossStage.json
-Да       Да       
-Да       ДдДЯДЯДЯTemplates
-Да               Room_Cross_15.json
-Да               Room_Eye_15.json
-Да               Room_FiveDice_20.json
-Да               Room_FourPillar_20.json
-Да               Room_Pillar_15.json
-Да               Room_SixDice_20.json
-Да               Room_Square_20.json
-Да               Stage1_NewRoom.json
-Да               
 ДеДЯДЯДЯModels
+Да   Да   structure.txt
+Да   Да   _dump_structure.bat
+Да   Да   
 Да   ДеДЯДЯДЯEnemy
 Да   Да   Да   Boss.cereal
 Да   Да   Да   Boss.glb
-Да   Да   Да   Enemy_Boid.glb
-Да   Да   Да   Enemy_Evader.glb
-Да   Да   Да   Enemy_Fire.glb
-Да   Да   Да   Enemy_Jumper.glb
-Да   Да   Да   Enemy_Pawn.cereal
-Да   Да   Да   Enemy_Pawn.glb
-Да   Да   Да   Enemy_Tank.glb
 Да   Да   Да   
 Да   Да   ДеДЯДЯДЯBoss_motion
 Да   Да   Да       Boss_death.fbx
@@ -136,6 +181,123 @@ D:.
 Да   Да   Да       Boss_slash.fbx
 Да   Да   Да       Boss_tackle.fbx
 Да   Да   Да       
+Да   Да   ДеДЯДЯДЯMuriel
+Да   Да   Да   Да   MI_Murial_Mouth_BaseColor.png
+Да   Да   Да   Да   MI_Murial_Mouth_MetallicRoughness.png
+Да   Да   Да   Да   MI_Murial_Mouth_Normal.png
+Да   Да   Да   Да   MI_Muriel_ArmsLegs_Muriel_GDC_BaseColor.png
+Да   Да   Да   Да   MI_Muriel_ArmsLegs_Muriel_GDC_MetallicRoughness.png
+Да   Да   Да   Да   MI_Muriel_ArmsLegs_Muriel_GDC_Occlusion.png
+Да   Да   Да   Да   MI_Muriel_Eye_New_Muriel_GDC_BaseColor.png
+Да   Да   Да   Да   MI_Muriel_Eye_New_Muriel_GDC_Emissive.png
+Да   Да   Да   Да   MI_Muriel_Eye_New_Muriel_GDC_Normal.png
+Да   Да   Да   Да   MI_Muriel_Face_BaseColor.png
+Да   Да   Да   Да   MI_Muriel_Face_MetallicRoughness.png
+Да   Да   Да   Да   MI_Muriel_Head_Helmet_Muriel_GDC_BaseColor.png
+Да   Да   Да   Да   MI_Muriel_Head_Helmet_Muriel_GDC_Emissive.png
+Да   Да   Да   Да   MI_Muriel_Head_Helmet_Muriel_GDC_MetallicRoughness.png
+Да   Да   Да   Да   MI_Muriel_Head_Helmet_Muriel_GDC_Occlusion.png
+Да   Да   Да   Да   MI_Muriel_UpperBody_Head_Muriel_GDC_BaseColor.png
+Да   Да   Да   Да   MI_Muriel_UpperBody_Head_Muriel_GDC_Emissive.png
+Да   Да   Да   Да   MI_Muriel_UpperBody_Head_Muriel_GDC_MetallicRoughness.png
+Да   Да   Да   Да   MI_Muriel_UpperBody_Head_Muriel_GDC_Occlusion.png
+Да   Да   Да   Да   MI_Muriel_Wings_Muriel_GDC_BaseColor.png
+Да   Да   Да   Да   MI_Muriel_Wings_Muriel_GDC_MetallicRoughness.png
+Да   Да   Да   Да   MI_Muriel_Wings_Muriel_GDC_Occlusion.png
+Да   Да   Да   Да   Muriel.bin
+Да   Да   Да   Да   Muriel.cereal
+Да   Да   Да   Да   Muriel.gltf
+Да   Да   Да   Да   T_Muriel_Head_N.png
+Да   Да   Да   Да   
+Да   Да   Да   ДдДЯДЯДЯAnimations
+Да   Да   Да           ConsecratedGround_Cast.bin
+Да   Да   Да           ConsecratedGround_Cast.gltf
+Да   Да   Да           ConsecratedGround_Prepare.bin
+Да   Да   Да           ConsecratedGround_Prepare.gltf
+Да   Да   Да           HitReact_Front.bin
+Да   Да   Да           HitReact_Front.gltf
+Да   Да   Да           Jump_Apex.bin
+Да   Да   Да           Jump_Apex.gltf
+Да   Да   Да           Jump_Fall.bin
+Да   Да   Да           Jump_Fall.gltf
+Да   Да   Да           Jump_Land_.bin
+Да   Да   Да           Jump_Land_.gltf
+Да   Да   Да           Jump_Start_.bin
+Да   Да   Да           Jump_Start_.gltf
+Да   Да   Да           Knock_Back_Fwd.bin
+Да   Да   Да           Knock_Back_Fwd.gltf
+Да   Да   Да           LifeLock_Fire.bin
+Да   Да   Да           LifeLock_Fire.gltf
+Да   Да   Да           LifeLock_Jog_Additive.bin
+Да   Да   Да           LifeLock_Jog_Additive.gltf
+Да   Да   Да           LifeLock_Start.bin
+Да   Да   Да           LifeLock_Start.gltf
+Да   Да   Да           MI_Murial_Mouth_BaseColor.png
+Да   Да   Да           MI_Murial_Mouth_MetallicRoughness.png
+Да   Да   Да           MI_Murial_Mouth_Normal.png
+Да   Да   Да           MI_Murial_Mouth_Specular.png
+Да   Да   Да           MI_Muriel_ArmsLegs_Muriel_GDC_BaseColor.png
+Да   Да   Да           MI_Muriel_ArmsLegs_Muriel_GDC_ClearCoatNormal.png
+Да   Да   Да           MI_Muriel_ArmsLegs_Muriel_GDC_ClearCoatRoughness.png
+Да   Да   Да           MI_Muriel_ArmsLegs_Muriel_GDC_MetallicRoughness.png
+Да   Да   Да           MI_Muriel_ArmsLegs_Muriel_GDC_Occlusion.png
+Да   Да   Да           MI_Muriel_ArmsLegs_Muriel_GDC_Specular.png
+Да   Да   Да           MI_Muriel_Eye_New_Muriel_GDC_BaseColor.png
+Да   Да   Да           MI_Muriel_Eye_New_Muriel_GDC_Emissive.png
+Да   Да   Да           MI_Muriel_Eye_New_Muriel_GDC_Normal.png
+Да   Да   Да           MI_Muriel_Face_BaseColor.png
+Да   Да   Да           MI_Muriel_Face_MetallicRoughness.png
+Да   Да   Да           MI_Muriel_Face_Specular.png
+Да   Да   Да           MI_Muriel_Head_Helmet_Muriel_GDC_BaseColor.png
+Да   Да   Да           MI_Muriel_Head_Helmet_Muriel_GDC_ClearCoatNormal.png
+Да   Да   Да           MI_Muriel_Head_Helmet_Muriel_GDC_ClearCoatRoughness.png
+Да   Да   Да           MI_Muriel_Head_Helmet_Muriel_GDC_Emissive.png
+Да   Да   Да           MI_Muriel_Head_Helmet_Muriel_GDC_MetallicRoughness.png
+Да   Да   Да           MI_Muriel_Head_Helmet_Muriel_GDC_Occlusion.png
+Да   Да   Да           MI_Muriel_Head_Helmet_Muriel_GDC_Specular.png
+Да   Да   Да           MI_Muriel_UpperBody_Head_Muriel_GDC_BaseColor.png
+Да   Да   Да           MI_Muriel_UpperBody_Head_Muriel_GDC_ClearCoatNormal.png
+Да   Да   Да           MI_Muriel_UpperBody_Head_Muriel_GDC_ClearCoatRoughness.png
+Да   Да   Да           MI_Muriel_UpperBody_Head_Muriel_GDC_Emissive.png
+Да   Да   Да           MI_Muriel_UpperBody_Head_Muriel_GDC_MetallicRoughness.png
+Да   Да   Да           MI_Muriel_UpperBody_Head_Muriel_GDC_Occlusion.png
+Да   Да   Да           MI_Muriel_UpperBody_Head_Muriel_GDC_Specular.png
+Да   Да   Да           MI_Muriel_Wings_Muriel_GDC_BaseColor.png
+Да   Да   Да           MI_Muriel_Wings_Muriel_GDC_ClearCoatNormal.png
+Да   Да   Да           MI_Muriel_Wings_Muriel_GDC_ClearCoatRoughness.png
+Да   Да   Да           MI_Muriel_Wings_Muriel_GDC_MetallicRoughness.png
+Да   Да   Да           MI_Muriel_Wings_Muriel_GDC_Occlusion.png
+Да   Да   Да           MI_Muriel_Wings_Muriel_GDC_Specular.png
+Да   Да   Да           Stun_Loop.bin
+Да   Да   Да           Stun_Loop.gltf
+Да   Да   Да           Stun_Start.bin
+Да   Да   Да           Stun_Start.gltf
+Да   Да   Да           Travel_Bwd.bin
+Да   Да   Да           Travel_Bwd.gltf
+Да   Да   Да           Travel_Bwd_Start.bin
+Да   Да   Да           Travel_Bwd_Start.gltf
+Да   Да   Да           Travel_Bwd_Stop.bin
+Да   Да   Да           Travel_Bwd_Stop.gltf
+Да   Да   Да           Travel_Fwd.bin
+Да   Да   Да           Travel_Fwd.gltf
+Да   Да   Да           Travel_Fwd_Start.bin
+Да   Да   Да           Travel_Fwd_Start.gltf
+Да   Да   Да           Travel_Fwd_Stop.bin
+Да   Да   Да           Travel_Fwd_Stop.gltf
+Да   Да   Да           Travel_Idle.bin
+Да   Да   Да           Travel_Idle.gltf
+Да   Да   Да           Travel_Idle_Start.bin
+Да   Да   Да           Travel_Idle_Start.gltf
+Да   Да   Да           Travel_Jump_Idle_Land.bin
+Да   Да   Да           Travel_Jump_Idle_Land.gltf
+Да   Да   Да           Travel_Prepare.bin
+Да   Да   Да           Travel_Prepare.gltf
+Да   Да   Да           T_Muriel_Head_N.png
+Да   Да   Да           Ultimate_Land.bin
+Да   Да   Да           Ultimate_Land.gltf
+Да   Да   Да           Ultimate_Prepare.bin
+Да   Да   Да           Ultimate_Prepare.gltf
+Да   Да   Да           
 Да   Да   ДдДЯДЯДЯTextures
 Да   Да           boss_Base.png
 Да   Да           Enemy_A_T_Base.png
@@ -144,164 +306,448 @@ D:.
 Да   Да           Enemy_D_T_Base.png
 Да   Да           Enemy_E_T_Base.png
 Да   Да           
-Да   ДеДЯДЯДЯMapChip
-Да   Да   Да   7.glb
-Да   Да   Да   Floor.glb
-Да   Да   Да   Hashira.glb
-Да   Да   Да   Kabe1.glb
-Да   Да   Да   torch.glb
-Да   Да   Да   Wall.cereal
-Да   Да   Да   Wall.glb
-Да   Да   Да   Yuka.glb
+Да   ДеДЯДЯДЯJammo
+Да   Да   Да   Jammo.bin
+Да   Да   Да   Jammo.gltf
 Да   Да   Да   
-Да   Да   ДеДЯДЯДЯ0
-Да   Да   Да   Да   tutorial.glb
-Да   Да   Да   Да   
-Да   Да   Да   ДдДЯДЯДЯTextures
-Да   Да   Да           standardSurface1_Base.png
-Да   Да   Да           standardSurface1_Emissive.png
-Да   Да   Да           standardSurface1_MetallicRoughness.png
-Да   Да   Да           standardSurface1_Normal.png
-Да   Да   Да           standardSurface1_Occlusion.png
-Да   Да   Да           
-Да   Да   ДеДЯДЯДЯ1
-Да   Да   Да   Да   1.glb
-Да   Да   Да   Да   
-Да   Да   Да   ДдДЯДЯДЯTextures
-Да   Да   Да           standardSurface1_Base.png
-Да   Да   Да           standardSurface1_Emissive.png
-Да   Да   Да           standardSurface1_MetallicRoughness.png
-Да   Да   Да           standardSurface1_Normal.png
-Да   Да   Да           standardSurface1_Occlusion.png
-Да   Да   Да           
-Да   Да   ДеДЯДЯДЯ2
-Да   Да   Да   Да   2.glb
-Да   Да   Да   Да   
-Да   Да   Да   ДдДЯДЯДЯTextures
-Да   Да   Да           standardSurface1_Base.png
-Да   Да   Да           standardSurface1_Emissive.png
-Да   Да   Да           standardSurface1_MetallicRoughness.png
-Да   Да   Да           standardSurface1_Normal.png
-Да   Да   Да           standardSurface1_Occlusion.png
-Да   Да   Да           
-Да   Да   ДеДЯДЯДЯ3
-Да   Да   Да   Да   3.glb
-Да   Да   Да   Да   
-Да   Да   Да   ДдДЯДЯДЯTextures
-Да   Да   Да           standardSurface1_Base.png
-Да   Да   Да           standardSurface1_Emissive.png
-Да   Да   Да           standardSurface1_MetallicRoughness.png
-Да   Да   Да           standardSurface1_Normal.png
-Да   Да   Да           standardSurface1_Occlusion.png
-Да   Да   Да           
-Да   Да   ДеДЯДЯДЯ4
-Да   Да   Да   Да   4.glb
-Да   Да   Да   Да   
-Да   Да   Да   ДдДЯДЯДЯTextures
-Да   Да   Да           standardSurface1_Base.png
-Да   Да   Да           standardSurface1_Emissive.png
-Да   Да   Да           standardSurface1_MetallicRoughness.png
-Да   Да   Да           standardSurface1_Normal.png
-Да   Да   Да           standardSurface1_Occlusion.png
-Да   Да   Да           
-Да   Да   ДеДЯДЯДЯ5
-Да   Да   Да   Да   5.glb
-Да   Да   Да   Да   
-Да   Да   Да   ДдДЯДЯДЯTextures
-Да   Да   Да           standardSurface1_Base.png
-Да   Да   Да           standardSurface1_Emissive.png
-Да   Да   Да           standardSurface1_MetallicRoughness.png
-Да   Да   Да           standardSurface1_Normal.png
-Да   Да   Да           standardSurface1_Occlusion.png
-Да   Да   Да           
-Да   Да   ДеДЯДЯДЯ6
-Да   Да   Да   Да   6.glb
-Да   Да   Да   Да   
-Да   Да   Да   ДдДЯДЯДЯTextures
-Да   Да   Да           standardSurface1_Base.png
-Да   Да   Да           standardSurface1_Emissive.png
-Да   Да   Да           standardSurface1_MetallicRoughness.png
-Да   Да   Да           standardSurface1_Normal.png
-Да   Да   Да           standardSurface1_Occlusion.png
-Да   Да   Да           
-Да   Да   ДеДЯДЯДЯNewModel
-Да   Да   Да   Да   Yuka.cereal
-Да   Да   Да   Да   Yuka.glb
-Да   Да   Да   Да   
-Да   Да   Да   ДдДЯДЯДЯTextures
-Да   Да   Да           standardSurface1_Base.png
-Да   Да   Да           standardSurface1_Emissive.png
-Да   Да   Да           standardSurface1_MetallicRoughness.png
-Да   Да   Да           standardSurface1_Normal.png
-Да   Да   Да           standardSurface1_Occlusion.png
-Да   Да   Да           
-Да   Да   ДеДЯДЯДЯTextures
-Да   Да   Да       standardSurface1_Base.png
-Да   Да   Да       standardSurface1_Emissive.png
-Да   Да   Да       standardSurface1_MetallicRoughness.png
-Да   Да   Да       standardSurface1_Normal.png
-Да   Да   Да       standardSurface1_Occlusion.png
-Да   Да   Да       
-Да   Да   ДдДЯДЯДЯTutorial
-Да   Да       Да   tutorial_click.glb
-Да   Да       Да   
-Да   Да       ДеДЯДЯДЯMove
-Да   Да       Да   Да   tutorial_move.glb
-Да   Да       Да   Да   
-Да   Да       Да   ДдДЯДЯДЯTextures
-Да   Да       Да           standardSurface1_Base.png
-Да   Да       Да           standardSurface1_Emissive.png
-Да   Да       Да           standardSurface1_MetallicRoughness.png
-Да   Да       Да           standardSurface1_Normal.png
-Да   Да       Да           standardSurface1_Occlusion.png
-Да   Да       Да           
-Да   Да       ДдДЯДЯДЯTextures
-Да   Да               standardSurface1_Base.png
-Да   Да               standardSurface1_Emissive.png
-Да   Да               standardSurface1_MetallicRoughness.png
-Да   Да               standardSurface1_Normal.png
-Да   Да               standardSurface1_Occlusion.png
-Да   Да               
+Да   Да   ДдДЯДЯДЯTextures
+Да   Да           jammo_eyes.png
+Да   Да           mixbot_low_mixamo_edit1_AlbedoTransparency.png
+Да   Да           
 Да   ДеДЯДЯДЯObject
+Да   Да   Да   Coin.cereal
 Да   Да   Да   Coin.glb
 Да   Да   Да   
 Да   Да   ДдДЯДЯДЯTextures
 Да   Да           standardSurface1_Base.png
 Да   Да           
 Да   ДеДЯДЯДЯPlayer
-Да   Да   Да   Player.cereal
-Да   Да   Да   Player.glb
-Да   Да   Да   Player_Tpose.fbx
-Да   Да   Да   Player_Tpose.glb
-Да   Да   Да   Player_Tpose_2.glb
+Да   Да   Да   MI_Head_A_BaseColor.png
+Да   Да   Да   MI_Head_A_Emissive.png
+Да   Да   Да   MI_Legs_A_BaseColor.png
+Да   Да   Да   MI_Legs_A_Emissive.png
+Да   Да   Да   MI_Torso_A_BaseColor.png
+Да   Да   Да   SciFiSoldier.bin
+Да   Да   Да   SciFiSoldier.cereal
+Да   Да   Да   SciFiSoldier.glb
+Да   Да   Да   SciFiSoldier.gltf
+Да   Да   Да   T_Head_Normal.png
+Да   Да   Да   T_Head_OcclusionRoughnessMetallic.png
+Да   Да   Да   T_Legs_Normal.png
+Да   Да   Да   T_Legs_OcclusionRoughnessMetallic.png
+Да   Да   Да   T_Torso_Normal.png
+Да   Да   Да   T_Torso_OcclusionRoughnessMetallic.png
 Да   Да   Да   
-Да   Да   ДеДЯДЯДЯmotion
-Да   Да   Да       Player_Attak.fbx
-Да   Да   Да       Player_Attak_2.fbx
-Да   Да   Да       Player_Death.fbx
-Да   Да   Да       Player_Death_2.fbx
-Да   Да   Да       Player_Idle.fbx
-Да   Да   Да       Player_Idle_2.fbx
-Да   Да   Да       Player_Run.fbx
-Да   Да   Да       Player_Run_2.fbx
-Да   Да   Да       
 Да   Да   ДдДЯДЯДЯTextures
-Да   Да           PC_T_Base.png
-Да   Да           Tsue_T_Base.png
+Да   Да           MI_Head_A_Base.png
+Да   Да           MI_Head_A_Emissive.png
+Да   Да           MI_Head_A_MetallicRoughness.png
+Да   Да           MI_Head_A_Normal.png
+Да   Да           MI_Head_A_Occlusion.png
+Да   Да           MI_Legs_A_Base.png
+Да   Да           MI_Legs_A_Emissive.png
+Да   Да           MI_Legs_A_MetallicRoughness.png
+Да   Да           MI_Legs_A_Normal.png
+Да   Да           MI_Legs_A_Occlusion.png
+Да   Да           MI_Torso_A_Base.png
+Да   Да           MI_Torso_A_MetallicRoughness.png
+Да   Да           MI_Torso_A_Normal.png
+Да   Да           MI_Torso_A_Occlusion.png
 Да   Да           
 Да   ДеДЯДЯДЯShape
+Да   Да       Sphere.cereal
 Да   Да       Sphere.glb
 Да   Да       
+Да   ДеДЯДЯДЯStage
+Да   Да   Да   ExampleStage.cereal
+Да   Да   Да   ExampleStage.glb
+Да   Да   Да   old_battle_arena.cereal
+Да   Да   Да   old_battle_arena.glb
+Да   Да   Да   
+Да   Да   ДдДЯДЯДЯTextures
+Да   Да           ProBuilderDefault_Base.png
+Да   Да           
+Да   ДеДЯДЯДЯTest
+Да   Да   Да   DamagedHelmet.cereal
+Да   Да   Да   DamagedHelmet.glb
+Да   Да   Да   Jammo.cereal
+Да   Да   Да   Jammo.glb
+Да   Да   Да   
+Да   Да   ДеДЯДЯДЯDamagedHelmet
+Да   Да   Да   Да   README.md
+Да   Да   Да   Да   
+Да   Да   Да   ДеДЯДЯДЯglTF
+Да   Да   Да   Да       DamagedHelmet.bin
+Да   Да   Да   Да       DamagedHelmet.cereal
+Да   Да   Да   Да       DamagedHelmet.gltf
+Да   Да   Да   Да       Default_albedo.jpg
+Да   Да   Да   Да       Default_AO.jpg
+Да   Да   Да   Да       Default_emissive.jpg
+Да   Да   Да   Да       Default_metalRoughness.jpg
+Да   Да   Да   Да       Default_normal.jpg
+Да   Да   Да   Да       
+Да   Да   Да   ДеДЯДЯДЯglTF-Binary
+Да   Да   Да   Да   Да   DamagedHelmet.glb
+Да   Да   Да   Да   Да   
+Да   Да   Да   Да   ДдДЯДЯДЯTextures
+Да   Да   Да   Да           Material_MR_Base.jpeg
+Да   Да   Да   Да           Material_MR_Emissive.jpeg
+Да   Да   Да   Да           Material_MR_MetallicRoughness.jpeg
+Да   Да   Да   Да           Material_MR_Normal.jpeg
+Да   Да   Да   Да           Material_MR_Occlusion.jpeg
+Да   Да   Да   Да           
+Да   Да   Да   ДеДЯДЯДЯglTF-Embedded
+Да   Да   Да   Да       DamagedHelmet.gltf
+Да   Да   Да   Да       
+Да   Да   Да   ДдДЯДЯДЯscreenshot
+Да   Да   Да           screenshot.png
+Да   Да   Да           
+Да   Да   ДеДЯДЯДЯDragonAttenuation
+Да   Да   Да   Да   README.md
+Да   Да   Да   Да   
+Да   Да   Да   ДеДЯДЯДЯglTF
+Да   Да   Да   Да       checkerboard.jpg
+Да   Да   Да   Да       DragonAttenuation.bin
+Да   Да   Да   Да       DragonAttenuation.gltf
+Да   Да   Да   Да       Dragon_ThicknessMap.jpg
+Да   Да   Да   Да       
+Да   Да   Да   ДеДЯДЯДЯglTF-Binary
+Да   Да   Да   Да   Да   DragonAttenuation.glb
+Да   Да   Да   Да   Да   
+Да   Да   Да   Да   ДдДЯДЯДЯTextures
+Да   Да   Да   Да           Cloth Backdrop_Base.jpeg
+Да   Да   Да   Да           
+Да   Да   Да   ДдДЯДЯДЯscreenshot
+Да   Да   Да           screenshot.jpg
+Да   Да   Да           screenshot_large.png
+Да   Да   Да           screenshot_pathTraced.png
+Да   Да   Да           surface_color.png
+Да   Да   Да           too-dark.png
+Да   Да   Да           
+Да   Да   ДеДЯДЯДЯSponza
+Да   Да   Да       10381718147657362067.jpg
+Да   Да   Да       10388182081421875623.jpg
+Да   Да   Да       11474523244911310074.jpg
+Да   Да   Да       11490520546946913238.jpg
+Да   Да   Да       11872827283454512094.jpg
+Да   Да   Да       11968150294050148237.jpg
+Да   Да   Да       1219024358953944284.jpg
+Да   Да   Да       12501374198249454378.jpg
+Да   Да   Да       13196865903111448057.jpg
+Да   Да   Да       13824894030729245199.jpg
+Да   Да   Да       13982482287905699490.jpg
+Да   Да   Да       14118779221266351425.jpg
+Да   Да   Да       14170708867020035030.jpg
+Да   Да   Да       14267839433702832875.jpg
+Да   Да   Да       14650633544276105767.jpg
+Да   Да   Да       15295713303328085182.jpg
+Да   Да   Да       15722799267630235092.jpg
+Да   Да   Да       16275776544635328252.png
+Да   Да   Да       16299174074766089871.jpg
+Да   Да   Да       16885566240357350108.jpg
+Да   Да   Да       17556969131407844942.jpg
+Да   Да   Да       17876391417123941155.jpg
+Да   Да   Да       2051777328469649772.jpg
+Да   Да   Да       2185409758123873465.jpg
+Да   Да   Да       2299742237651021498.jpg
+Да   Да   Да       2374361008830720677.jpg
+Да   Да   Да       2411100444841994089.jpg
+Да   Да   Да       2775690330959970771.jpg
+Да   Да   Да       2969916736137545357.jpg
+Да   Да   Да       332936164838540657.jpg
+Да   Да   Да       3371964815757888145.jpg
+Да   Да   Да       3455394979645218238.jpg
+Да   Да   Да       3628158980083700836.jpg
+Да   Да   Да       3827035219084910048.jpg
+Да   Да   Да       4477655471536070370.jpg
+Да   Да   Да       4601176305987539675.jpg
+Да   Да   Да       466164707995436622.jpg
+Да   Да   Да       4675343432951571524.jpg
+Да   Да   Да       4871783166746854860.jpg
+Да   Да   Да       4910669866631290573.jpg
+Да   Да   Да       4975155472559461469.jpg
+Да   Да   Да       5061699253647017043.png
+Да   Да   Да       5792855332885324923.jpg
+Да   Да   Да       5823059166183034438.jpg
+Да   Да   Да       6047387724914829168.jpg
+Да   Да   Да       6151467286084645207.jpg
+Да   Да   Да       6593109234861095314.jpg
+Да   Да   Да       6667038893015345571.jpg
+Да   Да   Да       6772804448157695701.jpg
+Да   Да   Да       7056944414013900257.jpg
+Да   Да   Да       715093869573992647.jpg
+Да   Да   Да       7268504077753552595.jpg
+Да   Да   Да       7441062115984513793.jpg
+Да   Да   Да       755318871556304029.jpg
+Да   Да   Да       759203620573749278.jpg
+Да   Да   Да       7645212358685992005.jpg
+Да   Да   Да       7815564343179553343.jpg
+Да   Да   Да       8006627369776289000.png
+Да   Да   Да       8051790464816141987.jpg
+Да   Да   Да       8114461559286000061.jpg
+Да   Да   Да       8481240838833932244.jpg
+Да   Да   Да       8503262930880235456.jpg
+Да   Да   Да       8747919177698443163.jpg
+Да   Да   Да       8750083169368950601.jpg
+Да   Да   Да       8773302468495022225.jpg
+Да   Да   Да       8783994986360286082.jpg
+Да   Да   Да       9288698199695299068.jpg
+Да   Да   Да       9916269861720640319.jpg
+Да   Да   Да       Sponza.bin
+Да   Да   Да       Sponza.cereal
+Да   Да   Да       Sponza.gltf
+Да   Да   Да       white.png
+Да   Да   Да       
+Да   Да   ДдДЯДЯДЯTextures
+Да   Да           jammo_eyes.png
+Да   Да           Material_MR_Base.jpeg
+Да   Да           Material_MR_Emissive.jpeg
+Да   Да           Material_MR_MetallicRoughness.jpeg
+Да   Да           Material_MR_Normal.jpeg
+Да   Да           Material_MR_Occlusion.jpeg
+Да   Да           mixbot_low_mixamo_edit1_AlbedoTransparency.png
+Да   Да           mixbot_low_mixamo_edit1_AO.png
+Да   Да           mixbot_low_mixamo_edit1_MetallicSmoothness.png
+Да   Да           mixbot_low_mixamo_edit1_Normal.png
+Да   Да           m_jammo_eyes_Base.png
+Да   Да           m_jammo_metal_Base.png
+Да   Да           
+Да   ДеДЯДЯДЯTextures
+Да   Да       LMBR_0000014_concrete_plaster_grey_01_Normal.png
+Да   Да       LMBR_000001d_wood_brown_01_Normal.png
+Да   Да       LMBR_0000021_metal_clean_01_Normal.png
+Да   Да       LMBR_0000026_wood_painted_grey_01_Normal.png
+Да   Да       LMBR_000002a_wood_painted_cian_01_Normal.png
+Да   Да       LMBR_000002b_awning_fabric_cian_Normal.png
+Да   Да       LMBR_000002c_awning_beams_10_Normal.png
+Да   Да       LMBR_000002d_wood_painted_red_01_Normal.png
+Да   Да       LMBR_0000033_awning_fabric_red_Normal.png
+Да   Да       LMBR_0000034_wood_painted_red_bright_Normal.png
+Да   Да       LMBR_000003a_Brick_Large_blend_01_Normal.png
+Да   Да       LMBR_000003b_Brick_Large_blend_02_Normal.png
+Да   Да       LMBR_000003c_Concrete_smooth_blend_03_Normal.png
+Да   Да       LMBR_000003e_details_dark_Normal.png
+Да   Да       LMBR_000003f_concrete_white_Normal.png
+Да   Да       LMBR_0000040_black_metal_Normal.png
+Да   Да       LMBR_0000044_Concrete_Smooth_Normal.png
+Да   Да       LMBR_0000045_Concrete_Striped_Normal.png
+Да   Да       LMBR_0000046_Metal_Normal.png
+Да   Да       LMBR_0000049_Concrete_Plaster_Normal.png
+Да   Да       LMBR_000004a_Concrete_Smooth_03_Normal.png
+Да   Да       LMBR_000004c_Concrete_Grooved_02_Normal.png
+Да   Да       LMBR_000004e_Wood_painted_02_Normal.png
+Да   Да       LMBR_000004f_Wiindows_Curtains_01_Normal.png
+Да   Да       LMBR_0000055_Wood_Painted_Flat_Grey_01_Normal.png
+Да   Да       LMBR_0000056_Roofing_Shingle_01_Normal.png
+Да   Да       LMBR_0000057_Grain_Metal_01_Normal.png
+Да   Да       LMBR_000005c_Forge_Metal_Normal.png
+Да   Да       LMBR_000005e_Concrete_02_Normal.png
+Да   Да       LMBR_0000062_Metal_Pipe_Normal.png
+Да   Да       LMBR_0000066_wood_painted_02_Normal.png
+Да   Да       LMBR_0000070_concrete_grooved_Normal.png
+Да   Да       LMBR_0000071_wood_painted_03_Normal.png
+Да   Да       LMBR_0000072_Painted_wood_Normal.png
+Да   Да       LMBR_0000073_Side_Letters_Normal.png
+Да   Да       LMBR_00000b0_Branches_Normal.png
+Да   Да       LMBR_00000c3_headlight_Normal.png
+Да   Да       LMBR_00000c6_tire_Normal.png
+Да   Да       LMBR_00000c7_wheel_rim_Normal.png
+Да   Да       LMBR_00000da_Metal_Normal.png
+Да   Да       LMBR_00000dc_Plastic_Dark_Normal.png
+Да   Да       LMBR_00000dd_Plastic_Normal.png
+Да   Да       LMBR_00000e0_main_Normal.png
+Да   Да       LMBR_00000e1_glass_Normal.png
+Да   Да       LMBR_00000e3_metal_Normal.png
+Да   Да       LMBR_00000ec_Paris_LiquorBottle_01_Caps_Normal.png
+Да   Да       LMBR_00000ed_Paris_LiquorBottle_01_Labels_Normal.png
+Да   Да       LMBR_00000f5_Metal_Worn_01_Normal.png
+Да   Да       LMBR_00000fc_Metal_Normal.png
+Да   Да       LMBR_00000fe_Label_Normal.png
+Да   Да       LMBR_000010a_NapkinHolder_01_Normal.png
+Да   Да       LMBR_0000114_Mesh_Normal.png
+Да   Да       LMBR_0000117_Mesh_Normal.png
+Да   Да       LMBR_0000125_Metal_Worn_01_Normal.png
+Да   Да       LMBR_0000127_Plastic_01_Normal.png
+Да   Да       LMBR_000012e_Paris_Glass_Detailed_02_Normal.png
+Да   Да       LMBR_0000138_Plastic_01_Normal.png
+Да   Да       LMBR_000013e_Metal_Chrome_01_Normal.png
+Да   Да       LMBR_0000142_Mesh_Normal.png
+Да   Да       LMBR_0000146_Metal_Chrome_Normal.png
+Да   Да       LMBR_0000147_Wood_Painted_Normal.png
+Да   Да       LMBR_0000148_Plastic_01_Normal.png
+Да   Да       LMBR_0000149_Wheels_01_Normal.png
+Да   Да       LMBR_000014e_Metal_Normal.png
+Да   Да       LMBR_0000150_Labels_Normal.png
+Да   Да       LMBR_0000158_Metal_Bronze_01_Normal.png
+Да   Да       LMBR_000015d_scarf_Normal.png
+Да   Да       LMBR_0000160_Pavement_Cobblestone_01_Normal.png
+Да   Да       LMBR_0000168_Cobblestone_Wet_Leaves_Normal.png
+Да   Да       LMBR_000016e_bricks_red_small_Normal.png
+Да   Да       LMBR_000016f_concrete_Normal.png
+Да   Да       LMBR_000017d_Paris_flowers_Normal.png
+Да   Да       LMBR_000017e_Foliage_Normal.png
+Да   Да       LMBR_000018c_support_bulb_Normal.png
+Да   Да       LMBR_0000190_metal_Normal.png
+Да   Да       LMBR_0000196_fixtures_Normal.png
+Да   Да       LMBR_000019f_Mesh_Emissive.png
+Да   Да       LMBR_000019f_Mesh_Normal.png
+Да   Да       LMBR_00001a2_Mesh_Emissive.png
+Да   Да       LMBR_00001a2_Mesh_Normal.png
+Да   Да       LMBR_00001aa_Metal_Normal.png
+Да   Да       LMBR_00001ae_Wood_Normal.png
+Да   Да       LMBR_00001af_Plaster_Normal.png
+Да   Да       LMBR_00001b3_Wooden_stuco_Normal.png
+Да   Да       LMBR_00001b4_Plaster_Red_Normal.png
+Да   Да       LMBR_00001b5_Wood_painted_01_Normal.png
+Да   Да       LMBR_00001ba_Paris_MenuSign_01_Normal.png
+Да   Да       LMBR_00001bb_Paris_Lantern_01_Emissive.png
+Да   Да       LMBR_00001bb_Paris_Lantern_01_Normal.png
+Да   Да       LMBR_00001bc_Ceiling_Color_Normal.png
+Да   Да       LMBR_00001bd_Frozen_Glass_Normal.png
+Да   Да       material15_MetallicRoughness.jpg
+Да   Да       material16_MetallicRoughness.jpg
+Да   Да       material18_MetallicRoughness.jpg
+Да   Да       material19_MetallicRoughness.jpg
+Да   Да       
 Да   ДдДЯДЯДЯWeapon
-Да           Pistol.glb
-Да           Staff.glb
-Да           
+Да       Да   Human Sword_LV1_Diffuse.png
+Да       Да   Human Sword_LV1_Normal.png
+Да       Да   Human Sword_LV1_Roughness.png
+Да       Да   Pistol.glb
+Да       Да   Staff.glb
+Да       Да   Sword.bin
+Да       Да   Sword.gltf
+Да       Да   tf.bin
+Да       Да   
+Да       ДеДЯДЯДЯcyber_sword_gltf
+Да       Да   Да   scene.bin
+Да       Да   Да   scene.cereal
+Да       Да   Да   scene.gltf
+Да       Да   Да   
+Да       Да   ДдДЯДЯДЯtextures
+Да       Да           Blade_baseColor.png
+Да       Да           Blade_emissive.png
+Да       Да           Blade_metallicRoughness.png
+Да       Да           cover_baseColor.png
+Да       Да           cover_emissive.png
+Да       Да           cover_metallicRoughness.png
+Да       Да           cover_normal.png
+Да       Да           Grip_baseColor.png
+Да       Да           Grip_E_baseColor.png
+Да       Да           Grip_E_normal.png
+Да       Да           Grip_metallicRoughness.png
+Да       Да           Grip_normal.png
+Да       Да           material_1_baseColor.png
+Да       Да           material_1_metallicRoughness.png
+Да       Да           material_1_normal.png
+Да       Да           material_baseColor.png
+Да       Да           material_metallicRoughness.png
+Да       Да           material_normal.png
+Да       Да           Metal_baseColor.png
+Да       Да           Metal_metallicRoughness.png
+Да       Да           Metal_normal.png
+Да       Да           
+Да       ДдДЯДЯДЯHuman Sword_LV1
+Да               Human Sword_LV1_Diffuse.png
+Да               Human Sword_LV1_Normal.png
+Да               Human Sword_LV1_Roughness.png
+Да               human_sword.bin
+Да               human_sword.gltf
+Да               
+ДеДЯДЯДЯPrefabs
+Да   Да   AnimationModel.json
+Да   Да   BehaviorEnemyAnimationModel.json
+Да   Да   JammoModel.json
+Да   Да   PBRModel.json
+Да   Да   Physics Sphere.json
+Да   Да   Sponza.json
+Да   Да   TestCombatAnimationTest.json
+Да   Да   TestNavPlayer.json
+Да   Да   
+Да   ДеДЯДЯДЯCamera
+Да   Да       FollowCamera.json
+Да   Да       FreeCamera.json
+Да   Да       FreeFastCamera.json
+Да   Да       PlayerFollowCamera.json
+Да   Да       
+Да   ДеДЯДЯДЯEnemy
+Да   Да       BossAI.json
+Да   Да       Drone.json
+Да   Да       TargetingTestObject.json
+Да   Да       
+Да   ДеДЯДЯДЯLight
+Да   Да       BossLighting.json
+Да   Да       GameLighting.json
+Да   Да       LightingSetup.json
+Да   Да       PlayerLight.json
+Да   Да       PointLight.json
+Да   Да       PortalLight.json
+Да   Да       SpotLight.json
+Да   Да       
+Да   ДеДЯДЯДЯParticles
+Да   Да       VFX_Boss_Attack.json
+Да   Да       VFX_Env_Ambient.json
+Да   Да       VFX_Env_Fire.json
+Да   Да       VFX_Explosion_Base.json
+Да   Да       VFX_Hit_Damage.json
+Да   Да       VFX_Hit_Impact.json
+Да   Да       VFX_Item_Coin.json
+Да   Да       VFX_Object_Portal.json
+Да   Да       VFX_Scene_Start.json
+Да   Да       VFX_Weapon_Bullet.json
+Да   Да       VFX_Weapon_Wand.json
+Да   Да       
+Да   ДеДЯДЯДЯPlayer
+Да   Да       Player.json
+Да   Да       PlayerCar.json
+Да   Да       
+Да   ДеДЯДЯДЯPrimitive
+Да   Да       PrimBox.json
+Да   Да       PrimCapusule.json
+Да   Да       PrimCone.json
+Да   Да       PrimCylinder.json
+Да   Да       PrimSphere.json
+Да   Да       
+Да   ДеДЯДЯДЯTest
+Да   Да       GPUParticle.json
+Да   Да       NavMeshSphere.json
+Да   Да       PhysicsBall.json
+Да   Да       RenderModel.json
+Да   Да       RenderPBR.json
+Да   Да       SoundObject.json
+Да   Да       Test.json
+Да   Да       TestSphere.json
+Да   Да       
+Да   ДдДЯДЯДЯWorld
+Да       Да   ExampleStage.json
+Да       Да   JoltExampleStage.json
+Да       Да   
+Да       ДеДЯДЯДЯMap
+Да       Да       Map_Floor.json
+Да       Да       Map_Wall.json
+Да       Да       Portal.json
+Да       Да       
+Да       ДдДЯДЯДЯStatic
+Да               Stage.json
+Да               StaticFloor.json
+Да               
+ДеДЯДЯДЯScene
+Да       BossAITestScene.json
+Да       ChainAttackTestScene02.json
+Да       HitStopDroneScene.json
+Да       
+ДеДЯДЯДЯScripts
+Да       BossAI.lua
+Да       PortalLogic.lua
+Да       Test.lua
+Да       
 ДеДЯДЯДЯShader
 Да       BasicPS.cso
 Да       BasicVS.cso
 Да       BloomDownSamplePS.cso
 Да       BloomExtractionPS.cso
 Да       BloomUpSamplePS.cso
+Да       DissolvePS.cso
 Да       FullScreenVS.cso
 Да       initialize_particle_cs.cso
 Да       integrate_particle_cs.cso
@@ -312,6 +758,8 @@ D:.
 Да       particle_gs.cso
 Да       particle_ps.cso
 Да       particle_vs.cso
+Да       PBR_PS.cso
+Да       PBR_VS.cso
 Да       PhongPS.cso
 Да       PhongVS.cso
 Да       PrimitiveRendererPS.cso
@@ -319,106 +767,98 @@ D:.
 Да       ShadowMapVS.cso
 Да       ShapeRendererPS.cso
 Да       ShapeRendererVS.cso
+Да       SkyboxPS.cso
+Да       SkyboxVS.cso
 Да       SpritePS.cso
 Да       SpriteVS.cso
 Да       ToneMapPS.cso
 Да       ToonPS.cso
 Да       ToonVS.cso
 Да       
-ДеДЯДЯДЯTextures
-Да   ДеДЯДЯДЯShader
-Да   Да       DistortedLayeredNoise.jpg
-Да   Да       FibrousWispyNoise.jpg
-Да   Да       Noise.png
-Да   Да       OrganicCellualNoise.jpg
-Да   Да       SwirlingFluidNoise.jpg
-Да   Да       
-Да   ДдДЯДЯДЯUI
-Да       ДеДЯДЯДЯCommon
-Да       Да       Stage1.png
-Да       Да       Stage2.png
-Да       Да       Stage3.png
-Да       Да       Stage4.png
-Да       Да       Stage5.png
-Да       Да       
-Да       ДеДЯДЯДЯHUD
-Да       Да       AttackGauge.png
-Да       Да       Coin.png
-Да       Да       Frame.png
-Да       Да       GameCursor.png
-Да       Да       HPGauge.png
-Да       Да       
-Да       ДеДЯДЯДЯItems
-Да       Да       chaos.png
-Да       Да       deceleration.png
-Да       Да       division.png
-Да       Да       explosion.png
-Да       Да       penetration.png
-Да       Да       reflection.png
-Да       Да       speed.png
-Да       Да       
-Да       ДеДЯДЯДЯMenus
-Да       Да       slot.png
-Да       Да       slotedit.png
-Да       Да       
-Да       ДдДЯДЯДЯTitle
-Да               GameEnd.png
-Да               GameStart.png
-Да               Logo.png
-Да               
-ДдДЯДЯДЯVFX
-    ДеДЯДЯДЯParticles
-    Да       BossAttakParticle.json
-    Да       BulletParticle.json
-    Да       CoinParticle.json
-    Да       DamageParticle.json
-    Да       ExplosionParticle.json
-    Да       FireEffect.json
-    Да       HitParticle.json
-    Да       Lodparticle.json
-    Да       PortalParticle.json
-    Да       SceneParticle.json
-    Да       Scenyou.json
-    Да       StartParticle.json
-    Да       test.json
+ДдДЯДЯДЯTextures
+    ДеДЯДЯДЯIBL
+    Да       ibl_brdf_lut.png
+    Да       ibl_sky_iem.dds
+    Да       ibl_sky_pmrem.dds
+    Да       skybox_highres.dds
     Да       
-    ДдДЯДЯДЯTextures
-            box_1.png
-            color temper chart.png
-            color temper test.png
-            ColorRamp_1.png
-            ColorRamp_2.png
-            cross.png
-            discharge.png
-            dummy.png
-            Flash_H.png
-            glade_C12.png
-            hit_1.png
-            hit_3.png
-            hit_4.png
-            hit_5.png
-            particle_clock_gear.png
+    ДеДЯДЯДЯShader
+    Да       DistortedLayeredNoise.jpg
+    Да       FibrousWispyNoise.jpg
+    Да       Noise.png
+    Да       OrganicCellualNoise.jpg
+    Да       ramp.png
+    Да       SwirlingFluidNoise.jpg
+    Да       
+    ДеДЯДЯДЯUI
+    Да   ДеДЯДЯДЯCommon
+    Да   Да       Stage1.png
+    Да   Да       Stage2.png
+    Да   Да       Stage3.png
+    Да   Да       Stage4.png
+    Да   Да       Stage5.png
+    Да   Да       
+    Да   ДеДЯДЯДЯHUD
+    Да   Да       AttackGauge.png
+    Да   Да       BarFrame.png
+    Да   Да       Coin.png
+    Да   Да       Frame.png
+    Да   Да       GameCursor.png
+    Да   Да       HealhtBar.png
+    Да   Да       HPGauge.png
+    Да   Да       PlayerBord.png
+    Да   Да       Stamina.png
+    Да   Да       
+    Да   ДеДЯДЯДЯItems
+    Да   Да       chaos.png
+    Да   Да       deceleration.png
+    Да   Да       division.png
+    Да   Да       explosion.png
+    Да   Да       penetration.png
+    Да   Да       reflection.png
+    Да   Да       speed.png
+    Да   Да       
+    Да   ДеДЯДЯДЯMenus
+    Да   Да       slot.png
+    Да   Да       slotedit.png
+    Да   Да       
+    Да   ДдДЯДЯДЯTitle
+    Да           Title_GameEnd.png
+    Да           Title_GameStart.png
+    Да           Title_Logo.png
+    Да           
+    ДдДЯДЯДЯVFX
             particle_fire.jpeg
-            particle_hanabira.png
-            particle_momiji.png
-            particle_momiji_s.png
-            particle_sakura.png
-            particle_smoke.png
-            particle_snow.png
-            particle_square.png
-            particle_star_4.png
-            particle_star_6.png
-            particle_sun.png
-            particle_trail_amiami.png
-            particle_wind.png
             rainbow_H.png
-            ring5.png
-            sand_1.png
-            Smoke.png
-            smoke_1.png
-            smork_2.png
-            smork_3.png
             uv_checker.png
-            yellow.png
-            yellow_red.png
+            VFX_Flash_01.png
+            VFX_Flash_Ring.png
+            VFX_Gear.png
+            VFX_Hit_Impact_01.png
+            VFX_Hit_Impact_02.png
+            VFX_Hit_Impact_03.png
+            VFX_Hit_Impact_04.png
+            VFX_Leaf_Cherry.png
+            VFX_Leaf_Maple_01.png
+            VFX_Leaf_Maple_02.png
+            VFX_Leaf_Sakura.png
+            VFX_Ramp_Fire.png
+            VFX_Ramp_Magic_01.png
+            VFX_Ramp_Magic_02.png
+            VFX_Ramp_Magic_03.png
+            VFX_Sand_01.png
+            VFX_Shape_Box.png
+            VFX_Shape_Cross_01.png
+            VFX_Shape_Square.png
+            VFX_Shape_Star_04.png
+            VFX_Shape_Star_06.png
+            VFX_Shape_Sun.png
+            VFX_Smoke_00.png
+            VFX_Smoke_01.png
+            VFX_Smoke_02.png
+            VFX_Smoke_03.png
+            VFX_Smoke_Base.png
+            VFX_Snow_6.png
+            VFX_Trail_01.png
+            VFX_Wind_Swirl.png
             

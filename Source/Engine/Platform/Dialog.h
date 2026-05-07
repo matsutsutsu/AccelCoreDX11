@@ -63,6 +63,12 @@ namespace DialogPreset
     extern const DialogConfig Model;        // FBX / OBJ / GLTF / GLB
     extern const DialogConfig Animation;    // FBX / BVH (アニメーション専用)
 
+    extern const DialogConfig BehaviorTree;
+    extern const DialogConfig AnimCurve;
+    extern const DialogConfig AnimNode;
+    extern const DialogConfig AnimSequence;
+    extern const DialogConfig TextureVFX;
+
     // ---- 2D アセット ----
     extern const DialogConfig Texture;      // PNG / JPG / TGA / DDS / BMP
     extern const DialogConfig Sprite;       // PNG / JPG (スプライト専用)
@@ -122,31 +128,7 @@ public:
     static DialogResult SaveByKey(char* filepath, int size, const std::string& key, HWND hWnd = NULL);
 
 
-    // =========================================================================
-    // ▼ 後方互換 API（既存コードをそのまま使いたい場合）
-    //   ※ initialDir が非 nullptr のときはその値を最優先で使います。
-    // =========================================================================
-
-    // [ファイルを開く]
-    static DialogResult OpenFileName(
-        char* filepath,
-        int         size,
-        const char* filter = nullptr,
-        const char* title = nullptr,
-        const char* initialDir = nullptr,
-        HWND        hWnd = NULL,
-        bool        multiSelect = false);
-
-    // [ファイルを保存]
-    static DialogResult SaveFileName(
-        char* filepath,
-        int         size,
-        const char* filter = nullptr,
-        const char* title = nullptr,
-        const char* initialDir = nullptr,
-        const char* ext = nullptr,
-        HWND        hWnd = NULL);
-
+ 
 
     // =========================================================================
     // ▼ ユーティリティ

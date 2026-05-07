@@ -46,6 +46,7 @@ template <> struct ComponentMeta<TransformComponent> {
         if (ImGui::DragFloat3("Position", &comp.position.x, 0.1f)) {
             comp.isTeleported = true; // ★ImGuiで動かしたら物理エンジンにもワープを指示
             comp.isStatic = false;
+			comp.isDirty = true; // ★行列の再計算も要求
             changed = true;
         }
 
@@ -55,12 +56,14 @@ template <> struct ComponentMeta<TransformComponent> {
             comp.rotation = EulerDegreesToQuat(euler);
             comp.isTeleported = true; // ★回転も同様
             comp.isStatic = false;
+            comp.isDirty = true; // ★行列の再計算も要求
             changed = true;
         }
 
         // 3. スケール
         if (ImGui::DragFloat3("Scale", &comp.scale.x, 0.1f)) {
             comp.isStatic = false;
+            comp.isDirty = true; // ★行列の再計算も要求
             changed = true;
         }
 

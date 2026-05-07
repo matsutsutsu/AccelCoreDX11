@@ -43,8 +43,7 @@ template <> struct ComponentMeta<BehaviorTreeComponent> {
         if (ImGui::Button("Load Behavior Tree... (JSON)", ImVec2(-1, 0))) {
             char filename[MAX_PATH] = {};
             // ウィンドウハンドルを渡してダイアログを親ウィンドウの中央に出す
-            if (Dialog::OpenFileName(filename, MAX_PATH, "JSON Files\0*.json\0", "Select Behavior Tree",
-                "Assets/BehaviorTree", GetActiveWindow()) == DialogResult::OK) {
+            if (Dialog::OpenFileName(filename, MAX_PATH, DialogPreset::BehaviorTree, GetActiveWindow()) == DialogResult::OK) {
 
                 // 絶対パスからプロジェクト相対パスへの変換処理（チーム開発対応）
                 namespace fs = std::filesystem;

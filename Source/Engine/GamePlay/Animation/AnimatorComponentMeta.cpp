@@ -133,8 +133,7 @@ template <> struct ComponentMeta<AnimStateMachineComponent> {
 
         if (ImGui::Button("Load Anim Graph... (JSON)", ImVec2(-1, 0))) {
             char filename[MAX_PATH] = {};
-            if (Dialog::OpenFileName(filename, MAX_PATH, "JSON Files\0*.json\0", "Select Anim Graph",
-                "Assets/Animations/Node", GetActiveWindow()) == DialogResult::OK) {
+            if (Dialog::OpenFileName(filename, MAX_PATH, DialogPreset::AnimNode, GetActiveWindow()) == DialogResult::OK) {
 
                 namespace fs = std::filesystem;
                 fs::path absPath = filename;

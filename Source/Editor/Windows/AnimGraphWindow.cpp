@@ -621,9 +621,11 @@ void AnimGraphWindow::DrawStateSettings(uint32_t stateHash) {
             ImGui::Text("再生ファイル (Motion Sequence):");
             ImGui::TextDisabled("%s", state.sequenceFilePath.empty() ? "None" : state.sequenceFilePath.c_str());
             if (ImGui::Button("ファイルを選択 (Browse...)##Motion", ImVec2(-1, 0))) {
-                char filename[MAX_PATH] = {};
-                if (Dialog::OpenFileName(filename, MAX_PATH, "JSON Files\0*.json\0", "Select Anim Sequence",
-                    "Assets/Animations/Node", GetActiveWindow()) == DialogResult::OK) {
+                char filename[256] = {};
+
+                // プリセット DialogPreset::Model を直接渡すだけ
+                if (Dialog::OpenFileName(filename, sizeof(filename), DialogPreset::AnimNode, GetActiveWindow()) == DialogResult::OK) {
+                    
                     namespace fs = std::filesystem;
                     std::error_code ec;
                     fs::path relPath = fs::relative(filename, fs::current_path(), ec);
@@ -792,10 +794,7 @@ void AnimGraphWindow::DrawTransitionSettings(int targetLinkId) {
 void AnimGraphWindow::DrawToolbar() {
     if (ImGui::Button("保存 (Save As...)")) {
         char filename[MAX_PATH] = {};
-        auto result = Dialog::SaveFileName(
-            filename, MAX_PATH, "JSON Files\0*.json\0", "Save Anim Graph", "json",
-            "Assets/Animations/Node", GetActiveWindow()
-        );
+        auto result = Dialog::SaveFileName(filename, MAX_PATH, DialogPreset::AnimNode, GetActiveWindow());
 
         if (result == DialogResult::OK) {
             namespace fs = std::filesystem;
@@ -812,10 +811,7 @@ void AnimGraphWindow::DrawToolbar() {
 
     if (ImGui::Button("読込 (Load...)")) {
         char filename[MAX_PATH] = {};
-        auto result = Dialog::OpenFileName(
-            filename, MAX_PATH, "JSON Files\0*.json\0", "Select Anim Graph File",
-            "Assets/Animations/Node", GetActiveWindow()
-        );
+        auto result = Dialog::OpenFileName(filename, MAX_PATH, DialogPreset::AnimNode, GetActiveWindow());
 
         if (result == DialogResult::OK) {
             namespace fs = std::filesystem;

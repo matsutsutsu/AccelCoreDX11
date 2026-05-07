@@ -51,6 +51,10 @@ void JoltBodySetupSystem::Update(float dt)
             return;
         }
 
+        DirectX::XMFLOAT3 spawnPos = trans.position;
+        DirectX::XMFLOAT4 spawnRot = trans.rotation;
+        DirectX::XMFLOAT3 spawnScale = trans.scale;
+
         JPH::ShapeRefC shape = nullptr;
 
         // =======================================================
@@ -103,62 +107,68 @@ void JoltBodySetupSystem::Update(float dt)
         // =======================================================
         else if (auto* meshCol = _world->GetComponent<JoltMeshColliderComponent>(id)) {
 
-            // 1. 同じEntityから、描画用のモデルコンポーネントを取得
             auto* modelComp = _world->GetComponent<ModelComponent>(id);
-
-            // モデルが無い、ロードされていない、またはタグがOFFならスキップ
             if (!modelComp || !modelComp->GetModel() || !meshCol->isEnabled) return;
-
-            // リソース（CPU上の頂点データ）にアクセス
-            const ModelResource* res = modelComp->GetModel()->GetResource();
-            if (!res) return;
+            Model* model = modelComp->GetModel();
 
             JPH::VertexList joltVertices;
             JPH::IndexedTriangleList joltTriangles;
 
-            // 2. ModelResource内の全メッシュから頂点とインデックスを吸い出す
-            for (const auto& mesh : res->GetMeshes()) {
+            for (const Model::Mesh& mesh : model->GetMeshes()) {
+                if (!mesh.data || !mesh.node) continue;
                 uint32_t vertexOffset = static_cast<uint32_t>(joltVertices.size());
 
-                // 頂点の「位置座標(Position)」だけを抽出 (UVや法線は物理には不要！)
-                for (const auto& v : mesh.vertices) {
-                    joltVertices.push_back(JPH::Float3(v.position.x, v.position.y, v.position.z));
+                // ★ TransformUpdate -> ModelPoseUpdate を経由した「完璧な最新行列」
+                DirectX::XMMATRIX nodeGlobalMat = DirectX::XMLoadFloat4x4(&mesh.node->globalTransform);
+
+                for (const auto& v : mesh.data->vertices) {
+                    DirectX::XMVECTOR localPos = DirectX::XMVectorSet(v.position.x, v.position.y, v.position.z, 1.0f);
+                    // 頂点にスケール・回転・座標の全てを焼き付ける
+                    DirectX::XMVECTOR globalPos = DirectX::XMVector3TransformCoord(localPos, nodeGlobalMat);
+                    joltVertices.push_back(JPH::Float3(
+                        DirectX::XMVectorGetX(globalPos), DirectX::XMVectorGetY(globalPos), DirectX::XMVectorGetZ(globalPos)
+                    ));
                 }
 
-                // インデックスを抽出（複数のメッシュを1つに合体させるためオフセットを足す）
-                for (size_t i = 0; i < mesh.indices.size(); i += 3) {
+                // ★ 右手系・左手系の反転対応（すり抜け防止）
+                for (size_t i = 0; i < mesh.data->indices.size(); i += 3) {
                     joltTriangles.push_back(JPH::IndexedTriangle(
-                        mesh.indices[i + 0] + vertexOffset,
-                        mesh.indices[i + 1] + vertexOffset,
-                        mesh.indices[i + 2] + vertexOffset
+                        mesh.data->indices[i + 0] + vertexOffset,
+                        mesh.data->indices[i + 2] + vertexOffset, // 反転
+                        mesh.data->indices[i + 1] + vertexOffset
                     ));
                 }
             }
 
             if (joltTriangles.empty()) return;
-
-            // 3. Joltの「純粋なメッシュ形状」を作成
             JPH::MeshShapeSettings meshSettings(joltVertices, joltTriangles);
-            JPH::ShapeRefC rawMeshShape = meshSettings.Create().Get();
-
-            // 4. ★最重要: Transform のスケールを物理メッシュに適用する！
-            // エディタで家を「3倍」に拡大した場合、物理判定も「3倍」に膨らませる
-            JPH::ScaledShapeSettings scaledSettings(
-                rawMeshShape,
-                JPH::Vec3(trans.scale.x, trans.scale.y, trans.scale.z)
-            );
-            shape = scaledSettings.Create().Get();
+            shape = meshSettings.Create().Get(); // 縮小ラッパーは不要。頂点が既に縮小済み。
         }
 
         // コライダーコンポーネントが一つも無い場合は物理実体を作れないのでスキップ
         if (shape == nullptr) return;
 
-        // 2. Jolt剛体の生成 (Rigidbodyコンポーネントの設定値を流し込む)
-        JPH::BodyCreationSettings bodySettings(shape,
-            JPH::RVec3(trans.position.x, trans.position.y, trans.position.z),
-            JPH::Quat(trans.rotation.x, trans.rotation.y, trans.rotation.z, trans.rotation.w),
-            rigid.motionType,
-            rigid.objectLayer);
+
+        // 2. BodyCreationSettings を構築
+        JPH::BodyCreationSettings bodySettings;
+        bodySettings.SetShape(shape);
+        bodySettings.mMotionType = rigid.motionType;
+        bodySettings.mObjectLayer = rigid.objectLayer;
+
+        if (_world->HasComponent<JoltMeshColliderComponent>(id)) {
+            // ★ MeshColliderは頂点に「ワールド座標」が既に焼き付いているため、剛体の原点は必ず(0,0,0)！
+            // これが「昔は下にズレていた」という最初のバグの真犯人だった。
+            bodySettings.mPosition = JPH::RVec3(0, 0, 0);
+            bodySettings.mRotation = JPH::Quat::sIdentity();
+        }
+        else {
+            // 他のコライダー（BoxやCapsule）はローカル形状なので今まで通り配置する
+            bodySettings.mPosition = JPH::RVec3(trans.position.x, trans.position.y, trans.position.z);
+            JPH::Quat joltRot(trans.rotation.x, trans.rotation.y, trans.rotation.z, trans.rotation.w);
+            bodySettings.mRotation = joltRot.Normalized();
+        }
+
+
         bodySettings.mRestitution = rigid.restitution;
         bodySettings.mFriction    = rigid.friction;
 

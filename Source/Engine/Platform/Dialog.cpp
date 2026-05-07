@@ -4,41 +4,50 @@
 #include <json.hpp>
 
 // =============================================================================
-// 内部ユーティリティ：Shift-JIS ↔ UTF-8 変換
+// 内部ユーティリティ：UTF-8 ↔ UTF-16 (WideChar) 変換
+// モダンWindows開発では、内部文字列(UTF-8)をUnicode API(W版)に渡すのが標準です。
 // =============================================================================
 namespace
 {
-    std::string SjisToUtf8(const std::string& sjis)
+    // 通常の文字列を UTF-16 に変換
+    std::wstring Utf8ToWString(const char* utf8)
     {
-        if (sjis.empty()) return "";
-        int wlen = MultiByteToWideChar(CP_ACP, 0, sjis.c_str(), -1, nullptr, 0);
+        if (!utf8 || utf8[0] == '\0') return L"";
+        int wlen = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, nullptr, 0);
         std::wstring wstr(wlen, 0);
-        MultiByteToWideChar(CP_ACP, 0, sjis.c_str(), -1, &wstr[0], wlen);
-
-        int u8len = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
-        std::string utf8(u8len, 0);
-        WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &utf8[0], u8len, nullptr, nullptr);
-        utf8.resize(strlen(utf8.c_str()));
-        return utf8;
+        MultiByteToWideChar(CP_UTF8, 0, utf8, -1, &wstr[0], wlen);
+        return wstr;
     }
 
-    std::string Utf8ToSjis(const std::string& utf8)
+    // フィルタ文字列専用の変換（途中の \0 で切れないようにダブルヌル \0\0 まで読み取る）
+    std::wstring Utf8ToWStringFilter(const char* utf8Filter)
     {
-        if (utf8.empty()) return "";
-        int wlen = MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), -1, nullptr, 0);
-        std::wstring wstr(wlen, 0);
-        MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), -1, &wstr[0], wlen);
+        if (!utf8Filter) return L"";
+        size_t len = 0;
+        // 連続する \0\0 を探す
+        while (!(utf8Filter[len] == '\0' && utf8Filter[len + 1] == '\0')) {
+            len++;
+        }
+        len += 2; // 末尾の \0\0 も含める
 
-        int sjislen = WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
-        std::string sjis(sjislen, 0);
-        WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, &sjis[0], sjislen, nullptr, nullptr);
-        sjis.resize(strlen(sjis.c_str()));
-        return sjis;
+        int wlen = MultiByteToWideChar(CP_UTF8, 0, utf8Filter, (int)len, nullptr, 0);
+        std::wstring wstr(wlen, 0);
+        MultiByteToWideChar(CP_UTF8, 0, utf8Filter, (int)len, &wstr[0], wlen);
+        return wstr;
     }
 
-    // -------------------------------------------------------------------------
+    // UTF-16 から UTF-8 に変換
+    std::string WStringToUtf8(const wchar_t* wstr)
+    {
+        if (!wstr || wstr[0] == L'\0') return "";
+        int len = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, nullptr, 0, nullptr, nullptr);
+        std::string str(len, 0);
+        WideCharToMultiByte(CP_UTF8, 0, wstr, -1, &str[0], len, nullptr, nullptr);
+        str.resize(strlen(str.c_str()));
+        return str;
+    }
+
     // 選択されたファイルパスからディレクトリ部分だけを取り出す
-    // -------------------------------------------------------------------------
     std::string ExtractDirectory(const char* filepath)
     {
         char drive[MAX_PATH], dir[MAX_PATH];
@@ -73,7 +82,10 @@ namespace
             return config.historyKey;
         if (config.title != nullptr && config.title[0] != '\0')
             return config.title;
-        return "Default";
+
+        // 【設計の要】キーが指定されていない設定を通さない
+        assert(false && "DialogConfig MUST have a valid historyKey or title.");
+        return "Unknown";
     }
 
     // -------------------------------------------------------------------------
@@ -152,7 +164,56 @@ namespace DialogPreset
         /* historyKey */ "Animation",
     };
 
-    // ---- 2D アセット ----
+    const DialogConfig BehaviorTree = {
+        "AI ビヘイビアツリーを選択",
+        "BehaviorTree\0*.json\0すべてのファイル\0*.*\0",
+        "Assets/BehaviorTree",
+        "json",
+        false,
+        "BehaviorTree",
+    };
+
+    // アニメーション：カーブデータ（TestCurve_01.json 等 [cite: 2]）
+    const DialogConfig AnimCurve = {
+        "アニメーションカーブを選択",
+        "Curve Data\0*.json\0",
+        "Assets/Animations/Curve",
+        "json",
+        false,
+        "AnimCurve"
+    };
+
+    // アニメーション：グラフノード（Boss_AnimGraphNode.json 等 [cite: 2]）
+    const DialogConfig AnimNode = {
+        "アニメーショングラフノードを選択",
+        "Anim Node\0*.json\0",
+        "Assets/Animations/Node",
+        "json",
+        false,
+        "AnimNode"
+    };
+
+    // アニメーション：シーケンス（Jammo_Run.json 等 [cite: 3]）
+    const DialogConfig AnimSequence = {
+        "アニメーションシーケンスを選択",
+        "Anim Sequence\0*.json\0",
+        "Assets/Animations/Sequence",
+        "json",
+        false,
+        "AnimSequence"
+    };
+
+    // テクスチャ：VFX用（VFX_Flash_01.png 等 [cite: 101]）
+    const DialogConfig TextureVFX = {
+        "VFX用テクスチャを選択",
+        "VFX Texture\0*.png;*.jpg;*.tga\0",
+        "Assets/Textures/VFX",
+        nullptr,
+        false,
+        "TextureVFX"
+    };
+
+    // ---- 3D アセット ----
     const DialogConfig Texture = {
         /* title      */ "テクスチャファイルを選択",
         /* filter     */ "画像ファイル\0*.png;*.jpg;*.jpeg;*.tga;*.dds;*.bmp\0PNG\0*.png\0JPEG\0*.jpg;*.jpeg\0TGA\0*.tga\0DDS\0*.dds\0すべてのファイル\0*.*\0",
@@ -162,13 +223,14 @@ namespace DialogPreset
         /* historyKey */ "Texture",
     };
 
-    const DialogConfig Sprite = {
+	// ---- 2D アセット ----
+    const DialogConfig UI = {
         /* title      */ "スプライト画像を選択",
         /* filter     */ "スプライト画像\0*.png;*.jpg;*.jpeg\0PNG\0*.png\0JPEG\0*.jpg;*.jpeg\0すべてのファイル\0*.*\0",
-        /* defaultDir */ "Assets/Sprites",
+        /* defaultDir */ "Assets/UI",
         /* ext        */ nullptr,
         /* multiSelect*/ false,
-        /* historyKey */ "Sprite",
+        /* historyKey */ "UI",
     };
 
     // ---- オーディオ ----
@@ -203,7 +265,7 @@ namespace DialogPreset
     const DialogConfig Scene = {
         /* title      */ "シーンファイルを選択",
         /* filter     */ "シーン\0*.scene;*.json\0SCENE\0*.scene\0JSON\0*.json\0すべてのファイル\0*.*\0",
-        /* defaultDir */ "Assets/Scenes",
+        /* defaultDir */ "Assets/Scene",
         /* ext        */ "scene",
         /* multiSelect*/ false,
         /* historyKey */ "Scene",
@@ -258,46 +320,78 @@ namespace DialogPreset
 } // namespace DialogPreset
 
 
-// =============================================================================
-// Dialog::OpenFileName（DialogConfig 版）
-// =============================================================================
 DialogResult Dialog::OpenFileName(char* filepath, int size, const DialogConfig& config, HWND hWnd)
 {
     const std::string historyKey = ResolveHistoryKey(config);
     const char* initDir = ResolveInitialDir(historyKey, config.defaultDir);
 
-    OPENFILENAMEA ofn;
-    InitOFN(ofn, filepath, size, config, hWnd);
-    ofn.lpstrInitialDir = initDir;
-    ofn.Flags |= OFN_FILEMUSTEXIST;
+    // UTF-8 の設定値を UTF-16 (WideChar) に変換
+    std::wstring wTitle = Utf8ToWString(config.title);
+    std::wstring wFilter = Utf8ToWStringFilter(config.filter);
+    std::wstring wInitDir = Utf8ToWString(initDir);
+    std::wstring wDefExt = Utf8ToWString(config.ext);
+
+    wchar_t wFilepath[MAX_PATH] = { 0 };
+
+    OPENFILENAMEW ofn;
+    ZeroMemory(&ofn, sizeof(ofn));
+    ofn.lStructSize = sizeof(ofn);
+    ofn.hwndOwner = hWnd;
+    ofn.lpstrFile = wFilepath;
+    ofn.nMaxFile = MAX_PATH;
+    ofn.lpstrFilter = wFilter.empty() ? nullptr : wFilter.c_str();
+    ofn.lpstrTitle = wTitle.empty() ? nullptr : wTitle.c_str();
+    ofn.lpstrDefExt = wDefExt.empty() ? nullptr : wDefExt.c_str();
+    ofn.lpstrInitialDir = wInitDir.empty() ? nullptr : wInitDir.c_str();
+    ofn.nFilterIndex = 1;
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR | OFN_FILEMUSTEXIST;
 
     if (config.multiSelect)
         ofn.Flags |= OFN_ALLOWMULTISELECT | OFN_EXPLORER;
 
-    if (GetOpenFileNameA(&ofn))
+    // Unicode版 API (GetOpenFileNameW) を呼び出し
+    if (GetOpenFileNameW(&ofn))
     {
+        // 取得したUTF-16パスをUTF-8に変換して出力バッファに書き込む
+        std::string resultUtf8 = WStringToUtf8(wFilepath);
+        strcpy_s(filepath, size, resultUtf8.c_str());
+
         s_history[historyKey] = ExtractDirectory(filepath);
         return DialogResult::OK;
     }
     return DialogResult::Cancel;
 }
 
-
-// =============================================================================
-// Dialog::SaveFileName（DialogConfig 版）
-// =============================================================================
 DialogResult Dialog::SaveFileName(char* filepath, int size, const DialogConfig& config, HWND hWnd)
 {
     const std::string historyKey = ResolveHistoryKey(config);
     const char* initDir = ResolveInitialDir(historyKey, config.defaultDir);
 
-    OPENFILENAMEA ofn;
-    InitOFN(ofn, filepath, size, config, hWnd);
-    ofn.lpstrInitialDir = initDir;
-    ofn.Flags |= OFN_OVERWRITEPROMPT;
+    std::wstring wTitle = Utf8ToWString(config.title);
+    std::wstring wFilter = Utf8ToWStringFilter(config.filter);
+    std::wstring wInitDir = Utf8ToWString(initDir);
+    std::wstring wDefExt = Utf8ToWString(config.ext);
 
-    if (GetSaveFileNameA(&ofn))
+    wchar_t wFilepath[MAX_PATH] = { 0 };
+
+    OPENFILENAMEW ofn;
+    ZeroMemory(&ofn, sizeof(ofn));
+    ofn.lStructSize = sizeof(ofn);
+    ofn.hwndOwner = hWnd;
+    ofn.lpstrFile = wFilepath;
+    ofn.nMaxFile = MAX_PATH;
+    ofn.lpstrFilter = wFilter.empty() ? nullptr : wFilter.c_str();
+    ofn.lpstrTitle = wTitle.empty() ? nullptr : wTitle.c_str();
+    ofn.lpstrDefExt = wDefExt.empty() ? nullptr : wDefExt.c_str();
+    ofn.lpstrInitialDir = wInitDir.empty() ? nullptr : wInitDir.c_str();
+    ofn.nFilterIndex = 1;
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR | OFN_OVERWRITEPROMPT;
+
+    if (GetSaveFileNameW(&ofn))
     {
+        std::string resultUtf8 = WStringToUtf8(wFilepath);
+        strcpy_s(filepath, size, resultUtf8.c_str());
+
         s_history[historyKey] = ExtractDirectory(filepath);
         return DialogResult::OK;
     }
@@ -335,70 +429,6 @@ DialogResult Dialog::SaveByKey(char* filepath, int size, const std::string& key,
 }
 
 
-// =============================================================================
-// 後方互換 API（既存コードをそのまま動かしたい場合）
-//   ※ initialDir が非 nullptr のときは履歴より優先します。
-// =============================================================================
-DialogResult Dialog::OpenFileName(char* filepath, int size,
-    const char* filter, const char* title,
-    const char* initialDir, HWND hWnd, bool multiSelect)
-{
-    DialogConfig cfg;
-    cfg.title = title;
-    cfg.filter = filter;
-    cfg.multiSelect = multiSelect;
-    // historyKey は title から自動解決
-
-    const std::string historyKey = ResolveHistoryKey(cfg);
-
-    OPENFILENAMEA ofn;
-    InitOFN(ofn, filepath, size, cfg, hWnd);
-    ofn.Flags |= OFN_FILEMUSTEXIST;
-    if (multiSelect)
-        ofn.Flags |= OFN_ALLOWMULTISELECT | OFN_EXPLORER;
-
-    // initialDir が明示指定されていればそれを最優先、なければ履歴
-    if (initialDir != nullptr)
-        ofn.lpstrInitialDir = initialDir;
-    else
-        ofn.lpstrInitialDir = ResolveInitialDir(historyKey, nullptr);
-
-    if (GetOpenFileNameA(&ofn))
-    {
-        s_history[historyKey] = ExtractDirectory(filepath);
-        return DialogResult::OK;
-    }
-    return DialogResult::Cancel;
-}
-
-DialogResult Dialog::SaveFileName(char* filepath, int size,
-    const char* filter, const char* title,
-    const char* initialDir, const char* ext, HWND hWnd)
-{
-    DialogConfig cfg;
-    cfg.title = title;
-    cfg.filter = filter;
-    cfg.ext = ext;
-
-    const std::string historyKey = ResolveHistoryKey(cfg);
-
-    OPENFILENAMEA ofn;
-    InitOFN(ofn, filepath, size, cfg, hWnd);
-    ofn.Flags |= OFN_OVERWRITEPROMPT;
-
-    if (initialDir != nullptr)
-        ofn.lpstrInitialDir = initialDir;
-    else
-        ofn.lpstrInitialDir = ResolveInitialDir(historyKey, nullptr);
-
-    if (GetSaveFileNameA(&ofn))
-    {
-        s_history[historyKey] = ExtractDirectory(filepath);
-        return DialogResult::OK;
-    }
-    return DialogResult::Cancel;
-}
-
 
 // =============================================================================
 // ユーティリティ
@@ -420,7 +450,7 @@ void Dialog::ClearAllHistory()
 
 
 // =============================================================================
-// 履歴の読み込み / 書き込み
+// 履歴の読み込み / 書き込み (UTF-8 直結版)
 // =============================================================================
 void Dialog::LoadHistory(const char* settingsFilePath)
 {
@@ -435,14 +465,14 @@ void Dialog::LoadHistory(const char* settingsFilePath)
         {
             for (auto& item : j["DialogHistory"].items())
             {
-                // JSON は UTF-8、内部では Shift-JIS で保持
-                s_history[item.key()] = Utf8ToSjis(item.value().get<std::string>());
+                // 変更点: Shift-JIS変換を挟まず、UTF-8のままメモリ(s_history)に格納する
+                s_history[item.key()] = item.value().get<std::string>();
             }
         }
     }
     catch (...)
     {
-        // ファイルが壊れていても無視してデフォルト起動
+        // パース失敗時は履歴を無視して継続
     }
 }
 
@@ -450,7 +480,7 @@ void Dialog::SaveHistory(const char* settingsFilePath)
 {
     nlohmann::json j;
 
-    // 既存ファイルを読み込んで追記（他のエディタ設定を上書きしない）
+    // 既存のJSONを読み込んで保持する（他のエディタ設定を消さないため）
     std::ifstream inFile(settingsFilePath);
     if (inFile.is_open())
     {
@@ -459,10 +489,10 @@ void Dialog::SaveHistory(const char* settingsFilePath)
         inFile.close();
     }
 
-    // Shift-JIS → UTF-8 に変換して JSON に書き込む
+    // 変更点: Shift-JIS変換を挟まず、UTF-8のままJSONへ書き出す
     for (const auto& [key, path] : s_history)
     {
-        j["DialogHistory"][key] = SjisToUtf8(path);
+        j["DialogHistory"][key] = path;
     }
 
     std::ofstream outFile(settingsFilePath);

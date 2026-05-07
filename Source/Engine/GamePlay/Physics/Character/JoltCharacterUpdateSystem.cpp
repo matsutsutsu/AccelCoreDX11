@@ -98,6 +98,21 @@ void JoltCharacterUpdateSystem::Update(float rawDt) {
             // ★修正: CharacterVirtual内部の挙動計算にもカスタム重力を渡す
             JPH::Vec3 joltGravity = (input.customGravity > 0.01f) ? JPH::Vec3(0, -input.customGravity, 0) : (physicsSystem->GetGravity() * config.gravityScale);
 
+            // =========================================================
+            // ★追加: 物理計算が走る前に、ワープ（テレポート）要求を処理する
+            // =========================================================
+            if (trans.isTeleported) {
+                // Joltの仮想キャラクターを、ECSで指定された座標へ強制移動させる
+                handle.character->SetPosition(JPH::RVec3(trans.position.x, trans.position.y, trans.position.z));
+
+                // 回転も同期させる場合
+                JPH::Quat joltRot(trans.rotation.x, trans.rotation.y, trans.rotation.z, trans.rotation.w);
+                handle.character->SetRotation(joltRot);
+
+                // ワープ完了。フラグを降ろして無限ループを防ぐ
+                trans.isTeleported = false;
+            }
+
             handle.character->ExtendedUpdate(
                 time.localDt,
                 joltGravity, // ← カスタム重力を渡す

@@ -1949,9 +1949,6 @@
     <ClCompile Include="Source\Engine\GamePlay\Graphics\Core\MaterialComponentMeta.cpp">
       <Filter>Source\Engine\GamePlay\Graphics\Core\_Meta</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\GamePlay\Graphics\Particle\GPUParticleComponentMeta.cpp">
-      <Filter>Source\Engine\GamePlay\Graphics\Particle\_Meta</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\GamePlay\Utils\MiscComponentMeta.cpp">
       <Filter>Source\Engine\GamePlay\Utils\_Meta</Filter>
     </ClCompile>
@@ -2365,6 +2362,9 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\GamePlay\Transform\Motion\MotionComponentMeta.cpp">
       <Filter>Source\Engine\GamePlay\Transform\Motion</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\GamePlay\Graphics\Particle\GPUParticleComponentMeta.cpp">
+      <Filter>Source\Engine\GamePlay\Graphics\Particle\_Meta</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

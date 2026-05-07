@@ -144,9 +144,7 @@ void EditorWindowManager::DrawMainMenuBar(EditorContext &context)
                 HWND               hWnd          = GetActiveWindow();
                 static const char *filter = "Scene Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
 
-                if (Dialog::OpenFileName(filename, 256, filter, "Open Scene",
-                    "Assets/Scene", hWnd) ==
-                    DialogResult::OK) {
+                if (Dialog::OpenFileName(filename, 256, DialogPreset::Scene, hWnd) == DialogResult::OK) {
 
                     //  即時ロードせず、パスを保存して予約する
                     context.pendingLoadScenePath = std::string(filename);
@@ -163,9 +161,7 @@ void EditorWindowManager::DrawMainMenuBar(EditorContext &context)
                 HWND               hWnd          = GetActiveWindow();
                 static const char *filter = "Scene Files (*.json)\0*.json\0All Files (*.*)\0*.*\0";
 
-                if (Dialog::SaveFileName(filename, 256, filter, "Save Scene", "json",
-                    "Assets/Scene", hWnd) ==
-                    DialogResult::OK) {
+                if (Dialog::SaveFileName(filename, 256, DialogPreset::Scene, hWnd) == DialogResult::OK) {
 
                     //  即時ロードせず、パスを保存して予約する
                     context.pendingSaveScenePath = std::string(filename);

@@ -261,19 +261,21 @@ void BehaviorTreeWindow::DrawContents(EditorContext& context) {
 // ====================================================================
 void BehaviorTreeWindow::DrawToolbar() {
     if (ImGui::Button("保存 ( Save )")) {
-        char path[MAX_PATH] = "";
-        // ★修正: 5番目(initialDir)に nullptr を入れ、6番目(ext)に "json" を入れる！
-        if (Dialog::SaveFileName(path, MAX_PATH, "BehaviorTree (*.json)\0*.json\0", "AIグラフを保存", nullptr, "json") == DialogResult::OK) {
-            _currentFilePath = path;
+        char filename[256] = {};
+
+        // プリセット DialogPreset::Model を直接渡すだけ
+        if (Dialog::OpenFileName(filename, sizeof(filename), DialogPreset::BehaviorTree, GetActiveWindow()) == DialogResult::OK) {
+            _currentFilePath = filename;
             SaveGraph(_currentFilePath);
         }
     }
     ImGui::SameLine();
     if (ImGui::Button("開く (Open...)")) {
-        char path[MAX_PATH] = "";
-        // ★こちらも一応 initialDir に nullptr を明示しておく
-        if (Dialog::OpenFileName(path, MAX_PATH, "BehaviorTree (*.json)\0*.json\0", "AIグラフを開く", nullptr) == DialogResult::OK) {
-            _currentFilePath = path;
+        char filename[256] = {};
+
+        // プリセット DialogPreset::Model を直接渡すだけ
+        if (Dialog::OpenFileName(filename, sizeof(filename), DialogPreset::BehaviorTree, GetActiveWindow()) == DialogResult::OK) {
+            _currentFilePath = filename;
             LoadGraph(_currentFilePath);
         }
     }

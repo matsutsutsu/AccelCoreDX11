@@ -440,10 +440,10 @@ void DroneFormationSystem::OnGui() {
 
         // 3. ボスの検索（誰の周りにドローンを出すか）
         CCL::ECS::EntityID activeBossId = CCL::ECS::InvalidEntityID;
-        auto bossView = _world->View<BossCommandComponent, TransformComponent>();
+        auto bossView = _world->View<BossActionComponent, BossCommandComponent, TransformComponent>();
         for (auto b : bossView) {
             activeBossId = b;
-            break; // 最初のボスを見つけたら終了
+            break;
         }
 
         if (activeBossId == CCL::ECS::InvalidEntityID) {
