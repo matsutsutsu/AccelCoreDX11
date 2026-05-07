@@ -3,6 +3,7 @@
 #include "Engine/GamePlay/Animation/Data/AnimStateMachine.h"
 #include "Engine/GamePlay/Animation/AnimParametersComponent.h"
 #include "Engine/GamePlay/Animation/AnimatorComponent.h"
+#include "Engine/GamePlay/Transform/TransformComponent.h"
 
 // ===================================================================================
 // ファイル: AnimControllerSystem.h
@@ -19,7 +20,8 @@
 class AnimControllerSystem : public CCL::ECS::IfSystem<AnimControllerSystem,
     CCL::ECS::Write<AnimStateMachineComponent>,
     CCL::ECS::Write<AnimatorComponent>,
-    CCL::ECS::Write<AnimParametersComponent>>
+    CCL::ECS::Write<AnimParametersComponent>,
+    CCL::ECS::Read<TransformComponent>> 
 {
 public:
     // 基底クラスのコンストラクタ呼び出しもフルパスで指定
@@ -27,4 +29,16 @@ public:
     virtual ~AnimControllerSystem() = default;
 
     void Update(float dt) override;
+
+    virtual void OnGui() override;
+
+private:
+    // ========================================================================
+    // デバッグ表示用のパラメータ群
+    // ========================================================================
+    bool m_showFloatingText = true;
+
+    float m_debugFontSize = 48.0f;    // アニメーションは情報量が多いので少し小さめに設定
+    bool m_useDepthScaling = true;    // 遠近法を適用するか
+    bool m_showTextBackground = true; // 黒い半透明の座布団を敷くか
 };

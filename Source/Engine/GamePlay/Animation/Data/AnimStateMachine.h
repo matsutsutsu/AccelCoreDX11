@@ -25,12 +25,18 @@ struct AnimCondition {
     float threshold = 0.0f;
 };
 
+// 遷移の判定ロジック (AND / OR)
+enum class AnimTransitionLogic { AND, OR };
+
 // 遷移の矢印
 struct AnimTransition {
     uint32_t targetStateHash;
 
     // ブレンドにかける時間 (秒)
     float blendDuration = 0.2f;
+
+    // デフォルトは AND（すべて満たす）
+    AnimTransitionLogic logicType = AnimTransitionLogic::AND;
 
 	// その矢印を進むための条件リスト（複数の条件を全て満たす必要がある）
     std::vector<AnimCondition> conditions;
@@ -44,10 +50,12 @@ struct AnimState {
     // 実際に再生するシーケンサーのJSONファイルパス (UnityのMotionにあたるもの)
     std::string sequenceFilePath;
 
+
     // --- 拡張パラメータ ---
     bool isLoop = true;
     float playbackSpeed = 1.0f;
     std::string speedCurveName; // 空文字ならカーブなし(等速)
+    std::string rootMotionCurveName; // 踏み込み距離用
 
     // エディタ上でのノードの座標
     float nodePosX = 0.0f;
@@ -70,6 +78,14 @@ struct AnimStateGraph {
     // Entryノードの座標
     float entryPosX = 0.0f;
     float entryPosY = 0.0f;
+
+    // Any State (特別遷移) のリスト
+    // どのステートにいても、ここの条件を満たせば強制遷移する
+    std::vector<AnimTransition> anyStateTransitions;
+
+    // エディタ表示用の Any State ノード座標
+    float anyStatePosX = 0.0f;
+    float anyStatePosY = 0.0f;
 };
 
 // =================================================================
@@ -106,6 +122,7 @@ inline void from_json(const json& j, AnimCondition& c) {
 inline void to_json(json& j, const AnimTransition& t) {
     j = json{ {"targetStateHash", t.targetStateHash},
             {"blendDuration", t.blendDuration},
+            {"logicType", (int)t.logicType},
             {"conditions", t.conditions} };
 }
 inline void from_json(const json& j, AnimTransition& t) {
@@ -117,6 +134,10 @@ inline void from_json(const json& j, AnimTransition& t) {
     else {
         t.blendDuration = 0.2f; // デフォルト値
     }
+
+    // 古いセーブデータ対応
+    if (j.contains("logicType")) j.at("logicType").get_to((int&)t.logicType);
+    else t.logicType = AnimTransitionLogic::AND;
     j.at("conditions").get_to(t.conditions);
 }
 
@@ -129,6 +150,7 @@ inline void to_json(json& j, const AnimState& s) {
         {"isLoop", s.isLoop},
         {"playbackSpeed", s.playbackSpeed},
         {"speedCurveName", s.speedCurveName},
+        {"rootMotionCurveName", s.rootMotionCurveName},   
         {"nodePosX", s.nodePosX}, // ★追加
         {"nodePosY", s.nodePosY}, // ★追加
         {"transitions", s.transitions}
@@ -141,6 +163,7 @@ inline void from_json(const json& j, AnimState& s) {
     if (j.contains("isLoop")) j.at("isLoop").get_to(s.isLoop);
     if (j.contains("playbackSpeed")) j.at("playbackSpeed").get_to(s.playbackSpeed);
     if (j.contains("speedCurveName")) j.at("speedCurveName").get_to(s.speedCurveName);
+    if (j.contains("rootMotionCurveName")) j.at("rootMotionCurveName").get_to(s.rootMotionCurveName);
 
     // ★追加: 古いJSONでもクラッシュしないように contains でチェック
     if (j.contains("nodePosX")) j.at("nodePosX").get_to(s.nodePosX);
@@ -153,19 +176,26 @@ inline void from_json(const json& j, AnimState& s) {
 inline void to_json(json& j, const AnimStateGraph& g) {
     j = json{
         {"entryStateHash", g.entryStateHash},
-        {"entryPosX", g.entryPosX}, // ★追加
-        {"entryPosY", g.entryPosY}, // ★追加
-        {"states", g.states}
+        {"entryPosX", g.entryPosX}, 
+        {"entryPosY", g.entryPosY}, 
+        {"states", g.states},
+        {"anyStateTransitions", g.anyStateTransitions},
+        {"anyStatePosX", g.anyStatePosX},              
+        {"anyStatePosY", g.anyStatePosY}               
     };
 }
 inline void from_json(const json& j, AnimStateGraph& g) {
     j.at("entryStateHash").get_to(g.entryStateHash);
 
-    // ★追加
     if (j.contains("entryPosX")) j.at("entryPosX").get_to(g.entryPosX);
     if (j.contains("entryPosY")) j.at("entryPosY").get_to(g.entryPosY);
 
     j.at("states").get_to(g.states);
+
+    // 後方互換性を持たせてロード
+    if (j.contains("anyStateTransitions")) j.at("anyStateTransitions").get_to(g.anyStateTransitions);
+    if (j.contains("anyStatePosX")) j.at("anyStatePosX").get_to(g.anyStatePosX);
+    if (j.contains("anyStatePosY")) j.at("anyStatePosY").get_to(g.anyStatePosY);
 }
 
 struct AnimStateMachineComponent {

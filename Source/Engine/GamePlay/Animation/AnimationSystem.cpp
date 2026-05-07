@@ -1,6 +1,6 @@
 #include "AnimationSystem.h"
 #include "ECS/Core/CCL_World.h"
-//#include "Engine/Graphics/Resource/Model.h"
+//#include "Engine/Assets/Model.h"
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Game/Core/SystemPriority.h"
 #include <cmath>
@@ -9,6 +9,10 @@
 // 先ほど作成した専用の手紙ヘッダー
 #include "Engine/GamePlay/Animation/Data/AnimEventMessages.h"
 #include "Engine/GamePlay/Animation/Data/AnimationCurve.h"
+
+#include "Engine/GamePlay/Transform/Motion/MotionComponent.h"
+#include "Game/Logic/System/BlackboardComponent.h"
+#include "Engine/GamePlay/Transform/TransformComponent.h"
 
 
 // ===================================================================================
@@ -23,10 +27,10 @@
 
 AnimationSystem::AnimationSystem() : IfSystem("AnimationSystem") {}
 
-void AnimationSystem::Update(float dt)
+void AnimationSystem::Update(float rawDt)
 {
     // ★超並列処理: ECSの真骨頂。数千体の計算を全コアに分散させる
-    ForEachWithIDParallel([dt, this](CCL::ECS::EntityID id, AnimatorComponent& animator, ModelComponent& modelComp) {
+    ForEachWithIDParallel([this](CCL::ECS::EntityID id, AnimatorComponent& animator, ModelComponent& modelComp, const TimeState& time) {
 
         // 台本（Sequence）がセットされていなければ何もしない
         if (!animator.currentSequence) return;
@@ -49,16 +53,25 @@ void AnimationSystem::Update(float dt)
             curveMultiplier = animator.activeCurve->Evaluate(progress);
         }
 
+        float prevTimeForDelta = animator.currentTimer;
+
         // 時間を進行させる (ベース速度 × カーブによる倍率 を dt に掛ける)
-        animator.currentTimer += dt * animator.playbackSpeed * curveMultiplier;
+        animator.currentTimer += time.localDt * animator.playbackSpeed * curveMultiplier;
+
+        float currTimeForDelta = animator.currentTimer;
+
+        // ループを跨いでいたら、Delta計算を0にする
+        if (currTimeForDelta < prevTimeForDelta) {
+            prevTimeForDelta = currTimeForDelta;
+        }
 
         // ========================================================
         //  過去の記憶（ブレンド）のタイマーを進行させる
         // ========================================================
         if (animator.isBlending) {
-            animator.currentBlendTime += dt;
+            animator.currentBlendTime += time.localDt;
             // 過去のアニメーションも再生し続ける（足がピタッと止まる不自然さを防ぐため）
-            animator.previousTimer += dt * animator.playbackSpeed; 
+            animator.previousTimer += time.localDt * animator.playbackSpeed;
 
             if (animator.previousSequence) {
                 // 過去のアニメがループ仕様なら時間を丸め込む
@@ -78,43 +91,57 @@ void AnimationSystem::Update(float dt)
         while (animator.nextEventIndex < seq->events.size()) {
             const auto& evt = seq->events[animator.nextEventIndex];
 
-            // まだイベントの時間に達していなければ、これ以上の走査は不要
-            // 点のイベント（音を鳴らす、エフェクトを出す）は開始時間になった瞬間に1回だけ発火する
-            if (animator.currentTimer >= evt.startTime) {
+            // ★修正: 新しい仕様に合わせて evt.startTime を参照する
+            if (animator.currentTimer < evt.startTime) {
+                break; // まだ時間が来ていなければループを抜ける
+            }
 
-                // ここがAAAの設計！
-                // 文字列を数値に変換し、switch文で最速のジャンプを行う
-                // ※実行時にはただの「数値の比較（int == int）」になるため負荷はゼロに等しい
-                uint32_t eventHash = CCL::Utils::HashString(evt.eventName.c_str());
+            uint32_t eventHash = CCL::Utils::HashString(evt.eventName.c_str());
+            bool isStandardEvent = true;
 
-                switch (eventHash) {
-                case  CCL::Utils::HashString("HitBox_Start"):
-                    _world->GetEventBus().Publish(AnimEventHitBoxMessage{ id, true });
-                    break;
-                case  CCL::Utils::HashString("HitBox_End"):
-                    _world->GetEventBus().Publish(AnimEventHitBoxMessage{ id, false });
-                    break;
-                case  CCL::Utils::HashString("Play_Sound"):
-                    _world->GetEventBus().Publish(AnimEventSoundMessage{ id });
-                    break;
-                case  CCL::Utils::HashString("Play_Effect"):
-                    _world->GetEventBus().Publish(AnimEventEffectMessage{ id, evt.stringParam });
-                    break;
-				case CCL::Utils::HashString("HitBox"):  // 状態を持つイベントはシステム側で検知するのでイベントはいらない
-                    // [重要] Hitbox は CombatAnimationSyncSystem が直接「状態」として
-                    // 読み取って処理するため、イベントバスに投げる必要はない。無視してよい。
-                    break;
-                default:
-                    // 未知のイベントは無視するか、警告を出す
-                    break;
+            switch (eventHash) {
+            case CCL::Utils::HashString("Play_Sound"):
+                _world->GetEventBus().Publish(AnimEventSoundMessage{ id }); // 実際には param 等を渡す
+                break;
+            case CCL::Utils::HashString("Play_Effect"):
+                _world->GetEventBus().Publish(AnimEventEffectMessage{ id, evt.stringParam });
+                break;
+            case CCL::Utils::HashString("HitBox"):
+                // [重要] HitBox は CombatAnimationSyncSystem が区間監視するのでここでイベントは出さない
+                break;
+            default:
+                isStandardEvent = false;
+                break;
+            }
+
+            // --- B. ブラックボード特化の汎用処理 (エディタの命名規則に対応) ---
+            if (!isStandardEvent) 
+            {
+                if (evt.eventName.find("BB_") == 0) {
+                    if (auto* bb = _world->GetComponent<BlackboardComponent>(id)) 
+                    {
+
+                        // 1. 真偽値（Flag）の判定: "_True" または "_False" で終わるか
+                        if (evt.eventName.find("_True") != std::string::npos) {
+                            std::string key = evt.eventName.substr(3, evt.eventName.find("_True") - 3);
+                            bb->SetBool(key, true);
+                        }
+                        else if (evt.eventName.find("_False") != std::string::npos) {
+                            std::string key = evt.eventName.substr(3, evt.eventName.find("_False") - 3);
+                            bb->SetBool(key, false);
+                        }
+                        // 2. 文字列パラメータがある場合は、そのままキーと値として登録
+                        else if (!evt.stringParam.empty()) {
+                            std::string key = evt.eventName.substr(3);
+                            bb->SetString(key, evt.stringParam);
+                        }
+                    }
                 }
+            }
 
-                // 栞を次に進める
-                animator.nextEventIndex++;
-            }
-            else {
-                break; // まだ時間が来ていないイベントに当たったらループを抜ける
-            }
+            // 栞を次に進める
+            animator.nextEventIndex++;
+        
         }
 
         // ========================================================
@@ -133,44 +160,93 @@ void AnimationSystem::Update(float dt)
         }
 
         // ========================================================
-        // 4. 描画側(Model)への計算依頼
-        // ========================================================
+         // 4. 描画側(Model)への計算依頼
+         // ========================================================
         if (modelComp.GetModel()) {
             Model* model = modelComp.GetModel();
             int animIndex = model->GetAnimationIndex(seq->targetAnimName.c_str());
 
             if (animIndex != -1) {
+                auto* motion = _world->GetComponent<MotionComponent>(id);
+                DirectX::XMVECTOR deltaVec = DirectX::XMVectorZero();
+
+                // ルートモーション抽出フラグの判定
+                bool extractMode = (motion != nullptr) && (!animator.disableRootMotion);
+
                 // ブレンド中の場合は2つのアニメーションを計算して混ぜる
                 if (animator.isBlending && animator.previousSequence) {
                     int prevAnimIndex = model->GetAnimationIndex(animator.previousSequence->targetAnimName.c_str());
 
                     if (prevAnimIndex != -1) {
-                        // ① 過去の姿勢を B に保存
-                        model->ComputeAnimation(prevAnimIndex, animator.previousTimer, animator.poseBufferB);
-                        // ② 現在の姿勢を A に保存
-                        model->ComputeAnimation(animIndex, animator.currentTimer, animator.poseBufferA);
+                        model->ComputeAnimationWithDelta(
+                            prevAnimIndex, animator.previousTimer, animator.previousTimer, // 過去はデルタ不要なので同値
+                            animator.poseBufferB, extractMode, modelComp.rootNodeName, nullptr
+                        );
 
-                        // ③ 補間率 (0.0 ~ 1.0) を算出してクランプ
-                        float blendRate = animator.currentBlendTime / animator.blendDuration;
-                        blendRate = std::fmax(0.0f, std::fmin(blendRate, 1.0f));
+                        model->ComputeAnimationWithDelta(
+                            animIndex, currTimeForDelta, prevTimeForDelta,
+                            animator.poseBufferA, extractMode, modelComp.rootNodeName, extractMode ? &deltaVec : nullptr
+                        );
 
-                        // ④ BとAを混ぜ合わせ、結果を A に上書きする！
+                        float blendRate = std::fmax(0.0f, std::fmin(animator.currentBlendTime / animator.blendDuration, 1.0f));
                         Model::BlendAnimations(animator.poseBufferB, animator.poseBufferA, blendRate, animator.poseBufferA);
-
-                        // ⑤ 混ぜた結果を骨に適用
-                        model->SetNodePoses(animator.poseBufferA);
                     }
                     else {
-                        // 過去のデータが見つからなければ通常再生
-                        model->ComputeAnimation(animIndex, animator.currentTimer, animator.poseBufferA);
-                        model->SetNodePoses(animator.poseBufferA);
+                        model->ComputeAnimationWithDelta(
+                            animIndex, currTimeForDelta, prevTimeForDelta,
+                            animator.poseBufferA, extractMode, modelComp.rootNodeName, extractMode ? &deltaVec : nullptr
+                        );
                     }
                 }
                 else {
-                    // ★ 通常の単独再生
-                    model->ComputeAnimation(animIndex, animator.currentTimer, animator.poseBufferA);
-                    model->SetNodePoses(animator.poseBufferA);
+                    // 通常の単独再生
+                    model->ComputeAnimationWithDelta(
+                        animIndex, currTimeForDelta, prevTimeForDelta,
+                        animator.poseBufferA, extractMode, modelComp.rootNodeName, extractMode ? &deltaVec : nullptr
+                    );
                 }
+
+                // ========================================================
+                // ★ 抽出された移動量の加工（カーブ適用とワールド空間変換）
+                // ========================================================
+                if (extractMode) {
+                    using namespace DirectX::SimpleMath;
+
+                    // 1. ルートモーションカーブの評価と適用 (踏み込み距離の増幅)
+                    float rmMultiplier = 1.0f;
+                    // 現在の進捗率を計算 (時間 / 全体時間)
+                    float normalizedTime = seq->duration > 0.0f ? (animator.currentTimer / seq->duration) : 0.0f;
+
+                    if (animator.activeRootMotionCurve && animator.activeRootMotionCurve->keys.size() > 0) {
+                        rmMultiplier = animator.activeRootMotionCurve->Evaluate(normalizedTime);
+                    }
+
+                    // XMVECTOR を Vector3 に変換して計算しやすくする
+                    Vector3 localDelta;
+                    DirectX::XMStoreFloat3(&localDelta, deltaVec);
+
+                    // X(左右)とZ(前後)にカーブの倍率を乗算
+                    localDelta.x *= rmMultiplier;
+                    localDelta.z *= rmMultiplier;
+
+                    // 2. ワールド空間への変換（キャラクターの向きに合わせる）
+                    auto* trans = _world->GetComponent<TransformComponent>(id);
+                    if (trans) {
+                        // アニメーションの局所的な移動を、キャラクターの向いている方角に回転させる
+                        localDelta = Vector3::Transform(localDelta, trans->rotation);
+                    }
+
+                    // 3. 最終的な移動量を MotionComponent へ渡す
+                    DirectX::XMFLOAT3 finalDelta;
+                    finalDelta.x = localDelta.x;
+                    finalDelta.y = localDelta.y;
+                    finalDelta.z = localDelta.z;
+                    motion->AddImpulse(finalDelta);
+                }
+
+                // 最後に描画用の骨格姿勢を確定させる
+                model->SetNodePoses(animator.poseBufferA);
+
             }
         }
         });
@@ -197,7 +273,10 @@ void AnimationSystem::UpdateManual(CCL::ECS::EntityID entity, float time)
     
     // 4. 指定された時間（time）で骨の姿勢を計算し、モデルに適用する
     if (animIndex != -1) {
-        model->ComputeAnimation(animIndex, time, animator->poseBufferA);
+        model->ComputeAnimationWithDelta(
+            animIndex, time, time, // エディタ中はデルタ移動しない
+            animator->poseBufferA, animator->disableRootMotion, modelComp->rootNodeName, nullptr
+        );
         model->SetNodePoses(animator->poseBufferA);
     }
 }

@@ -10,8 +10,7 @@
 #include "Engine/Serialization/Meta/ComponentMetaJson.h"
 
 #include "Engine/GamePlay/Animation/Data/AnimGraphSerializer.h"
-#include "Engine/Graphics/Resource/ResourceManager.h"
-#include "Engine/Graphics/Core/Graphics.h"
+#include "Engine/Assets/ResourceManager.h"
 #include "Engine/Platform/Dialog.h"
 #include <filesystem>
 
@@ -35,7 +34,8 @@ template <> struct ComponentMeta<AnimatorComponent> {
         ImGui::TextDisabled("Dynamic Preview");
         if (ImGui::Button("Load & Play Sequence... (JSON)", ImVec2(-1, 0))) {
             char filename[256] = {};
-            if (Dialog::OpenFileName(filename, 256, "JSON Files\0*.json\0", "Select Anim Sequence", Graphics::Instance().GetWindowHandle()) == DialogResult::OK) {
+            if (Dialog::OpenFileName(filename, 256, "JSON Files\0*.json\0", "Select Anim Sequence",
+                "Data/Animations/Sequence", GetActiveWindow()) == DialogResult::OK) {
 
                 namespace fs = std::filesystem;
                 fs::path absPath = filename;
@@ -99,7 +99,8 @@ template <> struct ComponentMeta<AnimStateMachineComponent> {
 
         if (ImGui::Button("Load Anim Graph... (JSON)", ImVec2(-1, 0))) {
             char filename[MAX_PATH] = {};
-            if (Dialog::OpenFileName(filename, MAX_PATH, "JSON Files\0*.json\0", "Select Anim Graph", Graphics::Instance().GetWindowHandle()) == DialogResult::OK) {
+            if (Dialog::OpenFileName(filename, MAX_PATH, "JSON Files\0*.json\0", "Select Anim Graph",
+                "Data/Animations/Node", GetActiveWindow()) == DialogResult::OK) {
 
                 namespace fs = std::filesystem;
                 fs::path absPath = filename;

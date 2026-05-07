@@ -15,6 +15,10 @@
 struct AnimEventHitBoxMessage {
     CCL::ECS::EntityID entity;
     bool isActive; // true なら判定ON、false なら判定OFF
+
+    // アニメーション側で設定されたヒットストップ性能
+    float hitStopDuration = 0.0f;
+    float hitStopFreezeScale = 0.0f;
 };
 
 // 2. 音響システム（AudioSystem）宛ての手紙

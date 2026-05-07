@@ -2,7 +2,7 @@
  * @file CombatAnimationSyncSystem.cpp
  */
 #include "CombatAnimationSyncSystem.h"
-#include "Game/Logics/Combat/CombatComponents.h"
+#include "Game/Logic/Combat/CombatComponents.h"
 #include "ECS/Core/CCL_World.h"
 #include "ECS/System/CCL_SystemRegistry.h"
 #include "Game/Core/SystemPriority.h"
@@ -31,11 +31,18 @@ void CombatAnimationSyncSystem::Update(float dt) {
             // この部位に対して、現在の時間でアクティブなHitBoxイベントがあるか調べる
             bool shouldBeActive = false;
 
+            // ループを抜けた後でも使えるように一時変数を用意しておく
+            float currentHitStopDuration = 0.0f;
+            float currentHitStopFreezeScale = 0.0f;
+
             for (const auto& ev : seq->events) {
                 if (ev.eventName == "HitBox" && ev.stringParam == targetTag) {
-                    // 現在の再生時間がイベントの区間内にあるか判定
                     if (animator.currentTimer >= ev.startTime && animator.currentTimer <= ev.endTime) {
                         shouldBeActive = true;
+
+                        // ★追加: 今アクティブになっているイベントの数値をキャッシュする
+                        currentHitStopDuration = ev.floatParam1;
+                        currentHitStopFreezeScale = ev.floatParam2;
                         break;
                     }
                 }
@@ -49,6 +56,10 @@ void CombatAnimationSyncSystem::Update(float dt) {
                 hitbox->hitCount = 0; // 多段ヒット防止の履歴をクリア
                 memset(hitbox->hitTargets, 0, sizeof(hitbox->hitTargets)); // 履歴配列をゼロクリア
                 hitbox->isActive = true;
+
+                // ★追加: データのバケツリレー（上でキャッシュした数値を入れる）
+                hitbox->hitStopDuration = currentHitStopDuration;
+                hitbox->hitStopFreezeScale = currentHitStopFreezeScale;
 
                 CCL_LOG_INFO(LogCategory::Game, "Hitbox Activated on '%s' (Entity %llu)", targetTag, weaponID);
             }

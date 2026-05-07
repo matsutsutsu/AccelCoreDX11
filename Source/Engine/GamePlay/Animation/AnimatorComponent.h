@@ -1,5 +1,5 @@
 #pragma once
-#include "Engine/Graphics/Resource/Model.h"
+#include "Engine/Assets/Model.h"
 #include "Engine/GamePlay/Animation/Data/AnimSequence.h"
 #include <vector>
 // カーブデータ構造の先行宣言（後で定義します）
@@ -20,14 +20,19 @@ struct AnimatorComponent {
     // --- 再生する台本データ ---
     const AnimSequence* currentSequence = nullptr; // 共有データへのポインタ（8バイト）
 
+
+
     // 再生速度を動的に変化させるカーブのポインタ
     const AnimationCurve* activeCurve = nullptr;
+	// ルートモーション速度倍率を制御するカーブのポインタ
+    const AnimationCurve* activeRootMotionCurve = nullptr;
 
     // --- アニメーション状態（時計） ---
     float currentTimer = 0.0f;
     float playbackSpeed = 1.0f;
     bool  isLoop = true;
     bool  isFinished = false;
+    bool disableRootMotion = false;
 
     // ★ O(1)アクセスのための「栞（しおり）」
     // 次にチェックするイベントのインデックス
@@ -49,7 +54,8 @@ struct AnimatorComponent {
     // エディタからの強制制御フラグ
     bool isEditorOverride = false;
 
-    void Play(const AnimSequence* sequence, float blendTime = 0.2f, bool loop = true, float speed = 1.0f, const AnimationCurve* curve = nullptr) {
+    void Play(const AnimSequence* sequence, float blendTime = 0.2f, bool loop = true, float speed = 1.0f)
+    {
         if (currentSequence != sequence) {
             // 前のアニメーションを「過去」として記録し、ブレンドを開始する
             if (currentSequence && blendTime > 0.001f) {
@@ -71,7 +77,16 @@ struct AnimatorComponent {
         }
         isLoop = loop;
         playbackSpeed = speed;
-        activeCurve = curve;
+       
+        // ★魔法: 自分の台本(sequence)から直接カーブのアドレスを取得する
+        if (currentSequence) {
+            activeCurve = &currentSequence->speedCurve;
+            activeRootMotionCurve = &currentSequence->rootMotionCurve;
+        }
+        else {
+            activeCurve = nullptr;
+            activeRootMotionCurve = nullptr;
+        }
     }
 
 };

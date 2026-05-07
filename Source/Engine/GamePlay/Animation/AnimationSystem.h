@@ -2,6 +2,7 @@
 #include "ECS/System/CCL_System.h"
 #include "Engine/GamePlay/Graphics/Core/ModelComponent.h"
 #include "Engine/GamePlay/Animation/AnimatorComponent.h"
+#include "Engine/GamePlay/Core/Time/TimeState.h"
 
 // ===================================================================================
 // ファイル: AnimationSystem.h
@@ -15,7 +16,8 @@
 
 class AnimationSystem : public CCL::ECS::IfSystem<AnimationSystem,
                             CCL::ECS::Write<AnimatorComponent>,
-                            CCL::ECS::Write<ModelComponent>> {
+                            CCL::ECS::Write<ModelComponent>,
+                            CCL::ECS::Read<TimeState>> { // 個別の時間を受け取る
   public:
     AnimationSystem();
     virtual ~AnimationSystem() = default;
