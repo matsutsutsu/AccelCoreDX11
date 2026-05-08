@@ -51,10 +51,24 @@ void TrailRenderer::Render(ID3D11DeviceContext* dc, const TrailComponent& trail)
         XMFLOAT4 color = trail.color;
         color.w *= lifeRatio; // アルファ値に適用
 
-        // 根本の頂点 (UVの V = 0.0)
+        // =========================================================
+        // ★追加 幅のテーパリング（鋭利化）計算
+        // =========================================================
+        XMVECTOR baseV = XMLoadFloat3(&pt.basePos);
+        XMVECTOR tipV = XMLoadFloat3(&pt.tipPos);
+
+        // 過去の点（lifeRatioが0に近い）ほど、先端の座標を根本に近づける
+        // ※ 0.0f にすると完全に一点に収束し、0.2f くらいにすると少し太さを残して消えます
+        float widthScale = std::lerp(0.0f, 1.0f, lifeRatio);
+        XMVECTOR taperedTipV = XMVectorLerp(baseV, tipV, widthScale);
+
+        XMFLOAT3 taperedTip;
+        XMStoreFloat3(&taperedTip, taperedTipV);
+
+        // 根本の頂点
         vertexData.push_back({ pt.basePos, color, XMFLOAT2(u, 0.0f) });
-        // 先端の頂点 (UVの V = 1.0)
-        vertexData.push_back({ pt.tipPos, color, XMFLOAT2(u, 1.0f) });
+        // 先端の頂点をテーパリング済みの座標に差し替え
+        vertexData.push_back({ taperedTip, color, XMFLOAT2(u, 1.0f) });
     }
 
     // =================================================================
