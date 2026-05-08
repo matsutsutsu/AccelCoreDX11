@@ -157,7 +157,7 @@ namespace DialogPreset
 
     const DialogConfig Animation = {
         /* title      */ "アニメーションファイルを選択",
-        /* filter     */ "アニメーション\0*.fbx;*.bvh\0FBX\0*.fbx\0BVH\0*.bvh\0すべてのファイル\0*.*\0",
+        /* filter     */ "JSON Files (*.json)\0*.json\0",
         /* defaultDir */ "Assets/Animations",
         /* ext        */ nullptr,
         /* multiSelect*/ false,
@@ -166,37 +166,35 @@ namespace DialogPreset
 
     const DialogConfig BehaviorTree = {
         "AI ビヘイビアツリーを選択",
-        "BehaviorTree\0*.json\0すべてのファイル\0*.*\0",
+        "JSON Files (*.json)\0*.json\0",
         "Assets/BehaviorTree",
         "json",
         false,
         "BehaviorTree",
     };
 
-    // アニメーション：カーブデータ（TestCurve_01.json 等 [cite: 2]）
+    // ---- アニメーション系も同様に JSON に統一 ----
     const DialogConfig AnimCurve = {
         "アニメーションカーブを選択",
-        "Curve Data\0*.json\0",
+        "JSON Files (*.json)\0*.json\0",
         "Assets/Animations/Curve",
         "json",
         false,
         "AnimCurve"
     };
 
-    // アニメーション：グラフノード（Boss_AnimGraphNode.json 等 [cite: 2]）
     const DialogConfig AnimNode = {
         "アニメーショングラフノードを選択",
-        "Anim Node\0*.json\0",
+        "JSON Files (*.json)\0*.json\0",
         "Assets/Animations/Node",
         "json",
         false,
         "AnimNode"
     };
 
-    // アニメーション：シーケンス（Jammo_Run.json 等 [cite: 3]）
     const DialogConfig AnimSequence = {
         "アニメーションシーケンスを選択",
-        "Anim Sequence\0*.json\0",
+        "JSON Files (*.json)\0*.json\0",
         "Assets/Animations/Sequence",
         "json",
         false,
@@ -264,7 +262,7 @@ namespace DialogPreset
     // ---- シーン / データ ----
     const DialogConfig Scene = {
         /* title      */ "シーンファイルを選択",
-        /* filter     */ "シーン\0*.scene;*.json\0SCENE\0*.scene\0JSON\0*.json\0すべてのファイル\0*.*\0",
+        /* filter     */ "JSON Files (*.json)\0*.json\0",
         /* defaultDir */ "Assets/Scene",
         /* ext        */ "scene",
         /* multiSelect*/ false,
@@ -273,7 +271,7 @@ namespace DialogPreset
 
     const DialogConfig Prefab = {
         /* title      */ "プレハブファイルを選択",
-        /* filter     */ "プレハブ\0*.prefab;*.json\0PREFAB\0*.prefab\0JSON\0*.json\0すべてのファイル\0*.*\0",
+        /* filter     */ "JSON Files (*.json)\0*.json\0",
         /* defaultDir */ "Assets/Prefabs",
         /* ext        */ "prefab",
         /* multiSelect*/ false,
@@ -282,7 +280,7 @@ namespace DialogPreset
 
     const DialogConfig Config = {
         /* title      */ "設定ファイルを選択",
-        /* filter     */ "設定ファイル\0*.json;*.ini;*.xml\0JSON\0*.json\0INI\0*.ini\0XML\0*.xml\0すべてのファイル\0*.*\0",
+        /* filter     */ "JSON Files (*.json)\0*.json\0INI Files (*.ini)\0*.ini\0XML Files (*.xml)\0*.xml\0All Files (*.*)\0*.*\0",
         /* defaultDir */ "Assets/Config",
         /* ext        */ "json",
         /* multiSelect*/ false,

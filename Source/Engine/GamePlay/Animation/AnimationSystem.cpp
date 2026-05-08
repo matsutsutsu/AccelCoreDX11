@@ -238,27 +238,19 @@ void AnimationSystem::Update(float rawDt)
 
                     DirectX::XMFLOAT3 finalDelta(localDelta.x, localDelta.y, localDelta.z);
 
-                    // ★ デバッグログ1：抽出された純粋な移動量
-                    CCL_LOG_INFO(LogCategory::Game, "[RootMotion] Entity[%llu] Extracted Delta: X=%.4f, Y=%.4f, Z=%.4f",
-                        id, finalDelta.x, finalDelta.y, finalDelta.z);
-
+                
                     // 旧Rigidbodyと新JoltCharacterのどちらでも動くように分配
                     if (motion) {
                         motion->AddImpulse(finalDelta);
-                        CCL_LOG_INFO(LogCategory::Game, "[RootMotion] -> Applied to MotionComponent");
+                       
                     }
                     else if (charInput && time.localDt > 0.0f) {
                         charInput->desiredVelocity.x += finalDelta.x / time.localDt;
                         charInput->desiredVelocity.y += finalDelta.y / time.localDt;
                         charInput->desiredVelocity.z += finalDelta.z / time.localDt;
-                        // ★ デバッグログ2：JoltCharacterに渡された後の速度
-                        CCL_LOG_INFO(LogCategory::Game, "[RootMotion] -> Applied to CharacterInput, Velocity: X=%.2f, Z=%.2f",
-                            charInput->desiredVelocity.x, charInput->desiredVelocity.z);
+                        
                     }
-                    else {
-                        // ★ デバッグログ3：受け取り手がいない場合の警告
-                        CCL_LOG_WARN(LogCategory::Game, "[RootMotion] ERROR: No Motion or CharacterInput Component found!");
-                    }
+                   
                 }
 
                 // 最後に描画用の骨格姿勢を確定させる
