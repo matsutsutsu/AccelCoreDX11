@@ -40,9 +40,9 @@ void EditorScene::Initialize()
     // 中では普通にPBRモデル用にしている
     SceneInitializer::SpawnAnimationTest(*_worldPtr, device);
 
-    _context.pendingLoadScenePath = "Assets/Scene/BossAITestScene.json";
+    //_context.pendingLoadScenePath = "Assets/Scene/BossAITestScene.json";
     //_context.pendingLoadScenePath = "Assets/Scene/ChainAttackTestScene02.json";
-    //_context.pendingLoadScenePath = "Assets/Scene/HitStopDroneScene.json";
+    _context.pendingLoadScenePath = "Assets/Scene/HitStopDroneScene.json";
 
     //SceneInitializer::SpawnBossAndDronesTest(*_worldPtr, device);
 

@@ -54,15 +54,17 @@ void JoltPushSystem::Update(float dt) {
                 // 毎フレームECS側の最新のワールド座標を物理エンジンに押し付ける
                 if (bodyInterface.GetMotionType(joltBody.bodyID) == JPH::EMotionType::Kinematic) {
 
-                    // SetPositionAndRotation を使うことで、アニメーションの動きに合わせて
-                    // 正確にJoltのコリジョン枠が追従します。
-                    // (もし他の剛体を押しのけたい場合は bodyInterface.MoveKinematic を使います)
-                    bodyInterface.SetPositionAndRotation(
-                        joltBody.bodyID,
-                        joltPos,
-                        joltRot,
-                        JPH::EActivation::Activate
-                    );
+                    if (trans.isDirty) {
+                        // SetPositionAndRotation を使うことで、アニメーションの動きに合わせて
+                        // 正確にJoltのコリジョン枠が追従します。
+                        // (もし他の剛体を押しのけたい場合は bodyInterface.MoveKinematic を使います)
+                        bodyInterface.SetPositionAndRotation(
+                            joltBody.bodyID,
+                            joltPos,
+                            joltRot,
+                            JPH::EActivation::Activate
+                        );
+                    }
                 }
             }
         });
