@@ -83,6 +83,10 @@ public:
                 item.type = 2;
                 cache.push_back(item);
             }
+            else if (evt.eventName == "Trail") { 
+                item.type = 4;
+                cache.push_back(item);
+            }
             else if (evt.eventName.find("BB_") == 0 && evt.eventName.find("_True") != std::string::npos) {
                 item.type = 3;
                 pendingBBStart = (int)(evt.startTime * 60.0f);
@@ -134,6 +138,11 @@ public:
                 ev.stringParam = item.stringParam;
                 targetSequence->events.push_back(ev);
             }
+            else if (item.type == 4) { // ★追加
+                ev.eventName = "Trail";
+                ev.stringParam = item.stringParam;
+                targetSequence->events.push_back(ev);
+            }
             else if (item.type == 3) {
                 // Blackboardの場合は、開始時にTrue、終了時にFalseの2つのイベントを生成する
                 std::string baseName = item.stringParam;
@@ -164,7 +173,7 @@ public:
     virtual int GetFrameMin() const override { return mFrameMin; }
     virtual int GetFrameMax() const override { return mFrameMax; }
     virtual int GetItemCount() const override { return (int)cache.size(); }
-    virtual int GetItemTypeCount() const override { return 4; }
+    virtual int GetItemTypeCount() const override { return 5; }
 
     virtual const char* GetItemTypeName(int typeIndex) const override {
         switch (typeIndex) {
@@ -172,6 +181,7 @@ public:
         case 1: return "Sound (SE)";
         case 2: return "Effect (VFX)";
         case 3: return "Blackboard (Flag)";
+        case 4: return "Trail (VFX)";
         default: return "Unknown";
         }
     }
@@ -186,6 +196,7 @@ public:
         case 1: sprintf_s(temp, "[%d] Sound: %s", index, name); break;
         case 2: sprintf_s(temp, "[%d] Effect: %s", index, name); break;
         case 3: sprintf_s(temp, "[%d] Blackboard: %s", index, name); break;
+        case 4: sprintf_s(temp, "[%d] Trail: %s", index, name); break;
         default: sprintf_s(temp, "[%d] Event", index); break;
         }
         return temp;
@@ -202,6 +213,8 @@ public:
             case 0: *color = 0xFF5050D0; break;
             case 1: *color = 0xFFD08050; break;
             case 2: *color = 0xFF50D050; break;
+            case 3: *color = 0xFFFFFFFF; break;
+            case 4: *color = 0xFFFF50FF; break; 
             default: *color = 0xFFFFFFFF; break;
             }
         }
@@ -704,6 +717,8 @@ void AnimationSequencerWindow::DrawContents(EditorContext& context)
         if (ImGui::Button("+ Sound (SE)")) AddAndSelectEvent(1);
         ImGui::SameLine();
         if (ImGui::Button("+ Effect (VFX)")) AddAndSelectEvent(2);
+        ImGui::SameLine(); // ★追加
+        if (ImGui::Button("+ Trail")) AddAndSelectEvent(4);
         if (ImGui::Button("+ BB Flag")) { AddAndSelectEvent(3); }
 
         int currentFrame = context.isAnimEditMode ? (int)(context.animEditTime * 60.0f) : (int)(animator->currentTimer * 60.0f);
@@ -760,13 +775,13 @@ void AnimationSequencerWindow::DrawContents(EditorContext& context)
             ImGui::Text("Time: %.2fs - %.2fs", selectedItem.frameStart / 60.0f, selectedItem.frameEnd / 60.0f);
             ImGui::Spacing();
 
-            if (selectedItem.type == 0) {
+            if (selectedItem.type == 0 || selectedItem.type == 4) {
                 auto* roster = context.world->GetComponent<CombatRosterComponent>(entity);
                 if (roster && roster->count > 0) {
-                    ImGui::Text("Target Weapon Tag:");
+                    ImGui::Text(selectedItem.type == 0 ? "Target Weapon Tag:" : "Trail Weapon Tag:");
                     const char* currentPreview = selectedItem.stringParam[0] != '\0' ? selectedItem.stringParam : "Select Tag...";
                     ImGui::SetNextItemWidth(-1);
-                    if (ImGui::BeginCombo("##HitboxTag", currentPreview)) {
+                    if (ImGui::BeginCombo("##WeaponTag", currentPreview)) {
                         for (int i = 0; i < roster->count; ++i) {
                             bool isSelected = (strcmp(selectedItem.stringParam, roster->entries[i].tag) == 0);
                             if (ImGui::Selectable(roster->entries[i].tag, isSelected)) {
@@ -781,23 +796,28 @@ void AnimationSequencerWindow::DrawContents(EditorContext& context)
                 else {
                     ImGui::TextColored(ImVec4(1, 1, 0, 1), "[Warning] No Roster");
                     ImGui::SetNextItemWidth(-1);
-                    if (ImGui::InputText("##DamageTag", selectedItem.stringParam, sizeof(selectedItem.stringParam))) propChanged = true;
+                    if (ImGui::InputText("##WeaponTag", selectedItem.stringParam, sizeof(selectedItem.stringParam))) propChanged = true;
                 }
 
                 ImGui::Spacing();
                 ImGui::Separator();
-                ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.3f, 1.0f), "Hit Stop Settings");
 
-                // ヒットストップ時間のスライダー (floatParam1 を使用)
-                if (ImGui::SliderFloat("Duration (sec)", &selectedItem.floatParam1, 0.0f, 1.0f, "%.2f s")) {
-                    propChanged = true;
+                // ▼ HitBox固有のパラメータ
+                if (selectedItem.type == 0) {
+                    ImGui::TextColored(ImVec4(1.0f, 0.7f, 0.3f, 1.0f), "Hit Stop Settings");
+                    if (ImGui::SliderFloat("Duration (sec)", &selectedItem.floatParam1, 0.0f, 1.0f, "%.2f s")) propChanged = true;
+                    if (ImGui::SliderFloat("Time Scale", &selectedItem.floatParam2, 0.0f, 1.0f, "%.2f x")) propChanged = true;
                 }
+                // ▼ Trail固有のパラメータ（★新規追加）
+                else if (selectedItem.type == 4) {
+                    ImGui::TextColored(ImVec4(0.8f, 0.3f, 1.0f, 1.0f), "Trail Parameter Overrides");
+                    // floatParam1 を トレイルの寿命（長さ）として使う
+                    if (ImGui::SliderFloat("Life Time", &selectedItem.floatParam1, 0.05f, 1.0f, "%.2f s")) propChanged = true;
+                    if (ImGui::IsItemHovered()) ImGui::SetTooltip("0.0の場合はコンポーネント側の設定をそのまま使います");
 
-                // ヒットストップ中の時間の進み具合 (floatParam2 を使用。0.0 で完全停止)
-                if (ImGui::SliderFloat("Time Scale", &selectedItem.floatParam2, 0.0f, 1.0f, "%.2f x")) {
-                    propChanged = true;
+                    // floatParam2 を 頂点の生成間隔として使う
+                    if (ImGui::SliderFloat("Min Vertex Dist", &selectedItem.floatParam2, 0.0f, 0.5f, "%.3f m")) propChanged = true;
                 }
-
             }
             else if (selectedItem.type == 1 || selectedItem.type == 2) {
                 ImGui::Text(selectedItem.type == 1 ? "Audio File Path:" : "Prefab File Path:");

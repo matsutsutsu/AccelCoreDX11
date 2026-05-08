@@ -201,7 +201,7 @@ void SceneInitializer::SpawnBossVFXTest(CCL::ECS::Core::World& world)
     // 1. 瓦礫の波紋 (ZeroG Debris) - 約500個
     // ========================================================
     auto debrisArch = ArchetypeHelper::Generate<TransformComponent, PrimitiveComponent, ZeroGDebrisComponent>();
-    for (int i = 0; i < 500; ++i) {
+    for (int i = 0; i < 5000; ++i) {
         auto e = EntityFactory::SpawnNamed(world, "Debris", debrisArch);
 
         float angle = distAngle(gen);

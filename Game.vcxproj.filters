@@ -1542,6 +1542,12 @@
     <ClInclude Include="Source\Engine\Graphics\Shader\Material\TrailShader.h">
       <Filter>Source\Engine\Graphics\Shader\Material</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Test\ZeroGDebrisComponent.h">
+      <Filter>Source\Game\Logics\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Test\ZeroGDebrisSystem.h">
+      <Filter>Source\Game\Logics\Test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\implot-master\implot.cpp">
@@ -2392,6 +2398,9 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Logics\Combat\Shader\TrailComponentMeta.cpp">
       <Filter>Source\Game\Logics\Combat\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Test\ZeroGDebrisSystem.cpp">
+      <Filter>Source\Game\Logics\Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

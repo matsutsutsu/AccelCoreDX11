@@ -491,6 +491,8 @@
     <ClInclude Include="Source\Game\Logics\Test\VectorFlowSystem.h" />
     <ClInclude Include="Source\Game\Logics\Test\VoxelOceanComponent.h" />
     <ClInclude Include="Source\Game\Logics\Test\VoxelOceanSystem.h" />
+    <ClInclude Include="Source\Game\Logics\Test\ZeroGDebrisComponent.h" />
+    <ClInclude Include="Source\Game\Logics\Test\ZeroGDebrisSystem.h" />
     <ClInclude Include="Source\Game\Scenes\BaseScene.h" />
     <ClInclude Include="Source\Game\Scenes\EditorScene.h" />
     <ClInclude Include="Source\Game\Scenes\ParticleScene.h" />
@@ -779,6 +781,7 @@
     <ClCompile Include="Source\Game\Logics\Test\TornadoVortexSystem.cpp" />
     <ClCompile Include="Source\Game\Logics\Test\VectorFlowSystem.cpp" />
     <ClCompile Include="Source\Game\Logics\Test\VoxelOceanSystem.cpp" />
+    <ClCompile Include="Source\Game\Logics\Test\ZeroGDebrisSystem.cpp" />
     <ClCompile Include="Source\Game\Scenes\BaseScene.cpp" />
     <ClCompile Include="Source\Game\Scenes\EditorScene.cpp" />
     <ClCompile Include="Source\Game\Scenes\ParticleScene.cpp" />
