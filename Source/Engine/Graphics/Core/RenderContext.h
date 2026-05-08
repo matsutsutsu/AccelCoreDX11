@@ -11,6 +11,7 @@ class PostProcessManager;
 class ParticleRenderer;   
 class PrimitiveRenderer;  
 class ShapeRenderer;      
+class TrailRenderer;
 
 class RenderQueue;
 
@@ -29,6 +30,7 @@ struct RenderContext
 	ParticleRenderer* particleRenderer = nullptr;
 	PrimitiveRenderer* primitiveRenderer = nullptr;
 	ShapeRenderer* shapeRenderer = nullptr;
+	TrailRenderer* trailRenderer = nullptr;
 
 	// 伝票カウンター
 	RenderQueue* renderQueue = nullptr;

@@ -21,7 +21,7 @@ struct BloomResources
         float threshold;
         float softKnee;
         float intensity;
-        float padding;
+        float maxBrightness;
         float texelWidth;
         float texelHeight;
         float pad2[2];
@@ -152,6 +152,7 @@ ID3D11ShaderResourceView* BloomPass::Process(
     cbData.threshold = config.threshold;
     cbData.softKnee = config.softKnee;
     cbData.intensity = config.intensity;
+	cbData.maxBrightness = config.maxBrightness;
     // TexelSizeはループ内で設定
 
     // --- 2. 抽出パス (Input -> Down[0]) ---

@@ -10,4 +10,6 @@ public:
 private:
     PipelineState _psoTransparent;
     InstanceBuffer _instanceBuffer;
+
+    PipelineState _psoTrail;       //  トレイル専用の加算合成PSO
 };

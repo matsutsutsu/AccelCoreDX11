@@ -9,6 +9,7 @@
 #include "Engine/Graphics/Renderer/ShapeRenderer.h"
 #include "Engine/Graphics/Renderer/ModelRenderer.h"
 #include "Engine/Graphics/Renderer/ParticleRenderer.h"
+#include "Engine/Graphics/Renderer/TrailRenderer.h"
 #include "Engine/Graphics/Shader/Pass/ShadowMap.h"
 
 class Camera;
@@ -82,6 +83,9 @@ public:
 	// パーティクルレンダラ取得
 	ParticleRenderer *GetParticleRenderer() const { return particleRenderer.get(); }
 
+	// トレイルレンダラ取得
+	TrailRenderer* GetTrailRenderer() const { return trailRenderer.get(); }
+
 	// シャドウマップ取得
 	ShadowMap* GetShadowMap() const { return shadowMap.get(); }
 
@@ -117,6 +121,7 @@ private:
 	std::unique_ptr<ShapeRenderer>					shapeRenderer;
 	std::unique_ptr<ModelRenderer>					modelRenderer;
     std::unique_ptr<ParticleRenderer>               particleRenderer;
+	std::unique_ptr<TrailRenderer>                  trailRenderer;	
 
 	std::unique_ptr<ShadowMap> shadowMap;
 

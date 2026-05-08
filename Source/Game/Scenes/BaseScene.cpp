@@ -91,6 +91,7 @@ void BaseScene::Initialize()
     _worldPtr->AddResource<ParticleRenderer *>(graphics.GetParticleRenderer());
     _worldPtr->AddResource<PrimitiveRenderer *>(graphics.GetPrimitiveRenderer());
     _worldPtr->AddResource<ShapeRenderer *>(graphics.GetShapeRenderer());
+	_worldPtr->AddResource<TrailRenderer*>(graphics.GetTrailRenderer());
 
     _worldPtr->AddResource<TimeContext>();
 
@@ -171,6 +172,7 @@ void BaseScene::Render()
     rc.particleRenderer = graphics.GetParticleRenderer();
     rc.primitiveRenderer = graphics.GetPrimitiveRenderer();
     rc.shapeRenderer = graphics.GetShapeRenderer();
+	rc.trailRenderer = graphics.GetTrailRenderer();
 
 
 

@@ -12,6 +12,8 @@
 #include "Engine/Graphics/Shader/Material/ShadowMapShader.h"
 #include "Engine/Graphics/Shader/Material/ToonShader.h"
 
+#include "Engine/Graphics/Shader/Material/TrailShader.h" // 上部に追加
+
 // HLSLの CbScene (b8) に合わせた構造体
 struct CbSceneData {
     DirectX::XMMATRIX viewProjection;
@@ -153,7 +155,7 @@ void Graphics::Initialize(HWND hWnd)
 	shadowMap = std::make_unique<ShadowMap>(device.Get(), 2048, 2048);
 	particleRenderer = std::make_unique<ParticleRenderer>();
     particleRenderer->Initialize(device.Get());
-
+	trailRenderer = std::make_unique<TrailRenderer>();
 
 	// enum ではなく、文字列のハッシュ値を使ってシェーダーファクトリを登録します
 	ShaderRegistry::Instance().RegisterShader<BasicShader>("Basic"_hash);
@@ -163,6 +165,9 @@ void Graphics::Initialize(HWND hWnd)
 	ShaderRegistry::Instance().RegisterShader<OutlineShader>("Outline"_hash);
 	ShaderRegistry::Instance().RegisterShader<ShadowMapShader>("ShadowMap"_hash);
 	ShaderRegistry::Instance().RegisterShader<PBRShader>("PBR"_hash);
+
+	// トレイルシェーダーの登録
+	ShaderRegistry::Instance().RegisterShader<TrailShader>("Trail"_hash);
 
 	// ゲームビュー用RTT作成
 	D3D11_TEXTURE2D_DESC texDesc = {};
@@ -291,6 +296,8 @@ void Graphics::Shutdown()
     modelRenderer.reset();
     shapeRenderer.reset();
     primitiveRenderer.reset();
+	particleRenderer.reset();
+	trailRenderer.reset();
     renderState.reset();
 
     depthStencilView.Reset();

@@ -32,6 +32,21 @@ struct PipelineStateDesc {
         desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
         return desc;
     }
+
+    // =========================================================
+    // ③ トレイル・パーティクル等の加算合成（光るエフェクト）用
+    // =========================================================
+    static PipelineStateDesc DefaultAdditive() {
+        PipelineStateDesc desc;
+        // 加算合成のブレンドステート（※RenderState.hに Additive がある前提）
+        desc.blend = BlendState::Additive;
+        // 半透明なので深度テストはするが、Zバッファへの書き込みはしない
+        desc.depth = DepthState::TestOnly;
+        // 剣の軌跡は裏からも見える必要があるのでカリングなし
+        desc.rasterizer = RasterizerState::SolidCullNone;
+        desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+        return desc;
+    }
 };
 
 // 2. 完成した「金型（PSO）」本体

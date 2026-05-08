@@ -16,7 +16,7 @@ cbuffer CbBloom : register(REG_CB(SLOT_CB_BLOOM))
     float gThreshold; // 閾値 (1.0)
     float gSoftKnee; // 滑らかさ (0.5)
     float gIntensity; // 強度 (1.0)
-    float gPadding;
+    float gMaxBrightness; // 異常発光対策の最大輝度 (10.0)
 
     // テクセルサイズ (1.0 / width, 1.0 / height)
     float2 gTexelSize;

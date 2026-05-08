@@ -433,6 +433,9 @@
     <Filter Include="Source\Game\Logics\Combat\Shader">
       <UniqueIdentifier>{e6f9e5c3-4a61-4021-9e2a-030f464799f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Material\Trail">
+      <UniqueIdentifier>{24f94ee4-1470-432a-9772-d54d6c0e6346}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\implot-master\implot.h">
@@ -1527,6 +1530,18 @@
     <ClInclude Include="Source\Engine\GamePlay\Transform\Motion\MotionComponent.h">
       <Filter>Source\Engine\GamePlay\Transform\Motion</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Combat\Shader\TrailComponent.h">
+      <Filter>Source\Game\Logics\Combat\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Logics\Combat\Shader\TrailSystem.h">
+      <Filter>Source\Game\Logics\Combat\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Renderer\TrailRenderer.h">
+      <Filter>Source\Engine\Graphics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Graphics\Shader\Material\TrailShader.h">
+      <Filter>Source\Engine\Graphics\Shader\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\implot-master\implot.cpp">
@@ -2366,6 +2381,18 @@
     <ClCompile Include="Source\Engine\GamePlay\Graphics\Particle\GPUParticleComponentMeta.cpp">
       <Filter>Source\Engine\GamePlay\Graphics\Particle\_Meta</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Combat\Shader\TrailSystem.cpp">
+      <Filter>Source\Game\Logics\Combat\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Renderer\TrailRenderer.cpp">
+      <Filter>Source\Engine\Graphics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Graphics\Shader\Material\TrailShader.cpp">
+      <Filter>Source\Engine\Graphics\Shader\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Logics\Combat\Shader\TrailComponentMeta.cpp">
+      <Filter>Source\Game\Logics\Combat\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Common\Common.hlsli">
@@ -2519,6 +2546,12 @@
     </FxCompile>
     <FxCompile Include="Shader\Pass\SkyBox\SkyboxPS.hlsl">
       <Filter>Shader\Pass\SkyBox</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\Material\Trail\TrailVS.hlsl">
+      <Filter>Shader\Material\Trail</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\Material\Trail\TrailPS.hlsl">
+      <Filter>Shader\Material\Trail</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

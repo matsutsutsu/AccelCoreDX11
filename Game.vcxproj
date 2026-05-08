@@ -366,6 +366,7 @@
     <ClInclude Include="Source\Engine\Graphics\Renderer\RenderQueue.h" />
     <ClInclude Include="Source\Engine\Graphics\Renderer\ShapeRenderer.h" />
     <ClInclude Include="Source\Engine\Graphics\Renderer\Sprite.h" />
+    <ClInclude Include="Source\Engine\Graphics\Renderer\TrailRenderer.h" />
     <ClInclude Include="Source\Engine\Graphics\Resource\GLTFImporter.h" />
     <ClInclude Include="Source\Engine\Graphics\Resource\GraphicsTypes.h" />
     <ClInclude Include="Source\Engine\Graphics\Resource\MaterialData.h" />
@@ -382,6 +383,7 @@
     <ClInclude Include="Source\Engine\Graphics\Shader\Material\PhongShader.h" />
     <ClInclude Include="Source\Engine\Graphics\Shader\Material\ShadowMapShader.h" />
     <ClInclude Include="Source\Engine\Graphics\Shader\Material\ToonShader.h" />
+    <ClInclude Include="Source\Engine\Graphics\Shader\Material\TrailShader.h" />
     <ClInclude Include="Source\Engine\Graphics\Shader\Pass\ShadowMap.h" />
     <ClInclude Include="Source\Engine\Graphics\Shader\Pass\ShadowUtils.h" />
     <ClInclude Include="Source\Engine\Graphics\Shader\PostProcess\BloomPass.h" />
@@ -467,6 +469,8 @@
     <ClInclude Include="Source\Game\Logics\Combat\HealthSystem.h" />
     <ClInclude Include="Source\Game\Logics\Combat\HitboxCollisionSystem.h" />
     <ClInclude Include="Source\Game\Logics\Combat\JustEvadeResolutionSystem.h" />
+    <ClInclude Include="Source\Game\Logics\Combat\Shader\TrailComponent.h" />
+    <ClInclude Include="Source\Game\Logics\Combat\Shader\TrailSystem.h" />
     <ClInclude Include="Source\Game\Logics\Combat\StaminaComponent.h" />
     <ClInclude Include="Source\Game\Logics\Combat\StaminaSystem.h" />
     <ClInclude Include="Source\Game\Logics\GameEvent\GameEvents.h" />
@@ -686,6 +690,7 @@
     <ClCompile Include="Source\Engine\Graphics\Renderer\PrimitiveRenderer.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Renderer\ShapeRenderer.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Renderer\Sprite.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Renderer\TrailRenderer.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Resource\GLTFImporter.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Resource\Model.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Resource\ModelResource.cpp" />
@@ -699,6 +704,7 @@
     <ClCompile Include="Source\Engine\Graphics\Shader\Material\PhongShader.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Shader\Material\ShadowMapShader.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Shader\Material\ToonShader.cpp" />
+    <ClCompile Include="Source\Engine\Graphics\Shader\Material\TrailShader.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Shader\Pass\ShadowMap.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Shader\PostProcess\BloomPass.cpp" />
     <ClCompile Include="Source\Engine\Graphics\Shader\PostProcess\PostProcessManager.cpp" />
@@ -759,6 +765,8 @@
     <ClCompile Include="Source\Game\Logics\Combat\HealthSystem.cpp" />
     <ClCompile Include="Source\Game\Logics\Combat\HitboxCollisionSystem.cpp" />
     <ClCompile Include="Source\Game\Logics\Combat\JustEvadeResolutionSystem.cpp" />
+    <ClCompile Include="Source\Game\Logics\Combat\Shader\TrailComponentMeta.cpp" />
+    <ClCompile Include="Source\Game\Logics\Combat\Shader\TrailSystem.cpp" />
     <ClCompile Include="Source\Game\Logics\Combat\StaminaComponentMeta.cpp" />
     <ClCompile Include="Source\Game\Logics\Combat\StaminaSystem.cpp" />
     <ClCompile Include="Source\Game\Logics\System\BlackboardComponentMeta.cpp" />
@@ -880,6 +888,14 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Shader\Material\Toon\ToonVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\Material\Trail\TrailPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\Material\Trail\TrailVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>

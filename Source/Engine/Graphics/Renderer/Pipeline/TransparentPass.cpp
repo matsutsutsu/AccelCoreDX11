@@ -6,9 +6,16 @@
 #include "Engine/Graphics/Shader/ShaderResources.h"
 #include <algorithm>
 
+#include "Engine/Graphics/Renderer/TrailRenderer.h"
+#include "Engine/Graphics/Resource/ResourceManager.h"
+
 void TransparentPass::Initialize(ID3D11Device* device) {
     _psoTransparent = PipelineState(PipelineStateDesc::DefaultTransparent());
     _instanceBuffer.Create(device, 8192);
+
+    // 先ほど作った加算合成の設計図を使ってPSOを固める
+    _psoTrail = PipelineState(PipelineStateDesc::DefaultAdditive());
+
 }
 
 void TransparentPass::Execute(const RenderContext& rc) {
@@ -16,9 +23,12 @@ void TransparentPass::Execute(const RenderContext& rc) {
     ZoneScopedN("Pass: Transparent");
 
     ID3D11DeviceContext* dc = rc.deviceContext;
+	ID3D11Device* device = Graphics::Instance().GetDevice();
 
     RenderQueue* queue = rc.renderQueue;
     ModelRenderer* renderer = rc.modelRenderer;
+
+
 
     if (!queue || !renderer) return;
 
@@ -41,7 +51,7 @@ void TransparentPass::Execute(const RenderContext& rc) {
         });
 
     for (const TransparencyCommand& info : allTrans) {
-        Shader* shader = ShaderRegistry::Instance().GetShader(info.shaderHash, Graphics::Instance().GetDevice());
+        Shader* shader = ShaderRegistry::Instance().GetShader(info.shaderHash, device);
         if (!shader) continue;
 
         shader->Begin(rc);
@@ -129,5 +139,39 @@ void TransparentPass::Execute(const RenderContext& rc) {
 
         _instanceBuffer.Unbind(dc, SLOT_SRV_INSTANCE);
         shader->End(rc);
+    }
+
+    // =========================================================
+    // ★追加: トレイル（剣の軌跡）の描画パス
+    // =========================================================
+    Shader* trailShader = ShaderRegistry::Instance().GetShader("Trail"_hash, device);
+
+    // Graphicsクラスに TrailRenderer が登録されていると仮定
+    // 実装に合わせて rc.trailRenderer 等に変更してください
+    TrailRenderer* trailRenderer = rc.trailRenderer;
+
+    if (trailShader && trailRenderer) {
+
+        trailShader->Begin(rc);
+        _psoTrail.Apply(dc, rc.renderState);
+
+        // =========================================================
+        // ★修正: ECSを直接見に行くのではなく、RenderQueueから伝票を受け取る
+        // =========================================================
+        const auto& trailCommands = queue->GetTrailCommands();
+        for (const auto& cmd : trailCommands) {
+
+            // ★追加: テクスチャのバインド処理
+            // TextureHandleのチケットを使って、ResourceManagerから実体(SRV)をもらう
+            if (cmd.trailData->textureHandle.IsValid()) {
+                ID3D11ShaderResourceView* srv = ResourceManager::Instance().GetTexture(cmd.trailData->textureHandle);
+                dc->PSSetShaderResources(SLOT_SRV_MAT_TEX0, 1, &srv);
+            }
+
+            // トレイルの描画
+            trailRenderer->Render(dc, *cmd.trailData);
+        }
+
+        trailShader->End(rc);
     }
 }

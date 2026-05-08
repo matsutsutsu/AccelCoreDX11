@@ -72,6 +72,7 @@ template <> struct ComponentMeta<BloomConfigComponent> {
             changed |= ImGui::DragFloat(u8"Intensity (強度)", &comp.intensity, 0.1f, 0.0f, 40.0f);
             changed |= ImGui::DragFloat(u8"Soft Knee (滑らかさ)", &comp.softKnee, 0.01f, 0.0f, 1.0f);
             changed |= ImGui::DragFloat(u8"Radius (広がり)", &comp.radius, 0.01f, 0.0f, 5.0f);
+			changed |= ImGui::DragFloat(u8"Max Brightness (最大輝度)", &comp.maxBrightness, 0.1f, 0.0f, 100.0f);
             ImGui::Unindent();
         }
         return changed;
@@ -84,7 +85,9 @@ template <> struct ComponentMeta<BloomConfigComponent> {
             META_FIELD_FLOAT(BloomConfigComponent, threshold, "threshold", "Threshold", 0.01f, 0.0f, 10.0f, "Params"),
             META_FIELD_FLOAT(BloomConfigComponent, intensity, "intensity", "Intensity", 0.1f, 0.0f, 40.0f, "Params"),
             META_FIELD_FLOAT(BloomConfigComponent, softKnee, "softKnee", "Soft Knee", 0.01f, 0.0f, 1.0f, "Params"),
-            META_FIELD_FLOAT(BloomConfigComponent, radius, "radius", "Radius", 0.01f, 0.0f, 5.0f, "Params") };
+            META_FIELD_FLOAT(BloomConfigComponent, radius, "radius", "Radius", 0.01f, 0.0f, 5.0f, "Params"),
+			META_FIELD_FLOAT(BloomConfigComponent, maxBrightness, "maxBrightness", "Max Brightness", 0.1f, 0.0f, 100.0f, "Params")
+	};
         return fields;
     }
 };

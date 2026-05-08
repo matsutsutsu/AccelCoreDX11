@@ -6,6 +6,7 @@
 #include "Engine/Graphics/Resource/Model.h"
 #include "Engine/Graphics/Resource/ResourceManager.h"
 #include "Engine/Graphics/Shader/ShaderRegistry.h"
+#include "Game/Logics/Combat/Shader/TrailComponent.h"
 
 // ---------------------------------------------------------
 // 伝票（重いデータ）
@@ -40,6 +41,10 @@ struct ShadowCommand {
     uint8_t cascadeMask = 0;
 };
 
+struct TrailCommand {
+    const TrailComponent* trailData; // 描画に必要なデータのポインタ
+    // ※必要であれば、カメラからの距離(depth)を入れてソート可能にする
+};
 
 // ---------------------------------------------------------
 // ソートキー（整理券：わずか8バイトで超軽量、キャッシュ効率極大）
@@ -84,6 +89,10 @@ public:
         _shadowCommands.push_back(cmd);
     }
 
+    void SubmitTrail(const TrailCommand& cmd) {
+        _trailCommands.push_back(cmd);
+    }
+
     // 描画直前に、溜まった伝票を一気にソートしてバッチを構築する
     void SortAndBuildBatches() {
         _sortKeys.clear();
@@ -120,7 +129,7 @@ public:
     const std::vector<TransparencyCommand>& GetTransparentCommands() const { return _transparentCommands; }
     const std::vector<TransparencyCommand>& GetDeferredTransparentCommands() const { return _deferredTransparentCommands; }
     const std::vector<ShadowCommand>& GetShadowCommands() const { return _shadowCommands; }
-
+    const std::vector<TrailCommand>& GetTrailCommands() const { return _trailCommands; }
 
 private:
     std::vector<RenderCommand>       _opaqueCommands;
@@ -128,4 +137,5 @@ private:
     std::vector<TransparencyCommand> _transparentCommands;
     std::vector<TransparencyCommand> _deferredTransparentCommands; // 不透明パスで弾かれた半透明
     std::vector<ShadowCommand>       _shadowCommands;
+    std::vector<TrailCommand>        _trailCommands; // トレイル用キュー
 };
