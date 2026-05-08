@@ -137,3 +137,33 @@ void UIManager::DrawDebugGUI()
     }
     ImGui::End();
 }
+
+
+std::vector<std::shared_ptr<UIElement>> UIManager::GetAllElements()
+{
+    std::vector<std::shared_ptr<UIElement>> allElements;
+
+    // 全てのルート要素から順に子要素を辿る
+    for (auto& root : m_rootElements)
+    {
+        CollectElementsRecursive(root, allElements);
+    }
+
+    return allElements;
+}
+
+void UIManager::CollectElementsRecursive(std::shared_ptr<UIElement> parent, std::vector<std::shared_ptr<UIElement>>& outList)
+{
+    if (!parent) return;
+
+    // 自分自身を追加
+    outList.push_back(parent);
+
+    // 全ての子要素に対して再帰的に処理を行う[cite: 5]
+    // UIElement が std::vector<std::shared_ptr<UIElement>> m_children を持っている前提
+    const auto& children = parent->GetChildren();
+    for (auto& child : children)
+    {
+        CollectElementsRecursive(child, outList);
+    }
+}

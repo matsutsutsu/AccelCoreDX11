@@ -17,6 +17,7 @@
 
 #include "Engine/GamePlay/Transform/TransformUpdateSystem.h"
 
+
 void EditorScene::Initialize()
 {
     BaseScene::Initialize(); // 共通初期化
@@ -78,9 +79,12 @@ void EditorScene::Initialize()
 
 void EditorScene::Finalize() 
 {
-
     BaseScene::Finalize(); // 共通終了化
+    if (!_worldPtr->HasResource<UIManager*>()) return;
+    auto* uiMgr = _worldPtr->GetResource<UIManager*>();
 
+    _playerHUD = std::make_unique<PlayerHUD>();
+    _playerHUD->Initialize(uiMgr);
 }
 
 void EditorScene::RegisterSystems()
@@ -129,6 +133,8 @@ void EditorScene::Update(float dt)
 	// Contextからのリクエストを処理（ロード/セーブ要求など）
     ProcessContextRequests();
 
+    UI_Update();
+
     // A. アニメーション編集モード中 (かつエンティティ選択中)
     if (_context.isAnimEditMode && _context.selectedEntity != 0 &&
         _context.selectedEntity != CCL::ECS::InvalidEntityID) {
@@ -143,6 +149,22 @@ void EditorScene::Update(float dt)
     // B. 通常プレイ中
     else {
         BaseScene::Update(dt);
+    }
+}
+
+//シーンのみで使う更新処理描画やイベントの設定などはSystemに任せる
+void EditorScene::UI_Update()
+{
+    // 4. ECSの掲示板(Resource)から最新データを取得し、UIに反映
+    if (_worldPtr && _worldPtr->HasResource<PlayerHUDData>())
+    {
+        // 掲示板からデータを取得
+        const auto& hudData = _worldPtr->GetResource<PlayerHUDData>();
+
+        // 保持しているHUDクラスへデータを流し込む[cite: 21, 22]
+        if (_playerHUD) {
+            _playerHUD->ReflectData(hudData);
+        }
     }
 }
 

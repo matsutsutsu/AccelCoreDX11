@@ -423,6 +423,7 @@
     <ClInclude Include="Source\Engine\UI\UIContext.h" />
     <ClInclude Include="Source\Engine\UI\UIElement.h" />
     <ClInclude Include="Source\Engine\UI\UIManager.h" />
+    <ClInclude Include="Source\Engine\UI\UISystem.h" />
     <ClInclude Include="Source\Engine\UI\Widgets\SimpleButton.h" />
     <ClInclude Include="Source\Engine\UI\Widgets\UIProgressBar.h" />
     <ClInclude Include="Source\Engine\UI\Widgets\UIText.h" />
@@ -726,6 +727,7 @@
     <ClCompile Include="Source\Engine\UI\ImGui\ImGuiThemes.cpp" />
     <ClCompile Include="Source\Engine\UI\UIElement.cpp" />
     <ClCompile Include="Source\Engine\UI\UIManager.cpp" />
+    <ClCompile Include="Source\Engine\UI\UISystem.cpp" />
     <ClCompile Include="Source\Game\Core\GamePlayComponentMeta.cpp" />
     <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\BehaviorTreeComponentMeta.cpp" />
     <ClCompile Include="Source\Game\Logics\AI\BehaviorTree\BossActionComponentMeta.cpp" />

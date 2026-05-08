@@ -19,7 +19,8 @@
 
 #include "Engine/GamePlay/Core/Scene/SceneManager.h"
 
-class BaseScene : public Scene {
+class BaseScene : public Scene 
+{
   protected:
     std::unique_ptr<CCL::ECS::ECSContext> _ecsContext;
 

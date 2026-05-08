@@ -433,6 +433,9 @@
     <Filter Include="Source\Game\Logics\Combat\Shader">
       <UniqueIdentifier>{e6f9e5c3-4a61-4021-9e2a-030f464799f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Game\UI\System">
+      <UniqueIdentifier>{1cf3ffbd-dec0-49c7-9ba2-c9d132189919}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\implot-master\implot.h">
@@ -1527,6 +1530,9 @@
     <ClInclude Include="Source\Engine\GamePlay\Transform\Motion\MotionComponent.h">
       <Filter>Source\Engine\GamePlay\Transform\Motion</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\UI\UISystem.h">
+      <Filter>Source\Engine\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\implot-master\implot.cpp">
@@ -2365,6 +2371,9 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\GamePlay\Graphics\Particle\GPUParticleComponentMeta.cpp">
       <Filter>Source\Engine\GamePlay\Graphics\Particle\_Meta</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\UI\UISystem.cpp">
+      <Filter>Source\Engine\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

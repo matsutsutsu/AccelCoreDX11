@@ -16,7 +16,8 @@ struct PlayerHUDData {
     float specialGaugeRatio = 1.0f;
 };
 
-class PlayerHUD {
+class PlayerHUD
+{
 public:
     PlayerHUD() = default;
     ~PlayerHUD() = default;

@@ -5,6 +5,8 @@
 
 #include "Engine/GamePlay/Animation/AnimationSystem.h"
 
+#include "Game/UI/PlayerHUD.h"
+
 class EditorScene : public BaseScene {
     // エディタ固有
     std::unique_ptr<EditorWindowManager> _windowManager;
@@ -12,6 +14,8 @@ class EditorScene : public BaseScene {
     // アニメーションシステムへの参照 (手動更新用)
     AnimationSystem* _animationSystem;
 
+    // HUDを一括管理
+    std::unique_ptr<PlayerHUD> _playerHUD;
 
     // エディタの全記憶を保持するコンテキスト（毎フレーム破棄されない）
     EditorContext _context;
@@ -30,6 +34,8 @@ class EditorScene : public BaseScene {
     // BaseSceneのUpdateをオーバーライドする
     void FixedUpdate(float dt) override;
     void Update(float dt) override;
+
+    void UI_Update();
 
     void OnDrawImGui() override;
 

@@ -83,6 +83,12 @@ class UIManager {
     std::shared_ptr<UIElement> GetSelectedElement() const { return m_selectedElement; }
     void SetSelectedElement(std::shared_ptr<UIElement> element) { m_selectedElement = element; }
 
+    // 全ての要素をフラットなリストとして取得する
+    std::vector<std::shared_ptr<UIElement>> GetAllElements();
     // デバッグ用
     void DrawDebugGUI();
+private:
+    // 再帰的に要素を収集するためのヘルパー
+    void CollectElementsRecursive(std::shared_ptr<UIElement> parent, std::vector<std::shared_ptr<UIElement>>& outList);
+
 };

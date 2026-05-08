@@ -73,6 +73,7 @@ class UIElement : public std::enable_shared_from_this<UIElement> {
     float             m_delayTimer     = 0.0f;
 
   public:
+    UIElement() = default;
     UIElement(const std::string &name, const std::string &spriteName);
     virtual ~UIElement() = default;
 
@@ -107,6 +108,8 @@ class UIElement : public std::enable_shared_from_this<UIElement> {
     // --- 操作系 ---
     void SetPosition(float x, float y); // ローカル座標セット
     void MoveTo(float x, float y);      // ローカル座標へ移動
+
+    void SetName(const std::string& name) { m_name = name; }
 
     // スケールを即時設定する
     void SetScale(float s)

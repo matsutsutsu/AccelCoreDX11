@@ -11,6 +11,7 @@ class PlayerHUDSystem : public CCL::ECS::IfSystem<PlayerHUDSystem,
 {
 public:
     PlayerHUDSystem() : IfSystem("PlayerHUDSystem") {}
+
     void Update(float dt) override;
 
 };
