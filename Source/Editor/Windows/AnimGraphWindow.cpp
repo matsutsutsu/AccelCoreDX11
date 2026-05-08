@@ -627,9 +627,16 @@ void AnimGraphWindow::DrawStateSettings(uint32_t stateHash) {
                 if (Dialog::OpenFileName(filename, sizeof(filename), DialogPreset::AnimNode, GetActiveWindow()) == DialogResult::OK) {
                     
                     namespace fs = std::filesystem;
+                    fs::path absPath = fs::u8path(filename);
                     std::error_code ec;
-                    fs::path relPath = fs::relative(filename, fs::current_path(), ec);
-                    state.sequenceFilePath = (!ec && !relPath.empty()) ? relPath.generic_string() : filename;
+                    fs::path relPath = fs::relative(absPath, fs::current_path(), ec);
+                    if (!ec && !relPath.empty()) {
+                        auto u8str = relPath.generic_u8string();
+                        state.sequenceFilePath = std::string(u8str.begin(), u8str.end());
+                    }
+                    else {
+                        state.sequenceFilePath = filename;
+                    }
                 }
             }
 
@@ -798,11 +805,16 @@ void AnimGraphWindow::DrawToolbar() {
 
         if (result == DialogResult::OK) {
             namespace fs = std::filesystem;
-            fs::path absPath = filename;
-            fs::path currentPath = fs::current_path();
+            fs::path absPath = fs::u8path(filename);
             std::error_code ec;
-            fs::path relPath = fs::relative(absPath, currentPath, ec);
-            _currentFilePath = (!ec && !relPath.empty()) ? relPath.generic_string() : filename;
+            fs::path relPath = fs::relative(absPath, fs::current_path(), ec);
+            if (!ec && !relPath.empty()) {
+                auto u8str = relPath.generic_u8string();
+                _currentFilePath = std::string(u8str.begin(), u8str.end());
+            }
+            else {
+                _currentFilePath = filename;
+            }
             SaveGraph(_currentFilePath);
         }
     }
@@ -815,11 +827,16 @@ void AnimGraphWindow::DrawToolbar() {
 
         if (result == DialogResult::OK) {
             namespace fs = std::filesystem;
-            fs::path absPath = filename;
-            fs::path currentPath = fs::current_path();
+            fs::path absPath = fs::u8path(filename);
             std::error_code ec;
-            fs::path relPath = fs::relative(absPath, currentPath, ec);
-            _currentFilePath = (!ec && !relPath.empty()) ? relPath.generic_string() : filename;
+            fs::path relPath = fs::relative(absPath, fs::current_path(), ec);
+            if (!ec && !relPath.empty()) {
+                auto u8str = relPath.generic_u8string();
+                _currentFilePath = std::string(u8str.begin(), u8str.end());
+            }
+            else {
+                _currentFilePath = filename;
+            }
             LoadGraph(_currentFilePath);
         }
     }

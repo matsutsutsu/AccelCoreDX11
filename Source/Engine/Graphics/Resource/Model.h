@@ -108,7 +108,7 @@ public:
 		float previousTime,
 		std::vector<NodePose>& outNodePoses,
 		bool extractRootMotion,
-		int rootNodeIndex, // ★ std::string から int へ変更
+		const char* rootNodeName, // ★ int から const char* に完全差し戻し
 		DirectX::XMVECTOR* outDeltaPosition) const;
 
 	// ノードポーズ設定

@@ -194,6 +194,9 @@ template <> struct ComponentMeta<ShadowMapConfigComponent> {
         // &c.cascadeSplits.x を渡すことで、XMFLOAT3 を一気に操作できる
         changed |= ImGui::DragFloat3(u8"Cascade Splits (Near/Mid/Far)", &c.cascadeSplits.x, 1.0f, 1.0f, 1000.0f);
 
+		changed |= ImGui::DragFloat(u8"Normal Bias Multiplier (スケールに応じて 0.01~0.05程度で調整)", &c.normalBiasMultiplier, 0.001f, 0.0f, 1.0f, "%.3f");
+		//changed |= ImGui::TextWrapped(u8"Shadow Bias (縞模様対策): カスケードの分割距離やシーンのスケールに応じて 0.0001~0.01程度で調整");
+
         changed |= ImGui::DragFloat(u8"Bias (縞模様対策)", &c.shadowBias, 0.0001f, 0.0f, 0.01f, "%.5f");
         changed |= ImGui::ColorEdit4(u8"Shadow Color", &c.shadowColor.x);
         return changed;

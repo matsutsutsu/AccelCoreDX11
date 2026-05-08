@@ -38,7 +38,7 @@ void EditorScene::Initialize()
     //SceneInitializer::SpawnJoltTest(*_worldPtr, device);
 
     // 中では普通にPBRモデル用にしている
-    SceneInitializer::SpawnAnimationTest(*_worldPtr, device);
+    //SceneInitializer::SpawnAnimationTest(*_worldPtr, device);
 
     //_context.pendingLoadScenePath = "Assets/Scene/BossAITestScene.json";
     //_context.pendingLoadScenePath = "Assets/Scene/ChainAttackTestScene02.json";
@@ -125,7 +125,6 @@ void EditorScene::FixedUpdate(float dt)
 // Updateのオーバーライド
 void EditorScene::Update(float dt)
 {
-
 	// Contextからのリクエストを処理（ロード/セーブ要求など）
     ProcessContextRequests();
 
@@ -281,6 +280,8 @@ void EditorScene::ProcessContextRequests()
     if (!_context.pendingLoadScenePath.empty()) {
         RequestLoadScene(_context.pendingLoadScenePath);
         _context.pendingLoadScenePath.clear();
+
+        //SceneInitializer::SpawnBossVFXTest(*_worldPtr);
     }
 
     if (!_context.pendingSaveScenePath.empty()) {
