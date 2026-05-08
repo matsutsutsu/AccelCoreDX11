@@ -1,6 +1,7 @@
 {
     "DialogHistory": {
-        "Model": "C:\\Users\\2240114\\Desktop\\TeamProject3r\\DX11Pro\\AccelCoreDX11\\Assets\\Models\\sci_fi_drone_gltf\\",
+        "AnimNode": "C:\\Users\\2240209\\Desktop\\チーム作成\\第8回チーム製作【AccelCore】\\AccelCoreDX11\\Assets\\Animations\\Node\\",
+        "Model": "C:\\Users\\2240209\\Desktop\\チーム作成\\第8回チーム製作【AccelCore】\\AccelCoreDX11\\Assets\\Models\\Enemy\\Muriel\\",
         "Scene": "C:\\Users\\2240209\\Desktop\\チーム作成\\第8回チーム製作【AccelCore】\\AccelCoreDX11\\Assets\\Scene\\"
     }
 }

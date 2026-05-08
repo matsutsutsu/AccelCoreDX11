@@ -45,6 +45,12 @@ void ShadowMapRenderSystem::RenderShadowMap()
         auto* config = _world->GetComponent<ShadowMapConfigComponent>(entity);
         if (config) {
             shadowMap->params.shadowBias = config->shadowBias;
+
+            shadowMap->params.normal_bias = config->normalBiasMultiplier; // ★追加
+
+            // ★追加: ディレクショナルライトの方向を取得して渡す
+            shadowMap->params.light_direction = lightManager->GetDirectionalLight().direction;
+
             shadowMap->params.shadowColor = config->shadowColor;
             shadowMap->params.cascadeSplits[0] = config->cascadeSplits.x;
             shadowMap->params.cascadeSplits[1] = config->cascadeSplits.y;

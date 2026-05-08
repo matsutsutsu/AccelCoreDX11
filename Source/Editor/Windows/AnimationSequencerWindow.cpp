@@ -522,9 +522,15 @@ void AnimationSequencerWindow::DrawContents(EditorContext& context)
         char filename[MAX_PATH] = {};
         if (Dialog::SaveFileName(filename, MAX_PATH, DialogPreset::AnimSequence, GetActiveWindow()) == DialogResult::OK) {
             namespace fs = std::filesystem;
+            fs::path absPath = fs::u8path(filename);
             std::error_code ec;
-            fs::path relPath = fs::relative(filename, fs::current_path(), ec);
-            std::string finalPath = (!ec && !relPath.empty()) ? relPath.generic_string() : filename;
+            fs::path relPath = fs::relative(absPath, fs::current_path(), ec);
+
+            std::string finalPath = filename;
+            if (!ec && !relPath.empty()) {
+                auto u8str = relPath.generic_u8string();
+                finalPath = std::string(u8str.begin(), u8str.end());
+            }
 
             strcpy_s(g_SavePath, sizeof(g_SavePath), finalPath.c_str());
             _sequencerImpl->SyncToData();
@@ -546,9 +552,15 @@ void AnimationSequencerWindow::DrawContents(EditorContext& context)
         char filename[MAX_PATH] = {};
         if (Dialog::OpenFileName(filename, MAX_PATH, DialogPreset::AnimSequence, GetActiveWindow()) == DialogResult::OK) {
             namespace fs = std::filesystem;
+            fs::path absPath = fs::u8path(filename);
             std::error_code ec;
-            fs::path relPath = fs::relative(filename, fs::current_path(), ec);
-            std::string finalPath = (!ec && !relPath.empty()) ? relPath.generic_string() : filename;
+            fs::path relPath = fs::relative(absPath, fs::current_path(), ec);
+
+            std::string finalPath = filename;
+            if (!ec && !relPath.empty()) {
+                auto u8str = relPath.generic_u8string();
+                finalPath = std::string(u8str.begin(), u8str.end());
+            }
 
             strcpy_s(g_SavePath, sizeof(g_SavePath), finalPath.c_str());
 
@@ -800,8 +812,15 @@ void AnimationSequencerWindow::DrawContents(EditorContext& context)
                     const DialogConfig& preset = (selectedItem.type == 1) ? DialogPreset::Audio : DialogPreset::Prefab;
                     if (Dialog::OpenFileName(filename, 256, preset, GetActiveWindow()) == DialogResult::OK) {
                         namespace fs = std::filesystem;
+                        fs::path absPath = fs::u8path(filename);
                         std::error_code ec;
-                        std::string finalPath = fs::relative(filename, fs::current_path(), ec).generic_string();
+                        fs::path relPath = fs::relative(absPath, fs::current_path(), ec);
+
+                        std::string finalPath = filename;
+                        if (!ec && !relPath.empty()) {
+                            auto u8str = relPath.generic_u8string();
+                            finalPath = std::string(u8str.begin(), u8str.end());
+                        }
                         strcpy_s(selectedItem.stringParam, sizeof(selectedItem.stringParam), finalPath.c_str());
                         propChanged = true;
                     }

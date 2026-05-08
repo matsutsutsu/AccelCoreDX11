@@ -58,8 +58,8 @@ struct AnimatorComponent {
     //  ルートモーション制御用データ
     // =========================================================
     // 抽出対象のルートボーン名 (例: "mixamorig:Hips")
-    // ※これは「初期化・エディタ操作時」のみ使われ、毎フレームの検索には使われない
-    std::string rootNodeName = "mixamorig:Hips";
+    // ★ 嘘のコメント（初期化時のみ使われる等）を削除。毎フレームこれで確実に検索する。
+    std::string rootNodeName = "root";
 
 
     void Play(const AnimSequence* sequence, float blendTime = 0.2f, bool loop = true, float speed = 1.0f)

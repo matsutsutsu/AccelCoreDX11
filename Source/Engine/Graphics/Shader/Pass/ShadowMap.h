@@ -32,7 +32,9 @@ public:
         DirectX::XMFLOAT4   shadowColor;
         float               shadowAttenuation;
         float               shadowBias;
+        float               normalBias; // ★新規: 法線オフセットの強さ
         int                 currentCascadeIndex; // 影を書き込む時に使う
+        DirectX::XMFLOAT3   lightDirection; // ★新規: 光源の方向 (ワールド空間)
         float               padding;             // 16バイト境界合わせ
     };
 
@@ -47,6 +49,9 @@ public:
         DirectX::XMFLOAT4 shadowColor = { 0.0f, 0.0f, 0.0f, 0.5f };
         float shadowBias = 0.0015f; // 初期値は小さめに
         float cascadeSplits[SHADOW_CASCADE_COUNT] = { 15.0f, 50.0f, 200.0f }; // 境界距離の初期値
+        float normal_bias;          // ★新規: 法線オフセットの強さ
+        DirectX::XMFLOAT3 light_direction;     // ★新規: 光源の方向 (ワールド空間)
+
     } params;
 
 

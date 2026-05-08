@@ -46,13 +46,6 @@ template <> struct ComponentMeta<AnimatorComponent> {
             anim.rootNodeName = rootBuffer;
             changed = true;
 
-            // 【超重要】ボーン名が変更されたら、O(1)アクセスのためのキャッシュを破棄する！
-            if (worldPtr) {
-                auto* world = static_cast<CCL::ECS::Core::World*>(worldPtr);
-                if (auto* modelComp = world->GetComponent<ModelComponent>(entityID)) {
-                    modelComp->rootNodeIndex = -1; // キャッシュをリセットし、再検索を促す
-                }
-            }
         }
         ImGui::Separator();
 
@@ -136,10 +129,10 @@ template <> struct ComponentMeta<AnimStateMachineComponent> {
             if (Dialog::OpenFileName(filename, MAX_PATH, DialogPreset::AnimNode, GetActiveWindow()) == DialogResult::OK) {
 
                 namespace fs = std::filesystem;
-                fs::path absPath = filename;
+                fs::path absPath = fs::u8path(filename);
                 fs::path currentPath = fs::current_path();
                 std::error_code ec;
-                fs::path relPath = fs::relative(absPath, currentPath, ec);
+                fs::path relPath = fs::relative(absPath, fs::current_path(), ec);
                 fsm.graphPath = (!ec && !relPath.empty()) ? relPath.generic_string() : filename;
 
                 // 即座にロードしてバインドする

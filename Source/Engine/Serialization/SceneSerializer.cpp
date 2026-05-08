@@ -56,8 +56,23 @@ void SceneSerializer::Serialize(World *world, const std::string &filepath)
         }
     }
 
-    std::ofstream o(filepath);
-    o << std::setw(4) << root << std::endl;
+    // UTF-8対応のパスでファイルを開く
+    std::ofstream outFile(std::filesystem::u8path(filepath));
+    if (!outFile.is_open()) {
+        CCL_LOG_ERROR(LogCategory::Editor, "Failed to open file for save: %s", filepath.c_str());
+        return;
+    }
+
+    // ★ JSONのダンプ処理を try-catch で保護し、例外を検知する
+    try {
+        // ここで例外が起きるとファイルが空白になります
+        outFile << std::setw(4) << root << std::endl;
+        CCL_LOG_INFO(LogCategory::Editor, "Scene saved successfully: %s", filepath.c_str());
+    }
+    catch (const std::exception& e) {
+        // なぜ空白になったのか、その理由（不正な文字コード等）を出力させる
+        CCL_LOG_ERROR(LogCategory::Editor, "JSON Serialize Exception: %s", e.what());
+    }
 }
 
 void SceneSerializer::SerializeEntity(World *world, EntityID entityID, json &outJson)

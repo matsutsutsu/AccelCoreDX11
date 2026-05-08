@@ -164,9 +164,6 @@ void SceneManager::LoadScene(World* world, const std::string& filepath)
     // ③ 世界に溜まった RequestDestroy を「今すぐ確定」させる
     world->ScrutinyAndApply();
 
-    // ③ 【超重要】世界に溜まった RequestDestroy を「今すぐ確定」させ、メモリを完全に解放する！
-    world->ScrutinyAndApply();
-
     // ==========================================================
     // 3. まっさらな世界にシーンを構築 (Build)
     // ==========================================================

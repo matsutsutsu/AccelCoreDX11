@@ -67,17 +67,24 @@ template <> struct ComponentMeta<ModelComponent> {
         if (ImGui::Button("Load New Model... (Dynamic)", ImVec2(-1, 0))) {
             char filename[256] = {};
 
-            // プリセット DialogPreset::Model を直接渡すだけ
             if (Dialog::OpenFileName(filename, sizeof(filename), DialogPreset::Model, GetActiveWindow()) == DialogResult::OK) {
                 namespace fs = std::filesystem;
-                fs::path absPath = filename;
+
+                // 【修正1】fs::u8path を使って、filename が UTF-8 であることを明示する
+                fs::path absPath = fs::u8path(filename);
                 fs::path currentPathFs = fs::current_path();
                 std::error_code ec;
                 fs::path relPath = fs::relative(absPath, currentPathFs, ec);
 
-                std::string finalPath = (!ec && !relPath.empty()) ? relPath.generic_string() : filename;
+                std::string finalPath = filename;
+                if (!ec && !relPath.empty()) {
+                    // 【修正2】UTF-8文字列として安全に取り出す
+                    auto u8str = relPath.generic_u8string();
+                    // C++17/20 両対応: std::u8string から std::string への変換
+                    finalPath = std::string(u8str.begin(), u8str.end());
+                }
 
-                // モデルを切り替え（.c_str() で渡す）
+                // モデルを切り替え
                 comp.SetModel(finalPath.c_str());
                 changed = true;
             }

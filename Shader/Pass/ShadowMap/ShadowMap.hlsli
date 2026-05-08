@@ -10,9 +10,13 @@ cbuffer CbShadow : register(REG_CB(SLOT_CB_SHADOW))
     row_major float4x4 light_view_projection[3]; // 3層の行列
     float4 cascadeSplits;
     float4 shadow_color;
+    
     float shadow_attenuation;
     float shadow_bias;
+    float normal_bias; // ★新規: 法線オフセットの強さ
     int currentCascadeIndex; // 書き込み用
+    
+    float3 light_direction; // ★新規: 光源の方向 (ワールド空間)
     float shadow_padding;
 };
 

@@ -13,6 +13,7 @@
 #include "Engine/GamePlay/Transform/Motion/MotionComponent.h"
 #include "Game/Logics/System/BlackboardComponent.h"
 #include "Engine/GamePlay/Transform/TransformComponent.h"
+#include "Game/Logics/Character/CharacterMovementInputComponent.h"
 
 #include <SimpleMath.h>
 using namespace DirectX::SimpleMath;
@@ -162,43 +163,34 @@ void AnimationSystem::Update(float rawDt)
         }
 
         // ========================================================
-         // 4. 描画側(Model)への計算依頼
-         // ========================================================
+        // 4. 描画側(Model)への計算依頼
+        // ========================================================
         if (modelComp.GetModel()) {
             Model* model = modelComp.GetModel();
             int animIndex = model->GetAnimationIndex(seq->targetAnimName.c_str());
 
             if (animIndex != -1) {
+                // ルートモーション抽出フラグの判定（Jolt環境にも対応）
                 auto* motion = _world->GetComponent<MotionComponent>(id);
+                auto* charInput = _world->GetComponent<CharacterMovementInputComponent>(id);
+                bool extractMode = (motion != nullptr || charInput != nullptr) && (!animator.disableRootMotion);
+
                 DirectX::XMVECTOR deltaVec = DirectX::XMVectorZero();
-
-                // ルートモーション抽出フラグの判定
-                bool extractMode = (motion != nullptr) && (!animator.disableRootMotion);
-
-                // ========================================================
-                // ★ O(1) アクセスのためのインデックス・キャッシュ解決
-                // ========================================================
-                if (extractMode && modelComp.rootNodeIndex == -1) {
-                    // 初回実行時、またはモデルが変更された場合のみ文字列検索を行う
-                    // ※ AnimatorComponent 側にエディタ等で設定された std::string rootNodeName が
-                    //   存在すると仮定しています。もしなければ "mixamorig:Hips" などを直接渡すか、
-                    //   Animator側に持たせてください。
-                    modelComp.rootNodeIndex = model->GetNodeIndex(animator.rootNodeName.c_str());
-                }
 
                 // ブレンド中の場合は2つのアニメーションを計算して混ぜる
                 if (animator.isBlending && animator.previousSequence) {
                     int prevAnimIndex = model->GetAnimationIndex(animator.previousSequence->targetAnimName.c_str());
 
                     if (prevAnimIndex != -1) {
+                        // ★ DX12と同じく、毎フレーム確実に String (c_str) でボーンを指定する！
                         model->ComputeAnimationWithDelta(
                             prevAnimIndex, animator.previousTimer, animator.previousTimer,
-                            animator.poseBufferB, extractMode, modelComp.rootNodeIndex, nullptr // ★ インデックスを渡す
+                            animator.poseBufferB, extractMode, animator.rootNodeName.c_str(), nullptr
                         );
 
                         model->ComputeAnimationWithDelta(
                             animIndex, currTimeForDelta, prevTimeForDelta,
-                            animator.poseBufferA, extractMode, modelComp.rootNodeIndex, extractMode ? &deltaVec : nullptr // ★ インデックスを渡す
+                            animator.poseBufferA, extractMode, animator.rootNodeName.c_str(), extractMode ? &deltaVec : nullptr
                         );
 
                         float blendRate = std::fmax(0.0f, std::fmin(animator.currentBlendTime / animator.blendDuration, 1.0f));
@@ -207,54 +199,58 @@ void AnimationSystem::Update(float rawDt)
                     else {
                         model->ComputeAnimationWithDelta(
                             animIndex, currTimeForDelta, prevTimeForDelta,
-                            animator.poseBufferA, extractMode, modelComp.rootNodeIndex, extractMode ? &deltaVec : nullptr
+                            animator.poseBufferA, extractMode, animator.rootNodeName.c_str(), extractMode ? &deltaVec : nullptr
                         );
                     }
                 }
                 else {
                     // 通常の単独再生
+                    // ★ DX12と同じく、毎フレーム確実に String (c_str) でボーンを指定する！
                     model->ComputeAnimationWithDelta(
                         animIndex, currTimeForDelta, prevTimeForDelta,
-                        animator.poseBufferA, extractMode, modelComp.rootNodeIndex, extractMode ? &deltaVec : nullptr
+                        animator.poseBufferA, extractMode, animator.rootNodeName.c_str(), extractMode ? &deltaVec : nullptr
                     );
                 }
 
                 // ========================================================
-                // ★ 抽出された移動量の加工（カーブ適用とワールド空間変換）
+                // ★ 抽出された移動量の加工と適用
                 // ========================================================
                 if (extractMode) {
                     using namespace DirectX::SimpleMath;
 
-                    // 1. ルートモーションカーブの評価と適用 (踏み込み距離の増幅)
                     float rmMultiplier = 1.0f;
-                    // 現在の進捗率を計算 (時間 / 全体時間)
                     float normalizedTime = seq->duration > 0.0f ? (animator.currentTimer / seq->duration) : 0.0f;
 
                     if (animator.activeRootMotionCurve && animator.activeRootMotionCurve->keys.size() > 0) {
                         rmMultiplier = animator.activeRootMotionCurve->Evaluate(normalizedTime);
                     }
 
-                    // XMVECTOR を Vector3 に変換して計算しやすくする
                     Vector3 localDelta;
                     DirectX::XMStoreFloat3(&localDelta, deltaVec);
 
-                    // X(左右)とZ(前後)にカーブの倍率を乗算
                     localDelta.x *= rmMultiplier;
                     localDelta.z *= rmMultiplier;
 
-                    // 2. ワールド空間への変換（キャラクターの向きに合わせる）
                     auto* trans = _world->GetComponent<TransformComponent>(id);
                     if (trans) {
-                        // アニメーションの局所的な移動を、キャラクターの向いている方角に回転させる
                         localDelta = Vector3::Transform(localDelta, trans->rotation);
                     }
 
-                    // 3. 最終的な移動量を MotionComponent へ渡す
-                    DirectX::XMFLOAT3 finalDelta;
-                    finalDelta.x = localDelta.x;
-                    finalDelta.y = localDelta.y;
-                    finalDelta.z = localDelta.z;
-                    motion->AddImpulse(finalDelta);
+                    DirectX::XMFLOAT3 finalDelta(localDelta.x, localDelta.y, localDelta.z);
+
+                
+                    // 旧Rigidbodyと新JoltCharacterのどちらでも動くように分配
+                    if (motion) {
+                        motion->AddImpulse(finalDelta);
+                       
+                    }
+                    else if (charInput && time.localDt > 0.0f) {
+                        charInput->desiredVelocity.x += finalDelta.x / time.localDt;
+                        charInput->desiredVelocity.y += finalDelta.y / time.localDt;
+                        charInput->desiredVelocity.z += finalDelta.z / time.localDt;
+                        
+                    }
+                   
                 }
 
                 // 最後に描画用の骨格姿勢を確定させる
@@ -269,26 +265,22 @@ void AnimationSystem::Update(float rawDt)
 // エディタ（AnimationSequencerWindow）から呼ばれる手動更新処理
 void AnimationSystem::UpdateManual(CCL::ECS::EntityID entity, float time)
 {
-    // 1. 対象のエンティティから必要なコンポーネントを取得
     auto* animator = _world->GetComponent<AnimatorComponent>(entity);
     auto* modelComp = _world->GetComponent<ModelComponent>(entity);
 
     if (!animator || !modelComp || !modelComp->GetModel()) return;
-    
+
     Model* model = modelComp->GetModel();
-    
-    // 2. 現在読んでいる台本（エディタで編集中）を取得
     const AnimSequence* seq = animator->currentSequence;
     if (!seq) return;
 
-    // 3. 台本に書かれているアニメーション名から、3Dモデル側のインデックスを引く
     int animIndex = model->GetAnimationIndex(seq->targetAnimName.c_str());
-    
-    // 4. 指定された時間（time）で骨の姿勢を計算し、モデルに適用する
+
     if (animIndex != -1) {
+        // ★ ここも String (c_str) 指定に差し戻す
         model->ComputeAnimationWithDelta(
             animIndex, time, time, // エディタ中はデルタ移動しない
-            animator->poseBufferA, animator->disableRootMotion, modelComp->rootNodeIndex, nullptr
+            animator->poseBufferA, animator->disableRootMotion, animator->rootNodeName.c_str(), nullptr
         );
         model->SetNodePoses(animator->poseBufferA);
     }
