@@ -24,5 +24,6 @@ struct SceneChangeRequest : public UIEventCommon
     std::string scenePath;
 
     void OnEditor() override;
+    std::string GetScenePath() { return scenePath; }
 };
 

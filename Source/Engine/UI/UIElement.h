@@ -79,6 +79,7 @@ class UIElement : public std::enable_shared_from_this<UIElement> {
     // --- 階層操作 ---
     void       AddChild(std::shared_ptr<UIElement> child);
     UIElement *GetParent() const { return m_parent; }
+    const std::vector<std::shared_ptr<UIElement>>& GetChildren() const { return m_children; }
 
     // --- 座標計算 ---
     // ワールド座標（親の座標を加算した最終位置）を取得
@@ -93,6 +94,8 @@ class UIElement : public std::enable_shared_from_this<UIElement> {
 
     // 実際の描画処理 (派生クラスでオーバーライドする)
     virtual void OnRender(ID3D11DeviceContext *dc, float globalScale);
+
+    virtual void OnDebugGUI();
 
     // --- 判定 ---
     // 再帰的にヒットテストを行う

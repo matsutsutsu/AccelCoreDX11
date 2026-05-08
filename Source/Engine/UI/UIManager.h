@@ -31,6 +31,8 @@ class UIManager {
   private:
     // ルート要素のみを保持（子要素は親が持つため、ここにはルートだけ入れる）
     std::vector<std::shared_ptr<UIElement>> m_rootElements;
+    //GUI用に現在の見たいUIのアクセス
+    std::shared_ptr<UIElement> m_selectedElement = nullptr;
 
     // スプライトリソース
     std::unordered_map<std::string, std::unique_ptr<Sprite>> m_sprites;
@@ -76,6 +78,10 @@ class UIManager {
     // --- ユーティリティ ---
     // 画面サイズに応じた拡大率を取得 (1920x1080基準)
     float GetGlobalScale() const;
+
+    const std::vector<std::shared_ptr<UIElement>>& GetRootElements() const { return m_rootElements; }
+    std::shared_ptr<UIElement> GetSelectedElement() const { return m_selectedElement; }
+    void SetSelectedElement(std::shared_ptr<UIElement> element) { m_selectedElement = element; }
 
     // デバッグ用
     void DrawDebugGUI();

@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cmath>
 
+#include "ImGui.h"
+
 // 補間関数
 template <typename T> static T Lerp(T start, T end, float t) { return start + (end - start) * t; }
 
@@ -141,6 +143,33 @@ void UIElement::OnRender(ID3D11DeviceContext *dc, float globalScale)
         m_color.z,
         m_color.w);
 }
+
+void UIElement::OnDebugGUI()
+{
+    if (ImGui::TreeNode(m_name.c_str()))
+    {
+        // 位置・サイズ調整 (DragFloatはスライダーのように操作できて便利です)
+        ImGui::DragFloat2("Position", &m_targetPosition.x, 1.0f);
+        ImGui::DragFloat2("Size", &m_size.x, 1.0f);
+
+        // 色調整
+        ImGui::ColorEdit4("Color", &m_targetColor.x);
+
+        // スケール
+        ImGui::DragFloat("Scale", &m_targetScale, 0.01f, 0.0f, 5.0f);
+
+        // 表示フラグ
+        ImGui::Checkbox("Visible", &m_isVisible);
+
+        // 子要素も再帰的に表示する場合
+        for (auto& child : m_children) {
+            child->OnDebugGUI();
+        }
+
+        ImGui::TreePop();
+    }
+}
+
 
 UIElement *UIElement::HitTestRecursive(float x, float y)
 {
